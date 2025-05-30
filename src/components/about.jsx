@@ -2,7 +2,7 @@ import React from "react";
 
 const AboutUsSection = () => {
   return (
-    <section className="bg-gradient-to-br from-black to-cyan-950 text-white py-10 px-6 md:px-20">
+    <section className="bg-gradient-to-br from-black to-cyan-950  text-white pb-10 pt-30 px-6 md:px-20">
       <div className="max-w-5xl mx-auto">
         <p className="text-lg md:text-xl font-semibold leading-loose">
           We aim to build a safer digital world where trust is <strong>verifiable</strong>. Whether you're protecting customer onboarding, moderating user content, or safeguarding public communications, <span className="text-cyan-400 font-semibold">GenReal.ai</span> helps you stay ahead of deepfake threats.

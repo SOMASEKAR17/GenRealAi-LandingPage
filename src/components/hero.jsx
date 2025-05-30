@@ -18,9 +18,9 @@ const HeroSection = () => {
   }, [prevScrollPos]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-black to-gray-900 text-white relative">
+    <div className="min-h-screen bg-black text-white relative">
       {/* Navbar */}
-      <nav className={`w-full transition-all duration-300 bg-black fixed top-0 z-50 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
+      <nav className={`w-full transition-all duration-300 bg-transparent backdrop-blur-sm fixed top-0 z-50 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
           <div className="flex items-center gap-2">
             <img src="/logoGenReal.png" alt="GenReal AI" className="h-[15vw] md:h-[10vw] w-[15vw] md:w-[10vw] lg:h-[4vw] lg:w-[4vw]" />
@@ -39,7 +39,7 @@ const HeroSection = () => {
               </svg>
             </button>
           </div>
-          <ul className="hidden md:flex text-lg gap-8 text-sm font-light">
+          <ul className="hidden md:flex text-lg gap-8  font-light">
             <li><a href="#">About</a></li>
             <li><a href="#">Features</a></li>
             <li><a href="#">News</a></li>
@@ -51,7 +51,7 @@ const HeroSection = () => {
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <ul className="md:hidden px-6 pb-4 space-y-2 bg-black">
+          <ul className="md:hidden px-6 pb-4 space-y-2 bg-transparent">
             <li><a href="#">About</a></li>
             <li><a href="#">Features</a></li>
             <li><a href="#">News</a></li>
@@ -65,7 +65,7 @@ const HeroSection = () => {
       {/* Hero Section */}
       <div className="flex flex-col items-center text-center px-4 pt-[60vw] md:pt-[30vw] lg:pt-[20vw] pb-[10vw] mg:pb-[20vw]">
         <h1 className="text-[10vw] leading-[9vw] lg:leading-[5vw] md:text-[5vw] font-bold">
-          Welcome to<br /> <span className=" font-bold bg-gradient-to-r from-[#6EE5F5] via-[#34B8C9] via-[#29A3B3] to-[#1397A9] bg-clip-text text-transparent">GenReal</span> AI
+          Welcome to<br /> <span className=" font-bold bg-gradient-to-r from-[#6EE5F5] via-[#29A3B3] to-[#1397A9] bg-clip-text text-transparent">GenReal</span> AI
         </h1>
         <p className="mt-4 text-lg text-gray-300">Discover the new age of security</p>
         <button className="mt-6 bg-orange-400 hover:bg-orange-500 text-white px-6 py-3 rounded-full text-sm font-semibold transition">
@@ -74,7 +74,7 @@ const HeroSection = () => {
       </div>
 
       {/* Statistics Section */}
-      <div className="flex flex-col md:flex-row justify-around items-center mt-20 px-8 pt-12 pb-[50vw] md:py-12 bg-black space-y-10 md:space-y-0">
+      <div className="flex flex-col md:flex-row  bg-gradient-to-b from-black to-gray-700 justify-around items-center mt-20 px-8 pt-12 pb-[50vw] md:py-12 space-y-10 md:space-y-0">
         <div className="text-center">
           <h2 className="text-cyan-400 text-4xl font-bold">80%</h2>
           <p className="text-gray-400 mt-2 text-sm max-w-xs">of companies lack protocols to handle deepfake attacks</p>
