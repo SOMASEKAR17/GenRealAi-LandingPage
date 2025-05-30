@@ -4,7 +4,7 @@ import About from './components/about'
 import CircularCards from './components/aboutCards'
 import Team from './components/team'
 import News from './components/news'
-
+import ContactUs from "./components/ContactUs.jsx"
 const App = () => {
   return (
     <div><Hero />
@@ -12,6 +12,7 @@ const App = () => {
     <CircularCards />
     <Team />
     <News />
+    <ContactUs />
     </div>
   )
 }
