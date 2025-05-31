@@ -86,27 +86,31 @@ const VideoCarousel = () => {
   }, [isEnd, videoId]);
 
   useEffect(() => {
+    let anim;
+    let animUpdate;
+  
+    const span = videoSpanRef.current[videoId];
+    const div = videoDivRef.current[videoId];
     let currentProgress = 0;
-    let span = videoSpanRef.current;
-
-    if (span[videoId]) {
-      let anim = gsap.to(span[videoId], {
+  
+    if (span) {
+      anim = gsap.to(span, {
         onUpdate: () => {
           const progress = Math.ceil(anim.progress() * 100);
-
+  
           if (progress !== currentProgress) {
             currentProgress = progress;
-
-            gsap.to(videoDivRef.current[videoId], {
+  
+            gsap.to(div, {
               width:
                 window.innerWidth < 760
                   ? "10vw"
                   : window.innerWidth < 1200
-                    ? "10vw"
-                    : "4vw",
+                  ? "10vw"
+                  : "4vw",
             });
-
-            gsap.to(span[videoId], {
+  
+            gsap.to(span, {
               width: `${currentProgress}%`,
               backgroundColor: "white",
             });
@@ -114,27 +118,39 @@ const VideoCarousel = () => {
         },
         onComplete: () => {
           if (isPlaying) {
-            gsap.to(videoDivRef.current[videoId], { width: "12px" });
-            gsap.to(span[videoId], { backgroundColor: "#afafaf" });
+            gsap.to(div, { width: "12px" });
+            gsap.to(span, { backgroundColor: "#afafaf" });
           }
         },
       });
-
-      if (videoId === 0) anim.restart();
-
-      const animUpdate = () => {
-        anim.progress(
-          videoRef.current[videoId].currentTime / hightlightsSlides[videoId].videoDuration
-        );
+  
+      if (videoId === 0) {
+        anim.restart();
+      }
+  
+      // ✅ Safe ticker callback
+      animUpdate = () => {
+        const videoEl = videoRef.current[videoId];
+        const slide = hightlightsSlides[videoId];
+  
+        if (videoEl && slide) {
+          anim.progress(videoEl.currentTime / slide.videoDuration);
+        }
       };
-
+  
+      // ✅ Add ticker if playing
       if (isPlaying) {
         gsap.ticker.add(animUpdate);
-      } else {
-        gsap.ticker.remove(animUpdate);
       }
     }
-  }, [videoId, StartPlay]);
+  
+    // ✅ Clean up the ticker
+    return () => {
+      if (animUpdate) {
+        gsap.ticker.remove(animUpdate);
+      }
+    };
+  }, [videoId, StartPlay, isPlaying]);
 
   useEffect(() => {
     if (loadedData.length > 3) {
