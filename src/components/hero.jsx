@@ -18,7 +18,7 @@ const HeroSection = () => {
   }, [prevScrollPos]);
 
   return (
-    <div className="min-h-screen bg-black text-white relative">
+    <div className="min-h-screen bg-black text-white relative" id="home">
       {/* Navbar */}
       <nav className={`w-full transition-all duration-300 bg-transparent backdrop-blur-sm fixed top-0 z-50 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">

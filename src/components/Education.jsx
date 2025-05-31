@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { motion } from "framer-motion";
 import { FaPen, FaVideo, FaFileAlt, FaTimes } from 'react-icons/fa';
 import DeepfakeQuiz from './Quiz';
+import VideoCarousel from "./videoCarousel";
 
 const EducationSection = () => {
   const [showQuiz, setShowQuiz] = useState(false);
+  const [showVideoCarousel, setShowVideoCarousel] = useState(false);
 
   const handleQuizOpen = () => {
     setShowQuiz(true);
@@ -14,17 +16,18 @@ const EducationSection = () => {
     setShowQuiz(false);
   };
 
+  const handleVideoCarouselOpen = () => {
+    setShowVideoCarousel(true);
+  };
+
+  const handleVideoCarouselClose = () => {
+    setShowVideoCarousel(false);
+  };
+
   return (
     <div
-      className="min-h-screen text-white p-8 relative"
+      className="min-h-screen text-white p-8 relative bg-gradient-to-br from-black to-cyan-950"
       id="education"
-      style={{
-        background: `
-          linear-gradient(135deg, #0B1F25 0%, #1A2F33 100%)
-        `,
-        position: "relative"
-      }}
-      
     >
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
@@ -45,19 +48,22 @@ const EducationSection = () => {
               className="text-white text-xl sm:text-2xl cursor-pointer hover:scale-110 transition-transform duration-200" 
               onClick={handleQuizOpen}
             />
-            <span className="text-lg sm:text-xl font-semibold font-['Poppins']">Test your Knowledge</span>
+            <span className="text-xl sm:text-2xl md:text-3xl font-semibold font-['Poppins']">Test your Knowledge</span>
           </div>
 
           {/* Card 2 - Video Playlist */}
           <div className="flex items-center justify-between bg-gradient-to-br from-[#053B39] via-[#086762] to-[#13928E] rounded-xl p-4 sm:p-6 md:p-8 h-16 sm:h-20 md:h-24 w-full shadow-lg hover:shadow-xl transition-all duration-300">
-            <FaVideo className="text-white text-xl sm:text-2xl cursor-pointer hover:scale-110 transition-transform duration-200" />
-            <span className="text-lg sm:text-xl font-semibold font-['Poppins']">Video Playlist</span>
+            <FaVideo 
+              className="text-white text-xl sm:text-2xl cursor-pointer hover:scale-110 transition-transform duration-200" 
+              onClick={handleVideoCarouselOpen}
+            />
+            <span className="text-xl sm:text-2xl md:text-3xl font-semibold font-['Poppins']">Video Playlist</span>
           </div>
 
           {/* Card 3 - Articles & Papers */}
           <div className="flex items-center justify-between bg-gradient-to-br from-[#053B39] via-[#086762] to-[#13928E] rounded-xl p-4 sm:p-6 md:p-8 h-16 sm:h-20 md:h-24 w-full shadow-lg hover:shadow-xl transition-all duration-300">
             <FaFileAlt className="text-white text-xl sm:text-2xl cursor-pointer hover:scale-110 transition-transform duration-200" />
-            <span className="text-lg sm:text-xl font-semibold font-['Poppins']">Articles & Papers</span>
+            <span className="text-xl sm:text-2xl md:text-3xl font-semibold font-['Poppins']">Articles & Papers</span>
           </div>
         </div>
       </div>
@@ -96,6 +102,36 @@ const EducationSection = () => {
             className="relative max-w-4xl w-full max-h-[90vh] overflow-hidden"
           >
             <DeepfakeQuiz onClose={handleQuizClose} />
+          </motion.div>
+        </motion.div>
+      )}
+
+      {/* Video Carousel Modal Popup */}
+      {showVideoCarousel && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-lg"
+        >
+          {/* Close button */}
+          <button
+            onClick={handleVideoCarouselClose}
+            className="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors duration-200 z-10 hover:cursor-pointer"
+          >
+            <FaTimes className="text-2xl" />
+          </button>
+
+          {/* Video Carousel Content */}
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+            className="relative max-w-6xl w-full max-h-[90vh] overflow-hidden"
+          >
+            <VideoCarousel />
           </motion.div>
         </motion.div>
       )}
