@@ -52,7 +52,7 @@ const aboutCards = () => {
       {/* Desktop Layout */}
       <div className="relative w-full   max-w-6xl hidden md:flex flex-col items-center">
         {/* Boxes */}
-        <div className="absolute top-[4vw] left-[9vw] lg:left-[7vw] transform -translate-x-1/3 -translate-y-1/3">
+        <div className="absolute top-[9vw] left-[9vw] lg:left-[7vw] transform -translate-x-1/3 -translate-y-1/3">
           <div className="bg-cyan-700/80 p-4 rounded-md w-64 shadow-lg">
             <p className="text-sm">
               Our platform provides explainable outputs—heatmaps, confidence
@@ -69,7 +69,7 @@ const aboutCards = () => {
           </div>
         </div>
 
-        <div className="absolute top-[4vw] right-[9vw] lg:right-[7vw] transform translate-x-1/3 -translate-y-1/3">
+        <div className="absolute top-[9vw] right-[9vw] lg:right-[7vw] transform translate-x-1/3 -translate-y-1/3">
           <div className="bg-cyan-700/80 p-4 rounded-md w-64 shadow-lg">
             <p className="text-sm">
               Our platform provides explainable outputs—heatmaps, confidence
@@ -86,7 +86,7 @@ const aboutCards = () => {
           </div>
         </div>
 
-        <div className="absolute top-[4vw] left-1/2 transform -translate-x-1/2 -translate-y-full">
+        <div className="absolute top-[10vw] left-1/2 transform -translate-x-1/2 -translate-y-full">
           <div className="bg-cyan-600/80 p-4 rounded-md w-64 shadow-lg">
             <p className="text-sm">
               Our platform provides explainable outputs—heatmaps, confidence
@@ -104,7 +104,7 @@ const aboutCards = () => {
         </div>
 
         {/* Head image */}
-        <div className="z-10 py-20">
+        <div className="z-10 pt-55 pb-20">
           <img
             src="/face.png"
             alt="Wireframe head"
