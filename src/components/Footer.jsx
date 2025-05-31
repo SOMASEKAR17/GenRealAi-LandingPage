@@ -3,7 +3,7 @@ import { FaLinkedin, FaInstagram, FaYoutube } from 'react-icons/fa';
 
 const Footer = () => {
   return (
-    <footer className="w-full bg-gradient-to-br from-[#096459] via-[#137a74] to-[#19b6b6] text-[#cfd8dc] font-['Montserrat'] relative">
+    <footer className="w-full bg-gradient-to-br from-[#096459] via-[#137a74] to-[#19b6b6] text-[#cfd8dc] relative">
       <div className="max-w-7xl mx-auto px-8 py-10">
         <div className="flex flex-col md:flex-row justify-between gap-8">
           {/* Left Section */}

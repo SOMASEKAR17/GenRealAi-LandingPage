@@ -86,7 +86,7 @@ const aboutCards = () => {
           </div>
         </div>
 
-        <div className="absolute top-[15vw] left-1/2 transform -translate-x-1/2 -translate-y-full">
+        <div className="absolute top-[10vw] left-1/2 transform -translate-x-1/2 -translate-y-full">
           <div className="bg-cyan-600/80 p-4 rounded-md w-64 shadow-lg">
             <p className="text-sm">
               Our platform provides explainable outputs—heatmaps, confidence
