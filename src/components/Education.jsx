@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from "framer-motion";
 import { FaPen, FaVideo, FaFileAlt, FaTimes } from 'react-icons/fa';
 import DeepfakeQuiz from './Quiz';
@@ -7,6 +7,21 @@ import VideoCarousel from "./videoCarousel";
 const EducationSection = () => {
   const [showQuiz, setShowQuiz] = useState(false);
   const [showVideoCarousel, setShowVideoCarousel] = useState(false);
+
+  useEffect(() => {
+  const body = document.body;
+  const shouldLockScroll = showQuiz || showVideoCarousel;
+
+  if (shouldLockScroll) {
+    body.classList.add("overflow-hidden");
+  } else {
+    body.classList.remove("overflow-hidden");
+  }
+
+  // Cleanup on unmount
+  return () => body.classList.remove("overflow-hidden");
+}, [showQuiz, showVideoCarousel]);
+
 
   const handleQuizOpen = () => {
     setShowQuiz(true);
@@ -29,44 +44,57 @@ const EducationSection = () => {
       className="min-h-screen text-white p-8 relative bg-gradient-to-br from-black to-cyan-950"
       id="education"
     >
-      <div
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
-        style={{ backgroundImage: 'url(/education.png)' }}
+      <div className="relative z-10 text-white px-4 py-16">
+  {/* Background overlay */}
+  <div
+    className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-10"
+    style={{ backgroundImage: "url(/education.png)" }}
+  />
+
+  {/* Title Section */}
+  <div className="relative z-10 text-center mb-12">
+    <h1 className=" font-bold text-4xl md:text-5xl tracking-wider drop-shadow-lg">
+      Education
+    </h1>
+    <p className=" font-medium text-lg md:text-xl mt-4 text-cyan-100 tracking-wide">
+      Understanding Deepfakes: Learn. Spot. Prevent.
+    </p>
+  </div>
+
+  {/* Card Section */}
+  <div className="relative z-10 max-w-5xl mx-auto grid gap-8">
+    {/* Card 1 */}
+    <div onClick={handleQuizOpen} className="flex gap-2 items-center cursor-pointer justify-between bg-[#001f23] border border-cyan-500 rounded-2xl p-6 shadow-[0_0_20px_rgba(0,255,255,0.15)] hover:shadow-[0_0_30px_rgba(0,255,255,0.25)] transition-all duration-300">
+      <FaPen 
+        className="text-cyan-300 text-3xl hover:scale-110 transition-transform duration-200" 
       />
-      <div className="relative z-10">
-        <h1 className="font-['Poppins'] font-bold text-[39px] leading-[75px] tracking-[0.09em]">
-          Education
-        </h1>
-        <p className="font-['Raleway'] font-medium text-[18px] leading-[40px] tracking-[0.09em] text-gray-200">
-          Understanding Deepfakes: Learn. Spot. Prevent
-        </p>
+      <span className="text-2xl text-cyan-100 tracking-wide">
+        Test your Knowledge
+      </span>
+    </div>
 
-        <div className="mt-12 space-y-8 max-w-7xl mx-auto">
-          {/* Card 1 - Test your Knowledge */}
-          <div className="flex items-center justify-between bg-gradient-to-br from-[#053B39] via-[#086762] to-[#13928E] rounded-xl p-4 sm:p-6 md:p-8 h-16 sm:h-20 md:h-24 w-full shadow-lg hover:shadow-xl transition-all duration-300">
-            <FaPen 
-              className="text-white text-xl sm:text-2xl cursor-pointer hover:scale-110 transition-transform duration-200" 
-              onClick={handleQuizOpen}
-            />
-            <span className="text-xl sm:text-2xl md:text-3xl font-semibold font-['Poppins']">Test your Knowledge</span>
-          </div>
+    {/* Card 2 */}
+    <div onClick={handleVideoCarouselOpen} className="flex gap-2 items-center cursor-pointer justify-between bg-[#001f23] border border-cyan-500 rounded-2xl p-6 shadow-[0_0_20px_rgba(0,255,255,0.15)] hover:shadow-[0_0_30px_rgba(0,255,255,0.25)] transition-all duration-300">
+      <FaVideo 
+        className="text-cyan-300 text-3xl hover:scale-110 transition-transform duration-200" 
+      />
+      <span className="text-2xl  text-cyan-100 tracking-wide">
+        Video Playlist
+      </span>
+    </div>
 
-          {/* Card 2 - Video Playlist */}
-          <div className="flex items-center justify-between bg-gradient-to-br from-[#053B39] via-[#086762] to-[#13928E] rounded-xl p-4 sm:p-6 md:p-8 h-16 sm:h-20 md:h-24 w-full shadow-lg hover:shadow-xl transition-all duration-300">
-            <FaVideo 
-              className="text-white text-xl sm:text-2xl cursor-pointer hover:scale-110 transition-transform duration-200" 
-              onClick={handleVideoCarouselOpen}
-            />
-            <span className="text-xl sm:text-2xl md:text-3xl font-semibold font-['Poppins']">Video Playlist</span>
-          </div>
+    {/* Card 3 */}
+    <div className="flex gap-2 items-center justify-between cursor-pointer bg-[#001f23] border border-cyan-500 rounded-2xl p-6 shadow-[0_0_20px_rgba(0,255,255,0.15)] hover:shadow-[0_0_30px_rgba(0,255,255,0.25)] transition-all duration-300">
+      <FaFileAlt 
+        className="text-cyan-300 text-3xl hover:scale-110 transition-transform duration-200" 
+      />
+      <span className="text-2xl  text-cyan-100 tracking-wide">
+        Articles & Papers
+      </span>
+    </div>
+  </div>
+</div>
 
-          {/* Card 3 - Articles & Papers */}
-          <div className="flex items-center justify-between bg-gradient-to-br from-[#053B39] via-[#086762] to-[#13928E] rounded-xl p-4 sm:p-6 md:p-8 h-16 sm:h-20 md:h-24 w-full shadow-lg hover:shadow-xl transition-all duration-300">
-            <FaFileAlt className="text-white text-xl sm:text-2xl cursor-pointer hover:scale-110 transition-transform duration-200" />
-            <span className="text-xl sm:text-2xl md:text-3xl font-semibold font-['Poppins']">Articles & Papers</span>
-          </div>
-        </div>
-      </div>
 
       {/* Quiz Modal Popup */}
       {showQuiz && (

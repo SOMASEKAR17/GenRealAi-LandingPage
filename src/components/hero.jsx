@@ -11,6 +11,7 @@ const HeroSection = () => {
       const currentScrollPos = window.scrollY;
       setVisible(prevScrollPos > currentScrollPos || currentScrollPos < 10);
       setPrevScrollPos(currentScrollPos);
+      setIsMobileMenuOpen(false)
     };
 
     window.addEventListener('scroll', handleScroll);
