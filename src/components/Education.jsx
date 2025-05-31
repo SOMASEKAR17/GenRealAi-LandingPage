@@ -17,13 +17,14 @@ const EducationSection = () => {
   return (
     <div
       className="min-h-screen text-white p-8 relative"
+      id="education"
       style={{
         background: `
-          radial-gradient(circle at top right, #072B2A 0%, transparent 35%),
-          radial-gradient(circle at bottom left, #072B2A 0%, transparent 17%),
-          linear-gradient(to bottom right, #050607, #081015, #0e1c24)
-        `
+          linear-gradient(135deg, #0B1F25 0%, #1A2F33 100%)
+        `,
+        position: "relative"
       }}
+      
     >
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"

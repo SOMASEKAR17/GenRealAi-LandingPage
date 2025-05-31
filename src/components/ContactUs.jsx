@@ -22,7 +22,7 @@ const ReachOutContact = () => {
   };
 
   return (
-    <div className="w-full bg-no-repeat bg-top bg-[url('/contactus-reachout.png')] bg-cover">
+    <div className="w-full bg-no-repeat bg-top bg-[url('/contactus-reachout.png')] bg-cover" id="contact-us">
       {/* Reach Out Section */}
       <div className="min-h-screen w-full flex items-center justify-center relative bg-no-repeat bg-cover bg-center bg-[url('/ReachOut.png')] px-4">
         <div className="text-center text-white">

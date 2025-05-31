@@ -8,7 +8,7 @@ const TeamSection = () => {
   ];
 
   return (
-    <div className="bg-gradient-to-bl from-black to-cyan-950  from-30%  to-100% text-white px-6 py-16">
+    <div className="bg-gradient-to-bl from-black to-cyan-950  from-30%  to-100% text-white px-6 py-16" id="team">
       {/* Founders Section */}
       <div className="max-w-7xl mx-auto text-center">
         <h2 className="text-3xl md:text-4xl font-bold mb-4">Meet Our Founders</h2>

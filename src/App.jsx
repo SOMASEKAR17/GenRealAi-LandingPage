@@ -12,13 +12,13 @@ import FAQ from "./components/FAQ";
 const App = () => {
   return (
     <div><Hero />
-    <About/>
+    <About id="about"/>
     <CircularCards/>
-    <Team />
-    <News />
-    <Education />
-    <FAQ/>
-    <ContactUs/>
+    <Team  id="team"/>
+    <News id="news"/>
+    <Education id="education"/>
+    <FAQ id="faq"/>
+    <ContactUs id="contact-us"/>
     <Footer/>
     </div>
   )

@@ -18,6 +18,7 @@ const FAQ = () => {
   return (
     <div
       className="w-full min-h-screen relative text-[#e3eaf0] font-['Montserrat']"
+      id="faq"
       style={{
         backgroundImage: `url('/faq.png')`,
         backgroundSize: 'cover',
