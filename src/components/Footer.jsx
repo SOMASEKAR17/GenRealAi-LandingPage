@@ -28,23 +28,23 @@ const Footer = () => {
           {/* Center Section */}
           <div className="min-w-[180px] flex-1">
             <ul className="space-y-3.5">
-              <li className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Home</li>
-              <li className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">About</li>
-              <li className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Features</li>
-              <li className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">News</li>
-              <li className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Education</li>
-              <li className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Frequently Asked Questions</li>
-              <li className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Contact Us</li>
+              <li><a href="#home" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Home</a></li>
+              <li><a href="#about" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">About</a></li>
+              <li><a href="#features" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Features</a></li>
+              <li><a href="#news" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">News</a></li>
+              <li><a href="#education" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Education</a></li>
+              <li><a href="#faq" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Frequently Asked Questions</a></li>
+              <li><a href="#contact-us" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Contact Us</a></li>
             </ul>
           </div>
 
           {/* Right Section */}
           <div className="min-w-[180px] flex-1">
             <ul className="space-y-3.5">
-              <li className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Privacy Policy</li>
-              <li className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Terms of Service</li>
-              <li className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Designer Agreement</li>
-              <li className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Our Team</li>
+              <li><a href="/privacy-policy" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Privacy Policy</a></li>
+              <li><a href="/terms-of-service" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Terms of Service</a></li>
+              <li><a href="/designer-agreement" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Designer Agreement</a></li>
+              <li><a href="#team" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Our Team</a></li>
             </ul>
           </div>
         </div>
@@ -58,4 +58,4 @@ const Footer = () => {
   );
 };
 
-export default Footer; 
+export default Footer;

@@ -16,15 +16,8 @@ const EducationSection = () => {
 
   return (
     <div
-      className="min-h-screen text-white p-8 relative"
+      className="min-h-screen text-white p-8 relative bg-gradient-to-br from-black to-cyan-950"
       id="education"
-      style={{
-        background: `
-          linear-gradient(135deg, #0B1F25 0%, #1A2F33 100%)
-        `,
-        position: "relative"
-      }}
-      
     >
       <div
         className="absolute inset-0 bg-cover bg-center bg-no-repeat opacity-20"
@@ -45,19 +38,19 @@ const EducationSection = () => {
               className="text-white text-xl sm:text-2xl cursor-pointer hover:scale-110 transition-transform duration-200" 
               onClick={handleQuizOpen}
             />
-            <span className="text-lg sm:text-xl font-semibold font-['Poppins']">Test your Knowledge</span>
+            <span className="text-xl sm:text-2xl md:text-3xl font-semibold font-['Poppins']">Test your Knowledge</span>
           </div>
 
           {/* Card 2 - Video Playlist */}
           <div className="flex items-center justify-between bg-gradient-to-br from-[#053B39] via-[#086762] to-[#13928E] rounded-xl p-4 sm:p-6 md:p-8 h-16 sm:h-20 md:h-24 w-full shadow-lg hover:shadow-xl transition-all duration-300">
             <FaVideo className="text-white text-xl sm:text-2xl cursor-pointer hover:scale-110 transition-transform duration-200" />
-            <span className="text-lg sm:text-xl font-semibold font-['Poppins']">Video Playlist</span>
+            <span className="text-xl sm:text-2xl md:text-3xl font-semibold font-['Poppins']">Video Playlist</span>
           </div>
 
           {/* Card 3 - Articles & Papers */}
           <div className="flex items-center justify-between bg-gradient-to-br from-[#053B39] via-[#086762] to-[#13928E] rounded-xl p-4 sm:p-6 md:p-8 h-16 sm:h-20 md:h-24 w-full shadow-lg hover:shadow-xl transition-all duration-300">
             <FaFileAlt className="text-white text-xl sm:text-2xl cursor-pointer hover:scale-110 transition-transform duration-200" />
-            <span className="text-lg sm:text-xl font-semibold font-['Poppins']">Articles & Papers</span>
+            <span className="text-xl sm:text-2xl md:text-3xl font-semibold font-['Poppins']">Articles & Papers</span>
           </div>
         </div>
       </div>
