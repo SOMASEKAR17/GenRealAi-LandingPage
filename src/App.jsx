@@ -6,16 +6,20 @@ import Team from './components/team'
 import News from './components/news'
 import ContactUs from "./components/ContactUs.jsx"
 import Education from "./components/Education";
+import Footer from "./components/Footer";
+import FAQ from "./components/FAQ";
 
 const App = () => {
   return (
     <div><Hero />
-    <About />
-    <CircularCards />
+    <About/>
+    <CircularCards/>
     <Team />
     <News />
     <Education />
-    <ContactUs />
+    <FAQ/>
+    <ContactUs/>
+    <Footer/>
     </div>
   )
 }

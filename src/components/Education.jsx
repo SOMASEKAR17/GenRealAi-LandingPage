@@ -81,7 +81,7 @@ const EducationSection = () => {
           {/* Close button */}
           <button
             onClick={handleQuizClose}
-            className="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors duration-200 z-10"
+            className="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors duration-200 z-10 hover:cursor-pointer"
           >
             <FaTimes className="text-2xl" />
           </button>
