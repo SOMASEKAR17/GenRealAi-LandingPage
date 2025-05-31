@@ -50,9 +50,9 @@ const aboutCards = () => {
       </div>
 
       {/* Desktop Layout */}
-      <div className="relative w-full   max-w-6xl hidden md:flex flex-col items-center">
+      <div className="relative w-full max-w-6xl hidden md:flex flex-col items-center">
         {/* Boxes */}
-        <div className="absolute top-[9vw] left-[9vw] lg:left-[7vw] transform -translate-x-1/3 -translate-y-1/3">
+        <div className="absolute top-[12vw] left-[9vw] lg:left-[7vw] transform -translate-x-1/3 -translate-y-1/3">
           <div className="bg-cyan-700/80 p-4 rounded-md w-64 shadow-lg">
             <p className="text-sm">
               Our platform provides explainable outputs—heatmaps, confidence
@@ -69,11 +69,11 @@ const aboutCards = () => {
           </div>
         </div>
 
-        <div className="absolute top-[9vw] right-[9vw] lg:right-[7vw] transform translate-x-1/3 -translate-y-1/3">
+        <div className="absolute top-[12vw] right-[9vw] lg:right-[7vw] transform translate-x-1/3 -translate-y-1/3">
           <div className="bg-cyan-700/80 p-4 rounded-md w-64 shadow-lg">
             <p className="text-sm">
               Our platform provides explainable outputs—heatmaps, confidence
-              scores, and tampering traces—so teams don’t just get a yes or no,
+              scores, and tampering traces—so teams don't just get a yes or no,
               but a complete picture of how and where the media was altered.
               This level of transparency is vital for legal, regulatory, and
               high-stakes decision-making.
@@ -86,7 +86,7 @@ const aboutCards = () => {
           </div>
         </div>
 
-        <div className="absolute top-[10vw] left-1/2 transform -translate-x-1/2 -translate-y-full">
+        <div className="absolute top-[15vw] left-1/2 transform -translate-x-1/2 -translate-y-full">
           <div className="bg-cyan-600/80 p-4 rounded-md w-64 shadow-lg">
             <p className="text-sm">
               Our platform provides explainable outputs—heatmaps, confidence
