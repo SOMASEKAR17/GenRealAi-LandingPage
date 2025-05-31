@@ -19,8 +19,8 @@ const EducationSection = () => {
       className="min-h-screen text-white p-8 relative"
       style={{
         background: `
-          radial-gradient(circle at top right, #203a43 0%, transparent 25%),
-          radial-gradient(circle at bottom left, #203a43 0%, transparent 17%),
+          radial-gradient(circle at top right, #072B2A 0%, transparent 35%),
+          radial-gradient(circle at bottom left, #072B2A 0%, transparent 17%),
           linear-gradient(to bottom right, #050607, #081015, #0e1c24)
         `
       }}
@@ -37,26 +37,26 @@ const EducationSection = () => {
           Understanding Deepfakes: Learn. Spot. Prevent
         </p>
 
-        <div className="mt-12 space-y-8 max-w-6xl">
+        <div className="mt-12 space-y-8 max-w-7xl mx-auto">
           {/* Card 1 - Test your Knowledge */}
-          <div className="flex items-center justify-between bg-gradient-to-br from-[#053B39] via-[#086762] to-[#13928E] rounded-xl p-10 h-32 w-full shadow-lg hover:shadow-xl transition-all duration-300">
+          <div className="flex items-center justify-between bg-gradient-to-br from-[#053B39] via-[#086762] to-[#13928E] rounded-xl p-4 sm:p-6 md:p-8 h-16 sm:h-20 md:h-24 w-full shadow-lg hover:shadow-xl transition-all duration-300">
             <FaPen 
-              className="text-white text-2xl cursor-pointer hover:scale-110 transition-transform duration-200" 
+              className="text-white text-xl sm:text-2xl cursor-pointer hover:scale-110 transition-transform duration-200" 
               onClick={handleQuizOpen}
             />
-            <span className="text-xl font-semibold">Test your Knowledge</span>
+            <span className="text-lg sm:text-xl font-semibold font-['Poppins']">Test your Knowledge</span>
           </div>
 
           {/* Card 2 - Video Playlist */}
-          <div className="flex items-center justify-between bg-gradient-to-br from-[#053B39] via-[#086762] to-[#13928E] rounded-xl p-10 h-32 w-full shadow-lg hover:shadow-xl transition-all duration-300">
-            <FaVideo className="text-white text-2xl cursor-pointer hover:scale-110 transition-transform duration-200" />
-            <span className="text-xl font-semibold">Video Playlist</span>
+          <div className="flex items-center justify-between bg-gradient-to-br from-[#053B39] via-[#086762] to-[#13928E] rounded-xl p-4 sm:p-6 md:p-8 h-16 sm:h-20 md:h-24 w-full shadow-lg hover:shadow-xl transition-all duration-300">
+            <FaVideo className="text-white text-xl sm:text-2xl cursor-pointer hover:scale-110 transition-transform duration-200" />
+            <span className="text-lg sm:text-xl font-semibold font-['Poppins']">Video Playlist</span>
           </div>
 
           {/* Card 3 - Articles & Papers */}
-          <div className="flex items-center justify-between bg-gradient-to-br from-[#053B39] via-[#086762] to-[#13928E] rounded-xl p-10 h-32 w-full shadow-lg hover:shadow-xl transition-all duration-300">
-            <FaFileAlt className="text-white text-2xl cursor-pointer hover:scale-110 transition-transform duration-200" />
-            <span className="text-xl font-semibold">Articles & Papers</span>
+          <div className="flex items-center justify-between bg-gradient-to-br from-[#053B39] via-[#086762] to-[#13928E] rounded-xl p-4 sm:p-6 md:p-8 h-16 sm:h-20 md:h-24 w-full shadow-lg hover:shadow-xl transition-all duration-300">
+            <FaFileAlt className="text-white text-xl sm:text-2xl cursor-pointer hover:scale-110 transition-transform duration-200" />
+            <span className="text-lg sm:text-xl font-semibold font-['Poppins']">Articles & Papers</span>
           </div>
         </div>
       </div>

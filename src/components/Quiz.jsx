@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, useMotionValue, useTransform } from "framer-motion";
 
 // QuizCard component
@@ -39,10 +39,28 @@ function QuizCard({ children, onSendToBack, sensitivity }) {
 function DeepfakeQuiz({
   randomRotation = true,
   sensitivity = 300,
-  cardDimensions = { width: 400, height: 450 },
   animationConfig = { stiffness: 260, damping: 20 },
   onClose
 }) {
+  const [cardDimensions, setCardDimensions] = useState({ width: 350, height: 400 });
+
+  // Responsive resizing
+  useEffect(() => {
+    function updateCardSize() {
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+
+      let width = Math.min(screenWidth * 0.9, 400);
+      let height = Math.min(screenHeight * 0.65, 480);
+
+      setCardDimensions({ width, height });
+    }
+
+    updateCardSize();
+    window.addEventListener("resize", updateCardSize);
+    return () => window.removeEventListener("resize", updateCardSize);
+  }, []);
+
   const [quizData] = useState([
     {
       id: 1,
@@ -81,7 +99,6 @@ function DeepfakeQuiz({
     },
   ]);
 
-  // Separate arrays for unanswered and answered questions
   const [unansweredCards, setUnansweredCards] = useState(quizData);
   const [answeredCards, setAnsweredCards] = useState([]);
   const [score, setScore] = useState(0);
@@ -100,8 +117,6 @@ function DeepfakeQuiz({
         newCards.unshift(lastCard);
         return newCards;
       });
-      
-      // Reset answer state when moving to a new card
       setAnswered(false);
       setUserAnswer(null);
       setShowExplanation(false);
@@ -119,7 +134,6 @@ function DeepfakeQuiz({
       setScore((prev) => prev + 1);
     }
 
-    // Move answered card to answered array and remove from unanswered
     setTimeout(() => {
       const answeredCard = {
         ...currentCard,
@@ -129,16 +143,14 @@ function DeepfakeQuiz({
 
       setAnsweredCards(prev => [...prev, answeredCard]);
       setUnansweredCards(prev => prev.slice(0, -1));
-      
-      // Reset states for next question
+
       setAnswered(false);
       setUserAnswer(null);
       setShowExplanation(false);
     }, 2000);
   };
 
-  // Check if quiz is completed
-  React.useEffect(() => {
+  useEffect(() => {
     if (unansweredCards.length === 0 && answeredCards.length === quizData.length) {
       setQuizCompleted(true);
     }
@@ -163,12 +175,12 @@ function DeepfakeQuiz({
 
   if (quizCompleted) {
     return (
-      <div className="text-center bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-md rounded-2xl p-8 border border-slate-600/30">
+      <div className="text-center bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-md rounded-2xl p-6 border border-slate-600/30 w-[90vw] max-w-md mx-auto">
         <h2 className="text-3xl font-bold text-white mb-4">Quiz Completed!</h2>
-        <div className={`text-6xl font-bold mb-4 ${getScoreColor()}`}>
+        <div className={`text-5xl font-bold mb-4 ${getScoreColor()}`}>
           {score} / {quizData.length}
         </div>
-        <p className="text-lg text-gray-200 mb-6">
+        <p className="text-base text-gray-200 mb-6">
           {score === quizData.length
             ? "Perfect! You're a deepfake detection expert!"
             : score >= 4
@@ -177,33 +189,15 @@ function DeepfakeQuiz({
             ? "Not bad! Keep practicing to improve your detection skills."
             : "Keep learning! Deepfake detection takes practice."}
         </p>
-        
-        {/* Show review of answered questions */}
-        <div className="mb-6 text-left max-h-40 overflow-y-auto">
-          <h3 className="text-lg font-semibold text-white mb-2">Your Answers:</h3>
-          {answeredCards.map((card, index) => (
-            <div key={card.id} className="text-sm mb-2 p-2 bg-slate-700/50 rounded">
-              <span className="text-gray-300">Q{index + 1}: </span>
-              <span className={card.correct ? "text-emerald-400" : "text-red-400"}>
-                {card.correct ? "Correct" : "Incorrect"}
-              </span>
-              <span className="text-gray-400 ml-2">
-                (You said: {card.userAnswer ? "Deepfake" : "Real"}, 
-                Actual: {card.isDeepfake ? "Deepfake" : "Real"})
-              </span>
-            </div>
-          ))}
-        </div>
-
-        <div className="flex gap-4 justify-center">
+        <div className="flex flex-col gap-4 sm:flex-row justify-center">
           <button
-            className="bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105"
+            className="bg-teal-600 hover:bg-teal-700 text-white px-5 py-2 rounded-lg font-semibold"
             onClick={restartQuiz}
           >
             Take Quiz Again
           </button>
           <button
-            className="bg-gradient-to-r from-slate-600 to-slate-700 hover:from-slate-700 hover:to-slate-800 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 cursor-pointer"
+            className="bg-slate-600 hover:bg-slate-700 text-white px-5 py-2 rounded-lg font-semibold"
             onClick={onClose}
           >
             Close Quiz
@@ -213,23 +207,11 @@ function DeepfakeQuiz({
     );
   }
 
-  // If no more unanswered cards, show completion
-  if (unansweredCards.length === 0) {
-    return (
-      <div className="text-center bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-md rounded-2xl p-8 border border-slate-600/30">
-        <h2 className="text-2xl font-bold text-white mb-4">All questions answered!</h2>
-        <p className="text-gray-200 mb-4">Calculating final score...</p>
-      </div>
-    );
-  }
-
   return (
-    <div className="flex flex-col items-center overflow-hidden">
+    <div className="flex flex-col items-center overflow-hidden w-full">
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-white mb-2">
-          Deepfake Detection Quiz
-        </h2>
-        <div className="text-teal-200 bg-teal-800/30 px-4 py-2 rounded-full backdrop-blur-sm border border-teal-600/30">
+        <h2 className="text-2xl font-bold text-white mb-2">Deepfake Detection Quiz</h2>
+        <div className="text-teal-200 bg-teal-800/30 px-4 py-2 rounded-full border border-teal-600/30 text-sm">
           Questions Left: {unansweredCards.length} | Answered: {answeredCards.length} | Score: {score}
         </div>
       </div>
@@ -253,7 +235,7 @@ function DeepfakeQuiz({
               sensitivity={sensitivity}
             >
               <motion.div
-                className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-md rounded-2xl border border-slate-600/30 overflow-hidden shadow-2xl"
+                className="bg-gradient-to-br from-slate-800/90 to-slate-900/90 backdrop-blur-md rounded-2xl border border-slate-600/30 overflow-hidden shadow-xl"
                 animate={{
                   rotateZ: (unansweredCards.length - index - 1) * 4 + randomRotate,
                   scale: 1 + index * 0.06 - unansweredCards.length * 0.06,
@@ -265,10 +247,7 @@ function DeepfakeQuiz({
                   stiffness: animationConfig.stiffness,
                   damping: animationConfig.damping,
                 }}
-                style={{
-                  width: cardDimensions.width,
-                  height: cardDimensions.height,
-                }}
+                style={cardDimensions}
               >
                 <div className="relative w-full h-full">
                   <img
@@ -276,34 +255,31 @@ function DeepfakeQuiz({
                     alt={`Quiz question ${card.id}`}
                     className="w-full h-3/5 object-cover"
                   />
-
                   {isTopCard && (
                     <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-slate-900/95 to-slate-800/80 p-4 text-center">
-                      <h3 className="text-white text-lg font-semibold mb-3">
+                      <h3 className="text-white text-base font-semibold mb-3">
                         Is this a deepfake?
                       </h3>
-
                       {!answered && (
                         <div className="flex gap-3 justify-center">
                           <button
-                            className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 text-sm"
+                            className="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg text-sm"
                             onClick={() => handleAnswer(false)}
                           >
                             Real Image
                           </button>
                           <button
-                            className="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white px-4 py-2 rounded-lg font-semibold transition-all duration-300 transform hover:scale-105 text-sm"
+                            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm"
                             onClick={() => handleAnswer(true)}
                           >
                             Deepfake
                           </button>
                         </div>
                       )}
-
                       {showExplanation && (
-                        <div className="mt-3">
+                        <div className="mt-3 text-sm">
                           <div
-                            className={`font-bold mb-2 ${
+                            className={`font-bold mb-1 ${
                               userAnswer === currentCard.isDeepfake
                                 ? "text-emerald-400"
                                 : "text-red-400"
@@ -313,7 +289,7 @@ function DeepfakeQuiz({
                               ? "Correct!"
                               : "Incorrect."}
                           </div>
-                          <p className="text-xs text-gray-300">
+                          <p className="text-gray-300 text-xs">
                             {currentCard.explanation}
                           </p>
                         </div>
@@ -332,7 +308,7 @@ function DeepfakeQuiz({
       </div>
 
       <button
-        className="text-sm text-gray-400 underline hover:text-gray-300 cursor-pointer"
+        className="text-sm text-gray-400 underline hover:text-gray-300"
         onClick={onClose}
       >
         Close Quiz
