@@ -2,7 +2,7 @@ import React from "react";
 
 const aboutCards = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-tr  from-black to-cyan-950 text-white flex flex-col items-center justify-center px-4 ">
+    <div className="min-h-screen bg-gradient-to-tr  from-black to-cyan-950 text-white flex flex-col items-center justify-center px-4 " id="features">
       {/* Mobile Layout */}
       <div className="w-full max-w-6xl flex flex-col md:hidden gap-6">
         

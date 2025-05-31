@@ -22,7 +22,7 @@ const NewsCarousel = () => {
 
   return (
     <section className="w-full bg-gradient-to-tl from-black to-cyan-950  from-30%  to-100% py-30 px-4 md:px-12">
-      <div className="max-w-7xl mx-auto text-white">
+      <div className="max-w-7xl mx-auto text-white" id="news">
         <h2 className="text-3xl font-bold mb-2">News & Insights</h2>
         <p className="text-sm text-gray-300 mb-6">
           Combating Misinformation with Technology
