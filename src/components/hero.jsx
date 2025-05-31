@@ -40,24 +40,24 @@ const HeroSection = () => {
             </button>
           </div>
           <ul className="hidden md:flex text-lg gap-8  font-light">
-            <li><a href="#">About</a></li>
-            <li><a href="#">Features</a></li>
-            <li><a href="#">News</a></li>
-            <li><a href="#">Education</a></li>
-            <li><a href="#">FAQ</a></li>
-            <li><a href="#">Contact Us</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#news">News</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact-us">Contact Us</a></li>
           </ul>
         </div>
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
           <ul className="md:hidden px-6 pb-4 space-y-2 bg-transparent">
-            <li><a href="#">About</a></li>
-            <li><a href="#">Features</a></li>
-            <li><a href="#">News</a></li>
-            <li><a href="#">Education</a></li>
-            <li><a href="#">FAQ</a></li>
-            <li><a href="#">Contact Us</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#news">News</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#contact-us">Contact Us</a></li>
           </ul>
         )}
       </nav>

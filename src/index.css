@@ -4,6 +4,9 @@
 .scrollbar-hide {
   scrollbar-width: none;
 }
+html {
+  scroll-behavior: smooth;
+}
 
 /* For WebKit (Chrome, Safari) */
 .scrollbar-hide::-webkit-scrollbar {
