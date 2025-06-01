@@ -45,14 +45,14 @@ const NewsCarousel = () => {
             {newsItems.map((item, index) => (
               <div
                 key={index}
-                className="min-w-[250px] flex-shrink-0 bg-cyan-400 rounded-lg p-3"
+                className="min-w-[280px] sm:min-w-[320px] md:min-w-[350px] lg:min-w-[400px] flex-shrink-0 bg-cyan-400 rounded-lg p-3 sm:p-4"
               >
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="w-full h-40 object-cover rounded"
+                  className="w-full h-32 sm:h-40 md:h-48 object-cover rounded"
                 />
-                <p className="text-sm text-black font-medium mt-2">
+                <p className="text-sm sm:text-base text-black font-medium mt-2 sm:mt-3">
                   {item.title}
                 </p>
               </div>
