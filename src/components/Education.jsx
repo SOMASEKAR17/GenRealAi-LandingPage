@@ -41,7 +41,7 @@ const EducationSection = () => {
 
   return (
     <div
-      className="min-h-screen text-white p-8 relative bg-gradient-to-br from-black to-cyan-950"
+      className="min-h-screen text-white p-8 relative bg-gradient-to-tl from-black to-cyan-950  from-30%  to-100%"
       id="education"
     >
       <div className="relative z-10 text-white px-4 py-16">

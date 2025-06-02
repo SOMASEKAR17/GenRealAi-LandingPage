@@ -14,10 +14,10 @@ const App = () => {
     <div><Hero />
     <About id="about"/>
     <CircularCards/>
-    <Team  id="team"/>
     <News id="news"/>
     <Education id="education"/>
     <FAQ id="faq"/>
+    <Team  id="team"/>
     <ContactUs id="contact-us"/>
     <Footer/>
     </div>
