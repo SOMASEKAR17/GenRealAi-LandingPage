@@ -18,7 +18,7 @@ const FAQ = () => {
   return (
     <div
       id="faq"
-      className="w-full min-h-screen relative text-white bg-gradient-to-br from-black to-cyan-950"
+      className="w-full min-h-screen relative text-white "
       style={{
         backgroundImage: `url('/faq.png')`,
         backgroundSize: 'cover',
@@ -27,7 +27,7 @@ const FAQ = () => {
       }}
     >
       {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-tr from-black to-cyan-950  z-0" />
+      <div className="absolute inset-0 bg-gradient-to-br from-black to-cyan-950  z-0" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10">
         <h2 className=" md:text-5xl mb-12 tracking-wider text-white font-bold text-4xl text-center">
