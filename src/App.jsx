@@ -31,6 +31,7 @@ const App = () => {
         <CircularCards />
         <News id="news" />
         <Education id="education" />
+        <Globe />
         <FAQ id="faq" />
         <Team id="team" />
         <ContactUs id="contact-us" />
