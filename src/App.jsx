@@ -6,6 +6,7 @@ import CircularCards from './components/aboutCards';
 import Team from './components/team';
 import News from './components/news';
 import ContactUs from './components/ContactUs';
+import Globe from "./components/globe";
 import Education from './components/Education';
 import Footer from './components/Footer';
 import FAQ from './components/FAQ';
@@ -31,6 +32,7 @@ const App = () => {
         <CircularCards />
         <News id="news" />
         <Education id="education" />
+        <Globe />
         <FAQ id="faq" />
         <Team id="team" />
         <ContactUs id="contact-us" />
