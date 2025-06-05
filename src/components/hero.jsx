@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import FaceModel from './faceModel.jsx';
+import FaceModel from './roadprop.jsx';
 import { gsap } from 'gsap';
 
 
@@ -41,7 +41,7 @@ const HeroSection = ({ Loaded }) => {
      </div>
 
       {/* Navbar */}
-      <nav className={`w-full transition-all pointer-events-none duration-300 bg-transparent backdrop-blur-sm fixed top-0 z-50 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
+      <nav className={`w-full transition-all duration-300 bg-transparent fixed top-0 z-50 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
           <img src="/logoGenReal.png" alt="GenReal AI" className="h-[15vw] md:h-[10vw] w-[15vw] md:w-[10vw] lg:h-[4vw] lg:w-[4vw]" />
           <div className="md:hidden">
