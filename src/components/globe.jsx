@@ -1,13 +1,31 @@
 import React, { useEffect, useRef } from 'react';
-import * as THREE from "three";
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
-import getStarfield from "./globe-animations/getStarfield.js";
-import { getFresnelMat } from "./globe-animations/getFresnelMat.js";
+import * as THREE from 'three';
+
+// Simple starfield function
+const getStarfield = ({ numStars = 500 }) => {
+  const positions = new Float32Array(numStars * 3);
+  
+  for (let i = 0; i < numStars; i++) {
+    const i3 = i * 3;
+    positions[i3] = (Math.random() - 0.5) * 2000;
+    positions[i3 + 1] = (Math.random() - 0.5) * 2000;
+    positions[i3 + 2] = (Math.random() - 0.5) * 2000;
+  }
+  
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  
+  const material = new THREE.PointsMaterial({
+    color: 0xffffff,
+    size: 2,
+    sizeAttenuation: false,
+  });
+  
+  return new THREE.Points(geometry, material);
+};
 
 const Globe = () => {
   const mountRef = useRef(null);
-  const sceneRef = useRef(null);
-  const rendererRef = useRef(null);
   const animationIdRef = useRef(null);
 
   useEffect(() => {
@@ -25,66 +43,35 @@ const Globe = () => {
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
     renderer.outputColorSpace = THREE.LinearSRGBColorSpace;
     
-    // Store refs for cleanup
-    sceneRef.current = scene;
-    rendererRef.current = renderer;
-    
     // Append to the component's div
     mountRef.current.appendChild(renderer.domElement);
 
     // Earth group setup
     const earthGroup = new THREE.Group();
-    earthGroup.rotation.z = -23.4 * Math.PI / 180;
+    earthGroup.rotation.z = -23.4 * Math.PI / 180; // Earth's axial tilt
     scene.add(earthGroup);
 
-    // Controls
-    const controls = new OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-
-    // Geometry and textures
+    // Geometry and material
     const detail = 12;
-    const loader = new THREE.TextureLoader();
     const geometry = new THREE.IcosahedronGeometry(1, detail);
 
-    // Earth material
+    // Earth material with basic texture
     const material = new THREE.MeshPhongMaterial({
-      map: loader.load("/textures/00_earthmap1k.jpg"),
-      specularMap: loader.load("/textures/02_earthspec1k.jpg"),
-      bumpMap: loader.load("/textures/01_earthbump1k.jpg"),
-      bumpScale: 0.04,
+      color: 0x2233ff,
+      shininess: 100,
     });
+
+    // If you have access to textures, uncomment these lines:
+    // const loader = new THREE.TextureLoader();
+    // material.map = loader.load("/textures/00_earthmap1k.jpg");
+    // material.specularMap = loader.load("/textures/02_earthspec1k.jpg");
+    // material.bumpMap = loader.load("/textures/01_earthbump1k.jpg");
+    // material.bumpScale = 0.04;
 
     const earthMesh = new THREE.Mesh(geometry, material);
     earthGroup.add(earthMesh);
 
-    // City lights
-    const lightsMat = new THREE.MeshBasicMaterial({
-      map: loader.load("/textures/03_earthlights1k.jpg"),
-      blending: THREE.AdditiveBlending,
-    });
-    const lightsMesh = new THREE.Mesh(geometry, lightsMat);
-    earthGroup.add(lightsMesh);
-
-    // Clouds
-    const cloudsMat = new THREE.MeshStandardMaterial({
-      map: loader.load("/textures/04_earthcloudmap.jpg"),
-      transparent: true,
-      opacity: 0.8,
-      blending: THREE.AdditiveBlending,
-      alphaMap: loader.load('/textures/05_earthcloudmaptrans.jpg'),
-    });
-    const cloudsMesh = new THREE.Mesh(geometry, cloudsMat);
-    cloudsMesh.scale.setScalar(1.003);
-    earthGroup.add(cloudsMesh);
-
-    // Atmosphere glow
-    const fresnelMat = getFresnelMat();
-    const glowMesh = new THREE.Mesh(geometry, fresnelMat);
-    glowMesh.scale.setScalar(1.01);
-    earthGroup.add(glowMesh);
-
-    // Stars
+    // Stars background
     const stars = getStarfield({ numStars: 2000 });
     scene.add(stars);
 
@@ -93,19 +80,19 @@ const Globe = () => {
     sunLight.position.set(-2, 0.5, 1.5);
     scene.add(sunLight);
 
+    // Add ambient light for better visibility
+    const ambientLight = new THREE.AmbientLight(0x404040, 0.2);
+    scene.add(ambientLight);
+
     // Animation loop
     function animate() {
       animationIdRef.current = requestAnimationFrame(animate);
 
-      // Rotate earth components
+      // Rotate earth
       earthMesh.rotation.y += 0.002;
-      lightsMesh.rotation.y += 0.002;
-      cloudsMesh.rotation.y += 0.0023;
-      glowMesh.rotation.y += 0.002;
+      
+      // Slowly rotate stars
       stars.rotation.y -= 0.0002;
-
-      // Update controls
-      controls.update();
 
       renderer.render(scene, camera);
     }
@@ -139,12 +126,9 @@ const Globe = () => {
         mountRef.current.removeChild(renderer.domElement);
       }
 
-      // Dispose of geometries, materials, and textures
+      // Dispose of geometries and materials
       geometry.dispose();
       material.dispose();
-      lightsMat.dispose();
-      cloudsMat.dispose();
-      fresnelMat.dispose();
 
       // Dispose of renderer
       renderer.dispose();
@@ -163,7 +147,8 @@ const Globe = () => {
         width: '100%', 
         height: '100vh',
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        backgroundColor: '#000'
       }} 
     />
   );
