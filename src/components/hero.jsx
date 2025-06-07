@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import face from "/facemesh.png";
+import FaceModel from './FaceModel';
 import GeometricAnimation from './GeometricAnimation'; // adjust the path as needed
 
 
@@ -89,12 +89,8 @@ const HeroSection = ({ Loaded }) => {
     {/* Black Gradient Overlay */}
     <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/70 via-black/40 to-black z-20 pointer-events-none" />
 
-    {/* Background Image */}
-    <img
-      src={face}
-      alt="Background"
-      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[520px] object-cover z-10 opacity-80 pointer-events-none"
-    />
+    {/* Background Model */}
+    <FaceModel />
 
       {/* Navbar */}
       <nav className={`w-full transition-all duration-300 bg-transparent fixed top-0 z-50 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
