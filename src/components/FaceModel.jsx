@@ -5,49 +5,42 @@ import { useGLTF } from '@react-three/drei';
 const Face = () => {
   const { scene } = useGLTF('/shewolf/scene.gltf');
   const groupRef = useRef();
+
+  // Track mouse position normalized between -1 and 1
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
 
-  // Mouse tracking
   useEffect(() => {
     const handleMouseMove = (event) => {
-      setMouse({
-        x: (event.clientX / window.innerWidth) * 2 - 1,
-        y: -(event.clientY / window.innerHeight) * 2 + 1,
-      });
+      const x = (event.clientX / window.innerWidth) * 2 - 1;
+      const y = ((event.clientY / window.innerHeight) * 2 - 1);
+      setMouse({ x, y });
     };
+
     window.addEventListener('mousemove', handleMouseMove);
+
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Smooth face movement based on mouse
   useFrame(() => {
-    if (!groupRef.current) return;
-
-    const maxYaw = 0.3; // left-right
-    const maxPitch = 0.3; // up-down
-
-    const targetYaw = mouse.x * maxYaw;
-    const targetPitch = mouse.y * maxPitch;
-
-    groupRef.current.rotation.y += (targetYaw - groupRef.current.rotation.y) * 0.1;
-    groupRef.current.rotation.x += (targetPitch - groupRef.current.rotation.x) * 0.1;
+    if (groupRef.current) {
+      // Rotate model based on mouse position with some easing/smoothing
+      groupRef.current.rotation.y += (mouse.x * 0.3 - groupRef.current.rotation.y) * 0.1;
+      groupRef.current.rotation.x += (mouse.y * 0.15 - groupRef.current.rotation.x) * 0.1;
+    }
   });
 
-  // Adjust model's internal position to center it
   useEffect(() => {
-    scene.traverse((child) => {
-      if (child.isMesh) {
-        child.castShadow = true;
-        child.receiveShadow = true;
-      }
-    });
-
-    // Center the model
-    scene.position.set(0, -10.5, 0); 
-    scene.scale.set(6, 6, 6);
+    // Set initial position, scale, rotation for the scene
+    scene.position.set(0, -11.2, 0);
+    scene.scale.set(6.5, 6.5, 6.5);
+    scene.rotation.set(0, 0.22, 0);
   }, [scene]);
 
-  return <group ref={groupRef}><primitive object={scene} /></group>;
+  return (
+    <group ref={groupRef}>
+      <primitive object={scene} />
+    </group>
+  );
 };
 
 const FaceModel = () => (
