@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
-import face from "/facemesh.png";
-import GeometricAnimation from './GeometricAnimation'; // adjust the path as needed
-
+import GeometricAnimation from './GeometricAnimation';
+import FaceModel from './FaceModel';
 
 const HeroSection = ({ Loaded }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -38,25 +37,19 @@ const HeroSection = ({ Loaded }) => {
 
     const observers = sections.map(id => {
       const section = document.getElementById(id);
-      if (!section) return;
+      if (!section) return null;
 
-      const observer = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) {
-            setActiveSection(id);
-          }
-        },
-        {
-          threshold: 0.4,
+      const observer = new IntersectionObserver(([entry]) => {
+        if (entry.isIntersecting) {
+          setActiveSection(id);
         }
-      );
+      }, { threshold: 0.4 });
+
       observer.observe(section);
       return observer;
     });
 
-    return () => {
-      observers.forEach(observer => observer?.disconnect());
-    };
+    return () => observers.forEach(o => o?.disconnect());
   }, []);
 
   const navLinks = [
@@ -65,7 +58,7 @@ const HeroSection = ({ Loaded }) => {
     { id: 'news', label: 'News' },
     { id: 'education', label: 'Education' },
     { id: 'faq', label: 'FAQ' },
-    { id: 'contact-us', label: 'Contact Us' }
+    { id: 'contact-us', label: 'Contact Us' },
   ];
 
   const getLinkClass = (id) =>
@@ -75,26 +68,17 @@ const HeroSection = ({ Loaded }) => {
 
   return (
     <div className="relative h-screen bg-black text-white overflow-hidden" id="home">
-    
-    {/* Particle Background Animation */}
-    <GeometricAnimation />
+      <GeometricAnimation />
+      <FaceModel />
 
-    {/* Colored Radial Background */}
-    <div className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none"
-      style={{
-        background: "radial-gradient(circle at center, #6EE5F5 0%, #34B8C9 10%, rgba(0, 0, 0, 0.8) 100%)"
-      }}
-    />
-
-    {/* Black Gradient Overlay */}
-    <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/70 via-black/40 to-black z-20 pointer-events-none" />
-
-    {/* Background Image */}
-    <img
-      src={face}
-      alt="Background"
-      className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[400px] h-[520px] object-cover z-10 opacity-80 pointer-events-none"
-    />
+      {/* Background Layers */}
+      <div
+        className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none"
+        style={{
+          background: "radial-gradient(circle at center, #6EE5F5 0%, #34B8C9 10%, rgba(0, 0, 0, 0.8) 100%)"
+        }}
+      />
+      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/70 via-black/40 to-black z-20 pointer-events-none" />
 
       {/* Navbar */}
       <nav className={`w-full transition-all duration-300 bg-transparent fixed top-0 z-50 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
@@ -116,7 +100,6 @@ const HeroSection = ({ Loaded }) => {
             ))}
           </ul>
         </div>
-
         {isMobileMenuOpen && (
           <ul className="md:hidden px-6 pb-4 space-y-2 bg-transparent z-40">
             {navLinks.map(link => (
@@ -128,7 +111,7 @@ const HeroSection = ({ Loaded }) => {
         )}
       </nav>
 
-      {/* Hero Content */}
+      {/* Hero Text */}
       <div className="absolute h-[70vh] inset-0 flex flex-col items-center justify-center text-center z-30">
         <h1 className="text-[10vw] leading-[9vw] md:text-[5vw] lg:leading-[5vw] font-bold">
           Welcome to<br />
@@ -142,7 +125,7 @@ const HeroSection = ({ Loaded }) => {
         </button>
       </div>
 
-      {/* Statistics Section */}
+      {/* Stats Section */}
       <div
         ref={statsRef}
         className="absolute opacity-0 w-full bottom-0 z-40 flex flex-col md:flex-row justify-around items-center px-8 py-4 space-y-6 md:space-y-0 pointer-events-auto"
