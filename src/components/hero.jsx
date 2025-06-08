@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import GeometricAnimation from './GeometricAnimation';
-import FaceModel from './FaceModel';
+import FaceModel from './FaceModel2';
 
 const HeroSection = ({ Loaded }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
