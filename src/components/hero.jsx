@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import GeometricAnimation from './GeometricAnimation';
-import FaceModel from './FaceModel2';
+import FaceModel from './FaceModel3';
 
 const HeroSection = ({ Loaded }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -68,10 +68,11 @@ const HeroSection = ({ Loaded }) => {
 
   return (
     <div className="relative h-screen bg-black text-white overflow-hidden" id="home">
+      {/* Canvas animations */}
       <GeometricAnimation />
       <FaceModel />
 
-      {/* Background Layers */}
+      {/* Background gradient layers */}
       <div
         className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none"
         style={{
@@ -111,8 +112,8 @@ const HeroSection = ({ Loaded }) => {
         )}
       </nav>
 
-      {/* Hero Text */}
-      <div className="absolute h-[70vh] inset-0 flex flex-col items-center justify-center text-center z-30">
+      {/* Hero Text (non-blocking except button) */}
+      <div className="absolute h-[70vh] inset-0 flex flex-col items-center justify-center text-center z-30 pointer-events-none">
         <h1 className="text-[10vw] leading-[9vw] md:text-[5vw] lg:leading-[5vw] font-bold">
           Welcome to<br />
           <span className="bg-gradient-to-r from-[#6EE5F5] via-[#29A3B3] to-[#1397A9] bg-clip-text text-transparent">
