@@ -7,6 +7,7 @@ const Face = () => {
   const { scene } = useGLTF('/RoboFace/scene.gltf');
   const groupRef = useRef();
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const [scale, setScale] = useState({ x: 1.4, y: 1.2, z: 1.2 });
 
   useEffect(() => {
     const handleMouseMove = (event) => {
@@ -19,8 +20,26 @@ const Face = () => {
   }, []);
 
   useEffect(() => {
-    scene.position.set(0, -1.7, 0);
-    scene.scale.set(1.4, 1.2, 1.2);
+    const handleResize = () => {
+      const isSmallDevice = window.innerWidth < 768; // Tailwind's md breakpoint
+      if (isSmallDevice) {
+        setScale({ x: 1, y: 1, z: 1 });
+        scene.position.set(0, -1, 0); // Adjusted position for small screens
+      } else {
+        setScale({ x: 1.4, y: 1.2, z: 1.2 });
+        scene.position.set(0, -1.7, 0); // Position for larger screens
+      }
+    };
+
+    // Set initial scale and position
+    handleResize();
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [scene]);
+
+  useEffect(() => {
+    scene.scale.set(scale.x, scale.y, scale.z);
     scene.rotation.set(0, 0, 0);
 
     scene.traverse((child) => {
@@ -37,7 +56,7 @@ const Face = () => {
         child.parent.add(wireframeMesh);
       }
     });
-  }, [scene]);
+  }, [scene, scale]);
 
   useFrame(() => {
     if (groupRef.current) {
