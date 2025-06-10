@@ -41,8 +41,8 @@ const Face = () => {
 
   useFrame(() => {
     if (groupRef.current) {
-      groupRef.current.rotation.y += (mouse.x * 0.3 - groupRef.current.rotation.y) * 0.1;
-      groupRef.current.rotation.x += (mouse.y * 0.15 - groupRef.current.rotation.x) * 0.1;
+      groupRef.current.rotation.y += (mouse.x * 0.6 - groupRef.current.rotation.y) * 0.1;
+      groupRef.current.rotation.x += (mouse.y * 0.4 - groupRef.current.rotation.x) * 0.1;
     }
   });
 
