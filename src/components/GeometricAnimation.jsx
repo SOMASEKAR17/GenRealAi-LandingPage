@@ -13,7 +13,7 @@ const GeometricAnimation = () => {
 
     const getParticleCount = () => {
       const area = window.innerWidth * window.innerHeight;
-      const baseCount = 200;
+      const baseCount = 150;
       // Reduce particle count on smaller screens
       if (area < 500000) return Math.floor(baseCount * 0.4); // Small screens
       if (area < 1000000) return Math.floor(baseCount * 0.7); // Medium screens

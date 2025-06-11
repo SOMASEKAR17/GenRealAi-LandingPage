@@ -1,6 +1,6 @@
 import React, { Suspense, useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { OrbitControls, useGLTF } from '@react-three/drei';
+import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
 const Face = () => {
@@ -70,6 +70,7 @@ const Face = () => {
 
 const FaceModel = () => (
   <Canvas
+    dpr={[1, 1.5]}
     className="absolute inset-0 pointer-events-none z-20"
     camera={{ position: [0, 0, 5], fov: 35 }}
     shadows
@@ -79,7 +80,7 @@ const FaceModel = () => (
     <Suspense fallback={null}>
       <Face />
     </Suspense>
-    <OrbitControls enableZoom={true} enablePan={true} />
+
   </Canvas>
 );
 
