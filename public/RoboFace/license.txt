@@ -1,0 +1,11 @@
+Model Information:
+* title:	Robo_face (clean up 3d model)
+* source:	https://sketchfab.com/3d-models/robo-face-clean-up-3d-model-490bf64cf5144f4b83947a83679590df
+* author:	abhijithsajikumarsvtm (https://sketchfab.com/abhijithsajikumarsvtm)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Robo_face (clean up 3d model)" (https://sketchfab.com/3d-models/robo-face-clean-up-3d-model-490bf64cf5144f4b83947a83679590df) by abhijithsajikumarsvtm (https://sketchfab.com/abhijithsajikumarsvtm) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

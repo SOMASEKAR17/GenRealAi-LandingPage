@@ -9,6 +9,33 @@ const GeometricAnimation = () => {
 
     const ctx = canvas.getContext('2d');
     let animationId;
+    let particles = [];
+
+    const getParticleCount = () => {
+      const area = window.innerWidth * window.innerHeight;
+      const baseCount = 150;
+      // Reduce particle count on smaller screens
+      if (area < 500000) return Math.floor(baseCount * 0.4); // Small screens
+      if (area < 1000000) return Math.floor(baseCount * 0.7); // Medium screens
+      return baseCount; // Large screens
+    };
+
+    const createParticles = () => {
+      const particleCount = getParticleCount();
+      particles = [];
+      
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.5,
+          vy: (Math.random() - 0.5) * 0.5,
+          size: Math.random() * 3 + 1,
+          opacity: Math.random() * 0.5 + 0.2,
+          hue: Math.random() * 60 + 180,
+        });
+      }
+    };
 
     const resize = () => {
       canvas.width = window.innerWidth;
@@ -16,29 +43,19 @@ const GeometricAnimation = () => {
       
       ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+      
+      // Regenerate particles with new count based on screen size
+      createParticles();
     };
 
     resize();
     window.addEventListener('resize', resize);
 
-    const particles = [];
-    const particleCount = 80;
-
-    for (let i = 0; i < particleCount; i++) {
-      particles.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: (Math.random() - 0.5) * 0.5,
-        size: Math.random() * 3 + 1,
-        opacity: Math.random() * 0.5 + 0.2,
-        hue: Math.random() * 60 + 180,
-      });
-    }
-
     const animate = (time) => {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const particleCount = particles.length;
 
       particles.forEach((particle, index) => {
         particle.x += particle.vx;

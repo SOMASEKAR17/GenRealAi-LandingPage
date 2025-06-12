@@ -68,16 +68,11 @@ const HeroSection = ({ Loaded }) => {
 
   return (
     <div className="relative h-screen bg-black text-white overflow-hidden" id="home">
+      {/* Canvas animations */}
       <GeometricAnimation />
       <FaceModel />
 
-      {/* Background Layers */}
-      <div
-        className="absolute top-0 left-0 w-full h-full z-0 pointer-events-none"
-        style={{
-          background: "radial-gradient(circle at center, #6EE5F5 0%, #34B8C9 10%, rgba(0, 0, 0, 0.8) 100%)"
-        }}
-      />
+    
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/70 via-black/40 to-black z-20 pointer-events-none" />
 
       {/* Navbar */}
@@ -111,9 +106,9 @@ const HeroSection = ({ Loaded }) => {
         )}
       </nav>
 
-      {/* Hero Text */}
-      <div className="absolute h-[70vh] inset-0 flex flex-col items-center justify-center text-center z-30">
-        <h1 className="text-[10vw] leading-[9vw] md:text-[5vw] lg:leading-[5vw] font-bold">
+      {/* Hero Text (non-blocking except button) */}
+      <div className="absolute h-[70vh] inset-0 flex flex-col items-center justify-center text-center z-30 pointer-events-none">
+        <h1 className="text-[11vw] leading-[9vw] md:text-[6vw] lg:leading-[5vw] font-bold">
           Welcome to<br />
           <span className="bg-gradient-to-r from-[#6EE5F5] via-[#29A3B3] to-[#1397A9] bg-clip-text text-transparent">
             GenReal
