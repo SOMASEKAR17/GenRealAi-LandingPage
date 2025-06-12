@@ -1,12 +1,13 @@
 import React, { Suspense, useRef, useEffect, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
+import * as THREE from 'three';
 
 const Face = () => {
-  const { scene } = useGLTF('/shewolf/scene.gltf');
+  const { scene } = useGLTF('/RoboFace/scene.gltf');
   const groupRef = useRef();
-
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
+  const [scale, setScale] = useState({ x: 1.4, y: 1.2, z: 1.2 });
 
   useEffect(() => {
     const handleMouseMove = (event) => {
@@ -14,59 +15,62 @@ const Face = () => {
       const y = (event.clientY / window.innerHeight) * 2 - 1;
       setMouse({ x, y });
     };
-
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
   useEffect(() => {
-    // Set initial transforms
-    scene.position.set(0, -11.4, 0);
-    scene.scale.set(7, 6.5, 6.5);
-    scene.rotation.set(0, 0.22, 0);
+    const handleResize = () => {
+      const isSmallDevice = window.innerWidth < 768; // Tailwind's md breakpoint
+      if (isSmallDevice) {
+        setScale({ x: 1, y: 1, z: 1 });
+        scene.position.set(0, -1, 0); // Adjusted position for small screens
+      } else {
+        setScale({ x: 1.4, y: 1.2, z: 1.2 });
+        scene.position.set(0, -1.7, 0); // Position for larger screens
+      }
+    };
+
+    // Set initial scale and position
+    handleResize();
+    
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, [scene]);
 
-  useFrame(({ clock }) => {
-    const t = clock.getElapsedTime();
+  useEffect(() => {
+    scene.scale.set(scale.x, scale.y, scale.z);
+    scene.rotation.set(0, 0, 0);
 
-    const blinkDuration = 0.25;   
-    const blinkInterval = 4;     
-    const blinkPhase = t % blinkInterval;
+    scene.traverse((child) => {
+      if (child.isMesh && child.geometry) {
+        const wireMaterial = new THREE.MeshBasicMaterial({
+          color: 'grey',
+          wireframe: true,
+        });
 
-    let influence = 0;
-    if (blinkPhase < blinkDuration) {
-      influence = blinkPhase / blinkDuration;  
-    } else if (blinkPhase < blinkDuration * 2) {
-      influence = 1 - (blinkPhase - blinkDuration) / blinkDuration; 
-    } else {
-      influence = 0;
-    }
-
-    const mesh = scene.getObjectByName('Object_7');
-    if (mesh && mesh.morphTargetInfluences && mesh.morphTargetInfluences.length > 0) {
-      // Reset all morph targets to 0
-      for (let i = 0; i < mesh.morphTargetInfluences.length; i++) {
-        mesh.morphTargetInfluences[i] = 0;
+        const wireframeMesh = new THREE.Mesh(child.geometry.clone(), wireMaterial);
+        wireframeMesh.position.copy(child.position);
+        wireframeMesh.rotation.copy(child.rotation);
+        wireframeMesh.scale.copy(child.scale);
+        child.parent.add(wireframeMesh);
       }
-      mesh.morphTargetInfluences[0] = influence;
-    }
+    });
+  }, [scene, scale]);
 
-    // Mouse-follow rotation with easing
+  useFrame(() => {
     if (groupRef.current) {
-      groupRef.current.rotation.y += (mouse.x * 0.3 - groupRef.current.rotation.y) * 0.1;
-      groupRef.current.rotation.x += (mouse.y * 0.15 - groupRef.current.rotation.x) * 0.1;
+      groupRef.current.rotation.y += (mouse.x * 0.6 - groupRef.current.rotation.y) * 0.1;
+      groupRef.current.rotation.x += (mouse.y * 0.4 - groupRef.current.rotation.x) * 0.1;
     }
   });
 
-  return (
-    <group ref={groupRef}>
-      <primitive object={scene} />
-    </group>
-  );
+  return <group ref={groupRef}><primitive object={scene} /></group>;
 };
 
 const FaceModel = () => (
   <Canvas
+    dpr={[1, 1.5]}
     className="absolute inset-0 pointer-events-none z-20"
     camera={{ position: [0, 0, 5], fov: 35 }}
     shadows
@@ -76,6 +80,7 @@ const FaceModel = () => (
     <Suspense fallback={null}>
       <Face />
     </Suspense>
+
   </Canvas>
 );
 
