@@ -3,11 +3,12 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
-const Face = () => {
+const Face = ({ paused }) => {
   const { scene } = useGLTF('/RoboFace/scene.gltf');
   const groupRef = useRef();
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState({ x: 1.4, y: 1.2, z: 1.2 });
+  const wireframesRef = useRef([]);
 
   useEffect(() => {
     const handleMouseMove = (event) => {
@@ -21,67 +22,102 @@ const Face = () => {
 
   useEffect(() => {
     const handleResize = () => {
-      const isSmallDevice = window.innerWidth < 768; // Tailwind's md breakpoint
-      if (isSmallDevice) {
-        setScale({ x: 1, y: 1, z: 1 });
-        scene.position.set(0, -1, 0); // Adjusted position for small screens
-      } else {
-        setScale({ x: 1.4, y: 1.2, z: 1.2 });
-        scene.position.set(0, -1.7, 0); // Position for larger screens
-      }
+      const isSmall = window.innerWidth < 768;
+      setScale(isSmall ? { x: 1, y: 1, z: 1 } : { x: 1.5, y: 1.3, z: 1.3 });
+      scene.position.set(0, isSmall ? -1 : -1.7, 0);
     };
-
-    // Set initial scale and position
     handleResize();
-    
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [scene]);
 
+  // Delay wireframe creation until next frame to ensure transforms are updated
   useEffect(() => {
-    scene.scale.set(scale.x, scale.y, scale.z);
-    scene.rotation.set(0, 0, 0);
+    const id = requestAnimationFrame(() => {
+      scene.scale.set(scale.x, scale.y, scale.z);
+      scene.rotation.set(0, 0, 0);
 
-    scene.traverse((child) => {
-      if (child.isMesh && child.geometry) {
-        const wireMaterial = new THREE.MeshBasicMaterial({
-          color: 'grey',
-          wireframe: true,
-        });
+      const wireframeColor = new THREE.Color('grey');
+      const wireframes = [];
 
-        const wireframeMesh = new THREE.Mesh(child.geometry.clone(), wireMaterial);
-        wireframeMesh.position.copy(child.position);
-        wireframeMesh.rotation.copy(child.rotation);
-        wireframeMesh.scale.copy(child.scale);
-        child.parent.add(wireframeMesh);
-      }
+      scene.traverse((child) => {
+        if (child.isMesh && child.geometry && !child.userData.hasWireframe) {
+          const edges = new THREE.EdgesGeometry(child.geometry);
+          const lineMaterial = new THREE.LineBasicMaterial({
+            color: wireframeColor,
+            transparent: true,
+            opacity: 0.4,
+            depthTest: false,
+          });
+
+          const wireframe = new THREE.LineSegments(edges, lineMaterial);
+
+          wireframe.position.copy(child.position);
+          wireframe.rotation.copy(child.rotation);
+          wireframe.scale.copy(child.scale);
+
+          child.add(wireframe); // attach wireframe to mesh itself
+
+          child.userData.hasWireframe = true;
+          wireframes.push(wireframe);
+        }
+      });
+
+      wireframesRef.current = wireframes;
     });
+
+    return () => {
+      cancelAnimationFrame(id);
+      wireframesRef.current.forEach((line) => {
+        line.geometry.dispose();
+        line.material.dispose();
+        line.parent?.remove(line);
+      });
+      wireframesRef.current = [];
+    };
   }, [scene, scale]);
 
   useFrame(() => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += (mouse.x * 0.6 - groupRef.current.rotation.y) * 0.1;
-      groupRef.current.rotation.x += (mouse.y * 0.4 - groupRef.current.rotation.x) * 0.1;
-    }
+    if (paused || !groupRef.current) return;
+    groupRef.current.rotation.y += (mouse.x * 0.6 - groupRef.current.rotation.y) * 0.1;
+    groupRef.current.rotation.x += (mouse.y * 0.4 - groupRef.current.rotation.x) * 0.1;
   });
 
   return <group ref={groupRef}><primitive object={scene} /></group>;
 };
 
-const FaceModel = () => (
-  <Canvas
-    dpr={[1, 1.5]}
-    className="absolute inset-0 pointer-events-none z-20"
-    camera={{ position: [0, 0, 5], fov: 35 }}
-    shadows
-  >
-    <ambientLight intensity={1} />
-    <directionalLight position={[2, 2, 5]} intensity={1.2} />
-    <Suspense fallback={null}>
-      <Face />
-    </Suspense>
 
-  </Canvas>
-);
+const FaceModel = ({ paused }) => {
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.1 }
+    );
+    const el = document.getElementById('hero-canvas');
+    if (el) observer.observe(el);
+    return () => el && observer.unobserve(el);
+  }, []);
+
+  return (
+    <div id="hero-canvas" className="absolute inset-0 pointer-events-none z-20">
+      {isVisible && (
+        <Canvas
+          dpr={[1, 1.5]}
+          camera={{ position: [0, 0, 5], fov: 35 }}
+          shadows
+          frameloop="always"
+        >
+          <ambientLight intensity={1} />
+          <directionalLight position={[2, 2, 5]} intensity={1.2} />
+          <Suspense fallback={null}>
+            <Face paused={paused} />
+          </Suspense>
+        </Canvas>
+      )}
+    </div>
+  );
+};
 
 export default FaceModel;
