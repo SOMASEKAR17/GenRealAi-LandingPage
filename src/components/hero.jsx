@@ -9,6 +9,8 @@ const HeroSection = ({ Loaded }) => {
   const [visible, setVisible] = useState(true);
   const [activeSection, setActiveSection] = useState('');
   const statsRef = useRef(null);
+  const heroRef = useRef(null);
+  const [isHeroInView, setIsHeroInView] = useState(true);
 
   useEffect(() => {
     if (statsRef.current && Loaded) {
@@ -52,6 +54,19 @@ const HeroSection = ({ Loaded }) => {
     return () => observers.forEach(o => o?.disconnect());
   }, []);
 
+  // Detect HeroSection visibility
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsHeroInView(entry.isIntersecting),
+      { threshold: 0.3 }
+    );
+
+    if (heroRef.current) observer.observe(heroRef.current);
+    return () => {
+      if (heroRef.current) observer.unobserve(heroRef.current);
+    };
+  }, []);
+
   const navLinks = [
     { id: 'about', label: 'About' },
     { id: 'features', label: 'Features' },
@@ -67,15 +82,12 @@ const HeroSection = ({ Loaded }) => {
       : 'text-gray-300 hover:text-white';
 
   return (
-    <div className="relative h-screen bg-black text-white overflow-hidden" id="home">
-      {/* Canvas animations */}
-      <GeometricAnimation />
-      <FaceModel />
+    <div className="relative h-screen bg-black text-white overflow-hidden" id="home" ref={heroRef}>
+      <GeometricAnimation paused={!isHeroInView} />
+      <FaceModel paused={!isHeroInView} />
 
-    
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/70 via-black/40 to-black z-20 pointer-events-none" />
 
-      {/* Navbar */}
       <nav className={`w-full transition-all duration-300 bg-transparent fixed top-0 z-50 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
           <img src="/logoGenReal.png" alt="GenReal AI" className="h-[15vw] md:h-[10vw] w-[15vw] md:w-[10vw] lg:h-[4vw] lg:w-[4vw]" />
@@ -106,7 +118,6 @@ const HeroSection = ({ Loaded }) => {
         )}
       </nav>
 
-      {/* Hero Text (non-blocking except button) */}
       <div className="absolute h-[70vh] inset-0 flex flex-col items-center justify-center text-center z-30 pointer-events-none">
         <h1 className="text-[11vw] leading-[9vw] md:text-[6vw] lg:leading-[5vw] font-bold">
           Welcome to<br />
@@ -120,7 +131,6 @@ const HeroSection = ({ Loaded }) => {
         </button>
       </div>
 
-      {/* Stats Section */}
       <div
         ref={statsRef}
         className="absolute opacity-0 w-full bottom-0 z-40 flex flex-col md:flex-row justify-around items-center px-8 py-4 space-y-6 md:space-y-0 pointer-events-auto"
