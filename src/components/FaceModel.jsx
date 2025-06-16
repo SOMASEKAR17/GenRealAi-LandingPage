@@ -8,7 +8,7 @@ const Face = ({ paused, isVisible }) => {
   const { scene } = useGLTF('/RoboFace/scene.gltf');
   const groupRef = useRef();
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
-  const [scale, setScale] = useState({ x: 1.4, y: 1.2, z: 1.2 });
+  const [scale, setScale] = useState({ x: 1.5, y: 1.2, z: 1.2 });
   const wireframesRef = useRef([]);
   const sharedWireMaterial = useRef(null);
 
@@ -100,14 +100,36 @@ const Face = ({ paused, isVisible }) => {
   // Scale and position adjustment on resize
   useEffect(() => {
     const handleResize = () => {
-      const isSmall = window.innerWidth < 768;
-      setScale(isSmall ? { x: 1, y: 1, z: 1 } : { x: 1.4, y: 1.2, z: 1.2 });
-      scene.position.set(0, isSmall ? -1 : -1.7, 0);
+      const width = window.innerWidth;
+      let newScale, newY;
+  
+      if (width < 480) {
+        // Very small devices
+        newScale = { x: 0.85, y: 0.8, z: 0.8 };
+        newY = -1; 
+      } else if (width < 768) {
+        // Phones and small tablets
+        newScale = { x: 1, y: 0.8, z: 1 };
+        newY = -0.8;
+      } else if (width < 1024) {
+        // Medium tablets
+        newScale = { x: 1.2, y: 1.0, z: 1.2 };
+        newY = -1.4;
+      } else {
+        // Desktops and large screens
+        newScale = { x: 1.5, y: 1.2, z: 1.2 };
+        newY = -1.7;
+      }
+  
+      setScale(newScale);
+      scene.position.set(0, newY, 0);
     };
-    handleResize();
+  
+    handleResize(); // Initial call
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [scene]);
+  
 
   useFrame(() => {
     if (paused || !groupRef.current || !isVisible) return;
