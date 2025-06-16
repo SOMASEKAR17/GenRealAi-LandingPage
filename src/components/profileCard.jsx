@@ -81,8 +81,8 @@ const ProfileCardComponent = ({
         "--pointer-from-center": `${clamp(Math.hypot(percentY - 50, percentX - 50) / 50, 0, 1)}`,
         "--pointer-from-top": `${percentY / 100}`,
         "--pointer-from-left": `${percentX / 100}`,
-        "--rotate-x": `${round(-(centerX / 10))}deg`,
-        "--rotate-y": `${round(centerY / 8)}deg`,
+        "--rotate-x": `${round(-(centerX / 16))}deg`,
+        "--rotate-y": `${round(centerY / 9)}deg`,
       };
 
       Object.entries(properties).forEach(([property, value]) => {
