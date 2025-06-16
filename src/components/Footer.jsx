@@ -1,58 +1,58 @@
 import React from 'react';
 import { FaLinkedin, FaInstagram, FaYoutube } from 'react-icons/fa';
+import logo from '/logoGenReal.png';
 
 const Footer = () => {
   return (
-    <footer className="w-full bg-gradient-to-br from-[#096459] via-[#137a74] to-[#19b6b6] text-[#cfd8dc] relative">
-      <div className="max-w-7xl mx-auto px-8 py-10">
-        <div className="flex flex-col md:flex-row justify-between gap-8">
-          {/* Left Section */}
-          <div className="min-w-[180px] flex-1">
-            <img src="/logoGenReal.png" alt="GenReal.AI Logo" className="w-16 mb-2" />
-            <div className="flex gap-4 mb-2">
-              <a href="#" aria-label="LinkedIn" className="text-white bg-transparent rounded-md p-1.5 text-2xl flex items-center justify-center w-9 h-9 transition-all duration-200 hover:bg-white/10">
-                <FaLinkedin />
-              </a>
-              <a href="#" aria-label="Instagram" className="text-white bg-transparent rounded-md p-1.5 text-2xl flex items-center justify-center w-9 h-9 transition-all duration-200 hover:bg-white/10">
-                <FaInstagram />
-              </a>
-              <a href="#" aria-label="YouTube" className="text-white bg-transparent rounded-md p-1.5 text-2xl flex items-center justify-center w-9 h-9 transition-all duration-200 hover:bg-white/10">
-                <FaYoutube />
-              </a>
-            </div>
-            <div className="text-base">
-              <p>Based in Vellore, Tamil Nadu<br />India</p>
-            </div>
+    <footer className="bg-gradient-to-b from-[#124B41] to-[rgba(43,177,155,0.3)] text-white px-4 pt-6 pb-4">
+      <div className="max-w-screen-xl mx-auto flex flex-col md:flex-row justify-center md:justify-between items-center md:items-start gap-8 md:gap-x-20">
+        {/* Left Section */}
+        <div className="flex-1 min-w-[250px] text-center md:text-left">
+          <img src={logo} alt="GenReal Logo" className="h-16 mb-3 mx-auto md:mx-0" />
+          <div className="flex gap-4 text-xl mb-3 justify-center md:justify-start">
+            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300">
+              <FaLinkedin />
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300">
+              <FaInstagram />
+            </a>
+            <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:text-gray-300">
+              <FaYoutube />
+            </a>
           </div>
-
-          {/* Center Section */}
-          <div className="min-w-[180px] flex-1">
-            <ul className="space-y-3.5">
-              <li><a href="#home" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Home</a></li>
-              <li><a href="#about" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">About</a></li>
-              <li><a href="#features" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Features</a></li>
-              <li><a href="#news" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">News</a></li>
-              <li><a href="#education" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Education</a></li>
-              <li><a href="#faq" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Frequently Asked Questions</a></li>
-              <li><a href="#contact-us" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Contact Us</a></li>
-            </ul>
-          </div>
-
-          {/* Right Section */}
-          <div className="min-w-[180px] flex-1">
-            <ul className="space-y-3.5">
-              <li><a href="/privacy-policy" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Privacy Policy</a></li>
-              <li><a href="/terms-of-service" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Terms of Service</a></li>
-              <li><a href="/designer-agreement" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Designer Agreement</a></li>
-              <li><a href="#team" className="text-[#cfd8dc] text-[1.08rem] cursor-pointer transition-colors duration-200 hover:text-white">Our Team</a></li>
-            </ul>
-          </div>
+          <p className="text-sm">Based in Vellore, Tamil Nadu, India</p>
         </div>
 
-        {/* Bottom Section */}
-        <div className="mt-8 text-base text-[#cfd8dc]">
-          <p>Copyright @ 2025 GenReal - All Rights Reserved</p>
+        {/* Right Section */}
+        <div className="flex-1 min-w-[200px] text-center md:text-right">
+          <ul className="list-none space-y-2">
+            <li>
+              <a href="/privacy" className="text-white hover:underline">
+                Privacy Policy
+              </a>
+            </li>
+            <li>
+              <a href="/terms" className="text-white hover:underline">
+                Terms of Service
+              </a>
+            </li>
+            <li>
+              <a href="/agreement" className="text-white hover:underline">
+                Designer Agreement
+              </a>
+            </li>
+            <li>
+              <a href="/team" className="text-white hover:underline">
+                Our Team
+              </a>
+            </li>
+          </ul>
         </div>
+      </div>
+
+      {/* Bottom Text */}
+      <div className="text-center mt-6 text-sm opacity-70">
+        © 2025 GenReal - All Rights Reserved
       </div>
     </footer>
   );
