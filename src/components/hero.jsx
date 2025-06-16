@@ -88,7 +88,7 @@ const HeroSection = ({ Loaded }) => {
 
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/70 via-black/40 to-black z-20 pointer-events-none" />
 
-      <nav className={`w-full transition-all duration-300 bg-transparent fixed top-0 z-50 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
+      <nav className={`w-full fixed top-0 z-50 transition-transform duration-300 ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
           <img src="/logoGenReal.png" alt="GenReal AI" className="h-[15vw] md:h-[10vw] w-[15vw] md:w-[10vw] lg:h-[4vw] lg:w-[4vw]" />
           <div className="md:hidden">
@@ -118,7 +118,8 @@ const HeroSection = ({ Loaded }) => {
         )}
       </nav>
 
-      <div className="absolute inset-0 flex flex-col items-center justify-start pt-[20vh] text-center z-30 pointer-events-none px-4">
+      <div className="absolute inset-0 flex flex-col items-center justify-start pt-[28vh] sm:pt-[24vh] md:pt-[20vh] text-center z-30 pointer-events-none px-4">
+
         <h1 className="text-[clamp(2.25rem,8vw,4.5rem)] leading-[clamp(2.25rem,7vw,4rem)] text-center font-bold">
           Welcome to<br />
           <span className="bg-gradient-to-r from-[#6EE5F5] via-[#29A3B3] to-[#1397A9] bg-clip-text text-transparent">
