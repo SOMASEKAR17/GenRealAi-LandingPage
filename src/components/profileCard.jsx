@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useCallback, useMemo } from "react";
 import "./ProfileCard.css";
 
 const DEFAULT_BEHIND_GRADIENT =
-  "radial-gradient(farthest-side circle at var(--pointer-x) var(--pointer-y),hsla(266,100%,90%,var(--card-opacity)) 4%,hsla(266,50%,80%,calc(var(--card-opacity)*0.75)) 10%,hsla(266,25%,70%,calc(var(--card-opacity)*0.5)) 50%,hsla(266,0%,60%,0) 100%),radial-gradient(35% 52% at 55% 20%,#00ffaac4 0%,#073aff00 100%),radial-gradient(100% 100% at 50% 50%,#00c1ffff 1%,#073aff00 76%),conic-gradient(from 124deg at 50% 50%,#c137ffff 0%,#07c6ffff 40%,#07c6ffff 60%,#c137ffff 100%)";
+  "radial-gradient(farthest-side circle at var(--pointer-x) var(--pointer-y), hsla(266, 100%, 85%, calc(var(--card-opacity) * 0.7)) 4%, hsla(266, 50%, 70%, calc(var(--card-opacity) * 0.5)) 10%, hsla(266, 25%, 60%, calc(var(--card-opacity) * 0.3)) 50%, hsla(266, 0%, 50%, 0) 100%), radial-gradient(35% 52% at 55% 20%, #00ffaa88 0%, #073aff00 100%), radial-gradient(100% 100% at 50% 50%, #00c1ff88 1%, #073aff00 76%), conic-gradient(from 124deg at 50% 50%, #c137ff99 0%, #07c6ff88 40%, #07c6ff88 60%, #c137ff99 100%)";
 
 const DEFAULT_INNER_GRADIENT =
   "linear-gradient(145deg,#60496e8c 0%,#71C4FF44 100%)";
@@ -81,8 +81,8 @@ const ProfileCardComponent = ({
         "--pointer-from-center": `${clamp(Math.hypot(percentY - 50, percentX - 50) / 50, 0, 1)}`,
         "--pointer-from-top": `${percentY / 100}`,
         "--pointer-from-left": `${percentX / 100}`,
-        "--rotate-x": `${round(-(centerX / 5))}deg`,
-        "--rotate-y": `${round(centerY / 4)}deg`,
+        "--rotate-x": `${round(-(centerX / 16))}deg`,
+        "--rotate-y": `${round(centerY / 9)}deg`,
       };
 
       Object.entries(properties).forEach(([property, value]) => {

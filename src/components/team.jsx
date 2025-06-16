@@ -9,7 +9,7 @@ const TeamSection = () => {
       handle: "xyz_handle",
       status: "Online",
       contactText: "Contact Me",
-      avatarUrl: "", // Add image paths yourself
+      avatarUrl: "",
     },
     {
       name: "xyz",
