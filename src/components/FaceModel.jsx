@@ -104,7 +104,7 @@ const Face = ({ paused, isVisible, disableTracking }) => {
         newScale = { x: 1.3, y: 1, z: 1 };
         newY = -1.4;
       } else {
-        newScale = { x: 1.4, y: 1.1, z: 1.1 };
+        newScale = { x: 1.45, y: 1.15, z: 1.1 };
         newY = -1.6;
       }
 
