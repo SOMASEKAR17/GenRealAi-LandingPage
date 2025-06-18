@@ -4,7 +4,7 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
-const Face = ({ paused, isVisible }) => {
+const Face = ({ paused, isVisible, disableTracking }) => {
   const { scene } = useGLTF('/RoboFace/scene.gltf');
   const groupRef = useRef();
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
@@ -12,7 +12,6 @@ const Face = ({ paused, isVisible }) => {
   const wireframesRef = useRef([]);
   const sharedWireMaterial = useRef(null);
 
-  // Create shared wireframe material once
   useEffect(() => {
     if (!sharedWireMaterial.current) {
       sharedWireMaterial.current = new THREE.MeshBasicMaterial({
@@ -23,7 +22,7 @@ const Face = ({ paused, isVisible }) => {
         side: THREE.DoubleSide
       });
     }
-    
+
     return () => {
       if (sharedWireMaterial.current) {
         sharedWireMaterial.current.dispose();
@@ -33,13 +32,11 @@ const Face = ({ paused, isVisible }) => {
   }, []);
 
   useEffect(() => {
-    // Only create wireframes when visible
     if (!isVisible) return;
-    
+
     scene.scale.set(scale.x, scale.y, scale.z);
     scene.rotation.set(0, 0, 0);
 
-    // Clean up existing wireframes first
     wireframesRef.current.forEach((mesh) => {
       if (mesh.parent) mesh.parent.remove(mesh);
     });
@@ -49,15 +46,11 @@ const Face = ({ paused, isVisible }) => {
 
     scene.traverse((child) => {
       if (child.isMesh && child.geometry && !child.userData.hasWireframe) {
-        // Create wireframe mesh using shared material and original geometry
         const wireframeMesh = new THREE.Mesh(child.geometry, sharedWireMaterial.current);
-        
-        // Copy transform properties exactly
         wireframeMesh.position.copy(child.position);
         wireframeMesh.rotation.copy(child.rotation);
         wireframeMesh.scale.copy(child.scale);
-        
-        // Add wireframe to the same parent as the original mesh
+
         if (child.parent) {
           child.parent.add(wireframeMesh);
           addedWireframes.push(wireframeMesh);
@@ -69,13 +62,11 @@ const Face = ({ paused, isVisible }) => {
     wireframesRef.current = addedWireframes;
 
     return () => {
-      // Cleanup - only remove meshes, don't dispose shared resources
       wireframesRef.current.forEach((mesh) => {
         if (mesh.parent) mesh.parent.remove(mesh);
       });
       wireframesRef.current = [];
-      
-      // Reset userData flags
+
       scene.traverse((child) => {
         if (child.isMesh) {
           child.userData.hasWireframe = false;
@@ -84,52 +75,47 @@ const Face = ({ paused, isVisible }) => {
     };
   }, [scene, scale, isVisible]);
 
-  // Mouse tracking - only when visible
+  // 🔥 Mouse tracking – only if visible and not disabled
   useEffect(() => {
-    if (!isVisible) return;
-    
+    if (!isVisible || disableTracking) return;
+
     const handleMouseMove = (event) => {
       const x = (event.clientX / window.innerWidth) * 2 - 1;
       const y = (event.clientY / window.innerHeight) * 2 - 1;
       setMouse({ x, y });
     };
+
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, [isVisible]);
+  }, [isVisible, disableTracking]);
 
-  // Scale and position adjustment on resize
   useEffect(() => {
     const handleResize = () => {
       const width = window.innerWidth;
       let newScale, newY;
-  
+
       if (width < 480) {
-        // Very small devices
-        newScale = { x: 0.85, y: 0.8, z: 0.8 };
-        newY = -1; 
+        newScale = { x: 0.95, y: 0.8, z: 1 };
+        newY = -0.85;
       } else if (width < 768) {
-        // Phones and small tablets
         newScale = { x: 1, y: 0.8, z: 1 };
-        newY = -0.8;
+        newY = -0.9;
       } else if (width < 1024) {
-        // Medium tablets
-        newScale = { x: 1.2, y: 1.0, z: 1.2 };
+        newScale = { x: 1.3, y: 1, z: 1 };
         newY = -1.4;
       } else {
-        // Desktops and large screens
-        newScale = { x: 1.5, y: 1.2, z: 1.2 };
-        newY = -1.7;
+        newScale = { x: 1.4, y: 1.1, z: 1.1 };
+        newY = -1.6;
       }
-  
+
       setScale(newScale);
       scene.position.set(0, newY, 0);
     };
-  
-    handleResize(); // Initial call
+
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, [scene]);
-  
 
   useFrame(() => {
     if (paused || !groupRef.current || !isVisible) return;
@@ -140,30 +126,24 @@ const Face = ({ paused, isVisible }) => {
   return <group ref={groupRef}><primitive object={scene} /></group>;
 };
 
-const FaceModel = ({ paused }) => {
+const FaceModel = ({ paused, disableTracking }) => {
   const [isVisible, setIsVisible] = useState(false);
   const canvasRef = useRef();
 
-  // Intersection Observer to detect visibility
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
       },
       {
-        threshold: 0.1, // Trigger when 10% of the element is visible
-        rootMargin: '50px' // Start loading 50px before it comes into view
+        threshold: 0.1,
+        rootMargin: '50px'
       }
     );
 
-    if (canvasRef.current) {
-      observer.observe(canvasRef.current);
-    }
-
+    if (canvasRef.current) observer.observe(canvasRef.current);
     return () => {
-      if (canvasRef.current) {
-        observer.unobserve(canvasRef.current);
-      }
+      if (canvasRef.current) observer.unobserve(canvasRef.current);
     };
   }, []);
 
@@ -178,7 +158,9 @@ const FaceModel = ({ paused }) => {
       <ambientLight intensity={1} />
       <directionalLight position={[2, 2, 5]} intensity={1.2} />
       <Suspense fallback={null}>
-        {isVisible && <Face paused={paused} isVisible={isVisible} />}
+        {isVisible && (
+          <Face paused={paused} isVisible={isVisible} disableTracking={disableTracking} />
+        )}
       </Suspense>
     </Canvas>
   );
