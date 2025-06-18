@@ -97,7 +97,7 @@ const HeroSection = ({ Loaded }) => {
 
       <nav className={`w-full fixed top-0 z-50 transition-transform duration-300 bg-black/30 backdrop-blur-md shadow-md ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="flex justify-between items-center px-[4vw] py-4 w-full">
-          <img src="/logoGenReal.png" alt="GenReal AI" className="h-[15vw] md:h-[10vw] w-[15vw] md:w-[10vw] xl:h-[4vw] xl:w-[4vw]" />
+          <img src="/logoGenReal.png" alt="GenReal AI" className="h-[12vw] w-[12vw] sm:h-[8vw] sm:w-[8vw] md:h-[6.5vw] md:w-[6.5vw] lg:h-[6vw] lg:w-[6vw] xl:h-[5vw] xl:w-[5vw]" />
 
           <div className="md:hidden">
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
@@ -128,7 +128,7 @@ const HeroSection = ({ Loaded }) => {
         )}
       </nav>
 
-      <div className="absolute inset-0 flex flex-col items-center justify-start pt-[26vh] sm:pt-[26vh] md:pt-[30vh] text-center z-30 pointer-events-none px-4">
+      <div className="absolute inset-0 flex flex-col items-center justify-start pt-[26vh] sm:pt-[26vh] md:pt-[30vh] xl:pt-[24vh] text-center z-30 pointer-events-none px-4">
         <h1 className="text-[clamp(2.75rem,10vw,5rem)] sm:text-[clamp(3rem,8vw,5.5rem)] lg:text-[5.5rem] xl:text-[6rem] leading-[clamp(2.75rem,7vw,4.5rem)] sm:leading-[clamp(3rem,7vw,5rem)] lg:leading-[5.5rem] text-center font-bold">
           Welcome to<br />
           <span className="bg-gradient-to-r from-[#6EE5F5] via-[#29A3B3] to-[#1397A9] bg-clip-text text-transparent">
