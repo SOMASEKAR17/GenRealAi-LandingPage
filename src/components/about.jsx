@@ -55,9 +55,9 @@ const AboutUsSection = () => {
           </div>
         </div>
 
-        <div className="text-center text-[10vw] md:text-5xl font-bold text-cyan-100 mt-18 mb-6 animate-on-scroll">
+        <h2 className="text-center text-[10vw] md:text-5xl font-bold text-cyan-100 mt-18 mb-6 animate-on-scroll">
           See beyond the surface. Spot Deepfakes easily.
-        </div>
+        </h2>
 
         <div className="flex flex-col md:flex-row-reverse mt-20 items-center md:mr-10 gap-6 animate-on-scroll from-left">
           <div className="min-w-[120px] min-h-[120px] border-2 border-cyan-400 rounded-full flex items-center justify-center text-cyan-400 font-bold text-center">
