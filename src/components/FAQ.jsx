@@ -8,82 +8,129 @@ const faqs = [
   { question: 'When do I use GenReal.ai?', answer: 'Not yet decided.' },
 ];
 
+const styles = {
+  section: {
+    width: '100vw',
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'radial-gradient(ellipse at center, rgba(11, 151, 132, 0.708) 0%, rgba(0,255,255,0.12) 8%, rgba(0,40,50,0.18) 14%, rgba(10,30,35,0.65) 18%, rgba(5,15,20,0.92) 22%, #01080d 32%, #000b10 100%)',
+    color: '#e3eaf0',
+    margin: 0,
+    padding: 0,
+  },
+  title: {
+    color: '#fff',
+    fontSize: '2.8rem',
+    fontWeight: 800,
+    marginBottom: 48,
+    letterSpacing: '2.5px',
+    textAlign: 'center',
+    marginTop: 60,
+  },
+  box: {
+    background: '#000b10',
+    border: '2.5px solid #00ffff',
+    borderRadius: 24,
+    boxShadow: '0 0 32px 4px #00ffff44',
+    padding: '32px 0 32px 0',
+    width: 950,
+    maxWidth: '99vw',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'stretch',
+    justifyContent: 'center',
+  },
+  item: {
+    background: '#000',
+    padding: '28px 40px',
+    borderBottom: '1.5px solid #00ffff',
+    transition: 'background 0.2s',
+  },
+  itemLast: {
+    borderBottom: 'none',
+  },
+  row: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    width: '100%',
+    cursor: 'pointer',
+  },
+  question: {
+    color: '#fff',
+    fontSize: '1.25rem',
+    fontWeight: 500,
+    letterSpacing: '0.2px',
+  },
+  icon: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 40,
+    height: 40,
+    borderRadius: '50%',
+    background: '#fff',
+    color: '#222e36',
+    fontSize: '1.5rem',
+    border: 'none',
+    boxShadow: '0 2px 8px rgba(0,255,255,0.10)',
+    transition: 'transform 0.25s',
+  },
+  iconOpen: {
+    transform: 'rotate(180deg)',
+  },
+  answer: {
+    color: '#b0bec5',
+    fontSize: '1.08rem',
+    padding: '18px 0 0 0',
+    background: '#000',
+    transition: 'max-height 0.2s, opacity 0.2s',
+    width: '100%',
+    display: 'block',
+  },
+};
+
 const FAQ = () => {
   const [openIndex, setOpenIndex] = useState(null);
 
-  const toggleFAQ = (idx) => {
+  const toggleFAQ = idx => {
     setOpenIndex(openIndex === idx ? null : idx);
   };
 
   return (
-    <div
-      id="faq"
-      className="w-full min-h-screen relative text-white "
-      style={{
-        backgroundImage: `url('/faq.png')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
-      {/* Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-black to-cyan-950  z-0" />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-10">
-        <h2 className=" md:text-5xl mb-12 tracking-wider text-white font-bold text-4xl text-center">
-          Frequently Asked Questions
-        </h2>
-
-        <div className="flex flex-col lg:flex-row gap-10 lg:gap-20 items-center lg:items-start">
-          {/* Image Section */}
-          <div className="w-full max-w-[400px] flex justify-center lg:justify-start">
-            <img
-              src="/faq-image.jpg"
-              alt="FAQ Visual"
-              className="w-full h-[320px] object-cover rounded-3xl shadow-[0_0_30px_rgba(0,255,255,0.2)] border border-cyan-500"
-            />
-          </div>
-
-          {/* FAQ List Section */}
-          <div className="w-full flex-1 border-t-2 lg:border-t-0 lg:border-l-2 border-cyan-500/20 pt-8 lg:pt-0 lg:pl-12">
-            <div className="space-y-6">
-              {faqs.map((faq, idx) => (
-                <div
-                  key={idx}
-                  className="bg-[#001f23] border border-cyan-500 rounded-2xl p-5 shadow-[0_0_20px_rgba(0,255,255,0.1)] hover:shadow-[0_0_30px_rgba(0,255,255,0.25)] transition-all duration-300"
-                >
-                  <div
-                    className="flex items-center justify-between cursor-pointer"
-                    onClick={() => toggleFAQ(idx)}
-                  >
-                    <span className="text-lg md:text-xl font-semibold tracking-wide text-cyan-100">
-                      {faq.question}
-                    </span>
-                    <span
-                      className={`flex items-center justify-center w-9 h-9 rounded-full bg-cyan-100 text-[#001f23] text-lg shadow-md transform transition-transform duration-300 ${
-                        openIndex === idx ? 'rotate-180' : ''
-                      }`}
-                    >
-                      <FaChevronDown />
-                    </span>
-                  </div>
-                  <div
-                    className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                      openIndex === idx ? 'max-h-40 mt-4' : 'max-h-0'
-                    }`}
-                  >
-                    <p className="text-cyan-200 text-sm md:text-base">
-                      {faq.answer}
-                    </p>
-                  </div>
-                </div>
-              ))}
+    <div style={styles.section}>
+      <h2 style={styles.title}>Frequently Asked Questions</h2>
+      <div style={styles.box}>
+        {faqs.map((faq, idx) => (
+          <div
+            key={idx}
+            style={{
+              ...styles.item,
+              ...(idx === faqs.length - 1 ? styles.itemLast : {}),
+            }}
+          >
+            <div style={styles.row} onClick={() => toggleFAQ(idx)}>
+              <p style={styles.question}>{faq.question}</p>
+              <span
+                style={{
+                  ...styles.icon,
+                  ...(openIndex === idx ? styles.iconOpen : {}),
+                }}
+              >
+                <FaChevronDown />
+              </span>
             </div>
+            {openIndex === idx && (
+              <p style={styles.answer}>{faq.answer}</p>
+            )}
           </div>
-        </div>
+        ))}
       </div>
     </div>
   );
 };
 
-export default FAQ;
+export default FAQ; 
