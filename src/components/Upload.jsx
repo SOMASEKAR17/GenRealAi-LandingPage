@@ -6,6 +6,7 @@ import Mypc from '/Mypc.png';
 import GoogleDrive from '/GoogleDrive.png';
 import OneDrive from '/OneDrive.png';
 
+
 const UploadModal = () => {
   const [dragging, setDragging] = useState(false);
   const [file, setFile] = useState(null);
@@ -55,7 +56,7 @@ const UploadModal = () => {
   };
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-black relative font-exo text-white overflow-hidden">
+    <div className="w-screen h-screen flex items-center justify-center bg-[#0E1010] relative font-exo text-white overflow-hidden">
       {/* Radial Background Glow */}
       <div className="absolute inset-0 w-full h-full pointer-events-none bg-[radial-gradient(ellipse_75%_140%_at_center,_#175553_0%,_transparent_50%)]" />
 
