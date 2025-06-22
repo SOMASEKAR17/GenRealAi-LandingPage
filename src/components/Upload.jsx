@@ -8,7 +8,7 @@ import Processing from './processing';
 const UploadModal = () => {
   const [dragging, setDragging] = useState(false);
   const [file, setFile] = useState(null);
-  const [showProcessing, setShowProcessing] = useState(false); // ✅ local state to toggle
+  const [showProcessing, setShowProcessing] = useState(false); 
 
   const fileInputRef = useRef(null);
   const modalRef = useRef(null);
@@ -49,7 +49,6 @@ const UploadModal = () => {
     fileInputRef.current?.click();
   };
 
-  // ✅ show Processing if triggered
   if (showProcessing) return <Processing />;
 
   return (
@@ -127,7 +126,7 @@ const UploadModal = () => {
           </button>
           <button
             className="bg-cyan-500 hover:bg-cyan-600 cursor-pointer text-white px-5 py-2 rounded-xl font-bold transition"
-            onClick={() => setShowProcessing(true)} // ✅ show Processing
+            onClick={() => setShowProcessing(true)} 
           >
             Confirm
           </button>

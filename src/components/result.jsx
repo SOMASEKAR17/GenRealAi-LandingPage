@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaArrowRight, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaArrowRight, FaChevronDown } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Result = () => {
@@ -8,26 +8,38 @@ const Result = () => {
   const [showDetailed, setShowDetailed] = useState(false);
   const [expandedModel, setExpandedModel] = useState(0);
 
+  // Scroll lock effect
+  useEffect(() => {
+    if (showDetailed) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [showDetailed]);
+
   const modelResults = [
-    { 
-      label: 'Model 1', 
+    {
+      label: 'Model 1',
       value: 60,
-      details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
+      details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit..."
     },
-    { 
-      label: 'Model 2', 
+    {
+      label: 'Model 2',
       value: 85,
-      details: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis."
+      details: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem..."
     },
-    { 
-      label: 'Model 3', 
+    {
+      label: 'Model 3',
       value: 72,
-      details: "But I must explain to you how all this mistaken idea of denouncing pleasure and praising pain was born and I will give you a complete account of the system."
+      details: "But I must explain to you how all this mistaken idea of..."
     },
-    { 
-      label: 'Model 4', 
+    {
+      label: 'Model 4',
       value: 49,
-      details: "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores."
+      details: "At vero eos et accusamus et iusto odio dignissimos..."
     },
   ];
 
@@ -41,7 +53,6 @@ const Result = () => {
 
   return (
     <div className="w-screen min-h-screen bg-[#0E1010] text-white font-sans relative px-4 sm:px-6 overflow-hidden">
-
       {/* Logo */}
       <img
         src="/logoGenReal.png"
@@ -51,7 +62,6 @@ const Result = () => {
 
       <AnimatePresence mode="wait">
         {!showDetailed ? (
-          // Initial Result View
           <motion.div
             key="initial"
             initial={{ opacity: 1 }}
@@ -68,10 +78,9 @@ const Result = () => {
                   76
                   <span className="text-xs font-medium text-gray-300 mt-1">out of 100</span>
                 </div>
-
                 <h4 className="text-xl font-bold text-white mb-2">Mostly a Deepfake</h4>
                 <p className="text-sm text-gray-300 px-4">
-                  60% of people encountered a deepfake video in the past year. 50% of people encountered a deepfake video in the past year
+                  60% of people encountered a deepfake video in the past year.
                 </p>
               </div>
 
@@ -115,7 +124,6 @@ const Result = () => {
             </div>
           </motion.div>
         ) : (
-          // Detailed Analysis View
           <motion.div
             key="detailed"
             initial={{ opacity: 0, y: 50 }}
@@ -132,16 +140,15 @@ const Result = () => {
               className="flex flex-col md:flex-row rounded-2xl overflow-hidden shadow-xl border border-gray-700 mb-8"
             >
               <div className="w-full md:w-1/3 bg-[#42DED980] p-6 flex flex-col items-center justify-center text-center">
-              <div className="w-28 h-28 bg-[#14534F] rounded-full flex flex-col items-center justify-center text-3xl font-bold mb-4">
-                76
-                <span className="text-xs font-medium text-gray-300 mt-1">out of 100</span>
-              </div>
-
+                <div className="w-28 h-28 bg-[#14534F] rounded-full flex flex-col items-center justify-center text-3xl font-bold mb-4">
+                  76
+                  <span className="text-xs font-medium text-gray-300 mt-1">out of 100</span>
+                </div>
               </div>
               <div className="w-full md:w-2/3 bg-[#3A3A3A] p-6">
                 <h4 className="text-xl font-bold text-white mb-2">Mostly a Deepfake</h4>
                 <p className="text-sm text-gray-300">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis.
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit...
                 </p>
               </div>
             </motion.div>
@@ -153,14 +160,13 @@ const Result = () => {
               transition={{ duration: 0.4, delay: 0.5 }}
             >
               <h2 className="text-2xl font-bold text-white text-center mb-8">Detailed Model Analysis</h2>
-              
               <div className="space-y-4">
                 {modelResults.map((model, index) => (
                   <motion.div
                     key={index}
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: 0.6 + (index * 0.1) }}
+                    transition={{ duration: 0.3, delay: 0.6 + index * 0.1 }}
                     className={`bg-[#2A2A2A] rounded-xl border ${
                       index === 2 ? 'border-[#42DED9]' : 'border-gray-600'
                     } overflow-hidden`}
@@ -177,7 +183,7 @@ const Result = () => {
                         <FaChevronDown className="text-gray-400" />
                       </motion.div>
                     </div>
-                    
+
                     <AnimatePresence>
                       {expandedModel === index && (
                         <motion.div
@@ -226,7 +232,7 @@ const Result = () => {
               <button
                 onClick={() => {
                   setShowDetailed(false);
-                  setExpandedModel(-1); 
+                  setExpandedModel(-1);
                 }}
                 className="bg-[#247875] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#2d8a86] transition cursor-pointer"
               >
