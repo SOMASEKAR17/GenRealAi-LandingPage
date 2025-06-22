@@ -13,6 +13,7 @@ import Footer from './components/Footer';
 import FAQ from './components/FAQ';
 import Upload from './components/upload';
 import Processing from './components/processing';
+import Result from "./components/result";
 
 const Home = ({ isLoaded }) => (
   <div className='z-10' style={{ visibility: isLoaded ? 'visible' : 'hidden' }}>
@@ -49,6 +50,7 @@ const AppContent = () => {
         <Route path="/" element={<Home isLoaded={isLoaded} />} />
         <Route path="/upload" element={<Upload />} />
         <Route path="/processing" element={<Processing/>}/>
+        <Route path="/result" element={<Result/>} />
       </Routes>
     </div>
   );
