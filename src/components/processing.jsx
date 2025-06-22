@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { FaInfoCircle } from 'react-icons/fa';
+import { FaInfoCircle, FaTimes } from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom'; // <-- Add this
+import DeepfakeQuiz from './Quiz'; // <-- Import the quiz
 
 const Processing = () => {
   const [progress, setProgress] = useState(0);
   const [showNotification, setShowNotification] = useState(false);
-  const navigate = useNavigate(); // <-- Hook for navigation
+  const [showQuiz, setShowQuiz] = useState(false); // <-- State to control quiz modal
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -43,11 +43,11 @@ const Processing = () => {
       style={{ backgroundColor: interpolateColor() }}
     >
       {/* Logo */}
-      <div className="relative mb-6 w-40 h-40 rounded-full border-2 border-cyan-400 overflow-hidden">
+      <div className="relative mb-6 w-48 h-48 rounded-full border-2 border-cyan-400 overflow-hidden bg-gray-800">
         <img
           src="/logoGenReal.png"
           alt="GenReal.AI Logo"
-          className="absolute inset-0 w-full h-full object-cover"
+          className="absolute inset-0 w-full h-full object-contain p-4"
         />
       </div>
 
@@ -84,11 +84,49 @@ const Processing = () => {
             </p>
             <button
               className="bg-cyan-500 hover:bg-cyan-600 text-white text-sm px-5 py-2 rounded-full font-semibold"
-              onClick={() => navigate('/quiz')} // <-- Navigate on click
+              onClick={() => setShowQuiz(true)} // <-- Show quiz on click
             >
               Take Quiz
             </button>
           </div>
+        </motion.div>
+      )}
+
+      {/* Quiz Popup Modal */}
+      {showQuiz && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{
+            background: `
+              radial-gradient(circle at top right, rgba(32, 58, 67, 0.8) 0%, transparent 25%),
+              radial-gradient(circle at bottom left, rgba(32, 58, 67, 0.8) 0%, transparent 17%),
+              linear-gradient(to bottom right, rgba(5, 6, 7, 0.9), rgba(8, 16, 21, 0.9), rgba(14, 28, 36, 0.9))
+            `,
+            backdropFilter: 'blur(10px)',
+          }}
+        >
+          {/* Close button */}
+          <button
+            onClick={() => setShowQuiz(false)}
+            className="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors duration-200 z-10 hover:cursor-pointer"
+          >
+            <FaTimes className="text-2xl" />
+          </button>
+
+          {/* Quiz Content */}
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.8, opacity: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+            className="relative max-w-4xl w-full max-h-[90vh] overflow-hidden"
+          >
+            <DeepfakeQuiz onClose={() => setShowQuiz(false)} />
+          </motion.div>
         </motion.div>
       )}
     </div>
