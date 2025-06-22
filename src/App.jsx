@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+
 import Loader from './components/Loader';
 import Hero from './components/hero';
 import About from './components/about';
@@ -9,34 +11,52 @@ import ContactUs from './components/ContactUs';
 import Education from './components/Education';
 import Footer from './components/Footer';
 import FAQ from './components/FAQ';
+import Upload from './components/upload';
 
-const App = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
+const Home = ({ isLoaded }) => (
+  <div className='z-10' style={{ visibility: isLoaded ? 'visible' : 'hidden' }}>
+    <Hero Loaded={isLoaded} />
+    <About id="about" />
+    <CircularCards />
+    <News id="news" />
+    <Education id="education" />
+    <FAQ id="faq" />
+    <Team id="team" />
+    <ContactUs id="contact-us" />
+    <Footer />
+  </div>
+);
 
-  // Scroll to top when loading finishes
+const AppContent = () => {
+  const location = useLocation();
+  const [isLoaded, setIsLoaded] = useState(location.pathname !== '/');
+
   useEffect(() => {
+    // Scroll to top when loading finishes
     if (isLoaded) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
   }, [isLoaded]);
 
+  const isHome = location.pathname === '/';
+
   return (
     <div className='relative bg-black overflow-hidden'>
-      {!isLoaded && (
-        <Loader onFinish={() => setIsLoaded(true)} />
-      )}
-      <div className='z-10' style={{ visibility: isLoaded ? 'visible' : 'hidden' }}>
-        <Hero Loaded={isLoaded} />
-        <About id="about" />
-        <CircularCards />
-        <News id="news" />
-        <Education id="education" />
-        <FAQ id="faq" />
-        <Team id="team" />
-        <ContactUs id="contact-us" />
-        <Footer />
-      </div>
+      {isHome && !isLoaded && <Loader onFinish={() => setIsLoaded(true)} />}
+
+      <Routes>
+        <Route path="/" element={<Home isLoaded={isLoaded} />} />
+        <Route path="/upload" element={<Upload />} />
+      </Routes>
     </div>
+  );
+};
+
+const App = () => {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   );
 };
 
