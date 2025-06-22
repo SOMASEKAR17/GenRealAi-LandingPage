@@ -12,7 +12,6 @@ import Education from './components/Education';
 import Footer from './components/Footer';
 import FAQ from './components/FAQ';
 import Upload from './components/upload';
-import Processing from './components/processing';
 
 const Home = ({ isLoaded }) => (
   <div className='z-10' style={{ visibility: isLoaded ? 'visible' : 'hidden' }}>
@@ -33,7 +32,6 @@ const AppContent = () => {
   const [isLoaded, setIsLoaded] = useState(location.pathname !== '/');
 
   useEffect(() => {
-    // Scroll to top when loading finishes
     if (isLoaded) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -48,7 +46,6 @@ const AppContent = () => {
       <Routes>
         <Route path="/" element={<Home isLoaded={isLoaded} />} />
         <Route path="/upload" element={<Upload />} />
-        <Route path="/processing" element={<Processing/>}/>
       </Routes>
     </div>
   );
