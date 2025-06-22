@@ -1,23 +1,28 @@
 import React, { useEffect, useState } from 'react';
-import { FaInfoCircle, FaTimes } from 'react-icons/fa';
+import { FaInfoCircle, FaTimes, FaEye } from 'react-icons/fa';
 import { motion } from 'framer-motion';
-import DeepfakeQuiz from './Quiz'; // <-- Import the quiz
+import DeepfakeQuiz from './Quiz';
+import Result from "./result";
 
 const Processing = () => {
   const [progress, setProgress] = useState(0);
   const [showNotification, setShowNotification] = useState(false);
-  const [showQuiz, setShowQuiz] = useState(false); // <-- State to control quiz modal
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [processingComplete, setProcessingComplete] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+
 
   useEffect(() => {
     const interval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
           clearInterval(interval);
+          setProcessingComplete(true);
           return 100;
         }
         return prev + 0.5;
       });
-    }, 100);
+    }, 50);
 
     const timeout = setTimeout(() => {
       setShowNotification(true);
@@ -37,6 +42,14 @@ const Processing = () => {
     return `rgb(${interpolated.join(',')})`;
   };
 
+  const handleSeeResults = () => {
+    setShowResult(true);
+  };
+
+  if (showResult) {
+    return <Result />;
+  }
+
   return (
     <div
       className="w-screen h-screen text-white flex flex-col items-center justify-center font-sans relative overflow-hidden px-4"
@@ -52,7 +65,6 @@ const Processing = () => {
         />
       </div>
     </div>
-
 
       {/* Title */}
       <h2 className="text-cyan-400 font-semibold text-sm uppercase tracking-widest mb-2">
@@ -72,6 +84,30 @@ const Processing = () => {
         />
       </div>
 
+      {/* See Results Button - appears when processing is complete */}
+      {processingComplete && (
+        <motion.div
+          initial={{ opacity: 0, y: 20, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          transition={{ 
+            duration: 0.6, 
+            ease: "easeOut",
+            delay: 0.3 
+          }}
+          className="mb-6"
+        >
+          <motion.button
+            onClick={handleSeeResults}
+            className="bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 cursor-pointer hover:to-cyan-700 text-white font-semibold px-8 py-3 rounded-full shadow-lg flex items-center gap-3 transition-all duration-300 transform hover:scale-105"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <FaEye className="text-lg" />
+            See Results
+          </motion.button>
+        </motion.div>
+      )}
+
       {/* Notification box */}
       {showNotification && (
         <motion.div
@@ -87,7 +123,7 @@ const Processing = () => {
             </p>
             <button
               className="bg-cyan-500 hover:bg-cyan-600 text-white text-sm px-5 py-2 rounded-full font-semibold"
-              onClick={() => setShowQuiz(true)} // <-- Show quiz on click
+              onClick={() => setShowQuiz(true)} 
             >
               Take Quiz
             </button>
