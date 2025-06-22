@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import GeometricAnimation from './GeometricAnimation';
 import FaceModel from './FaceModel';
+import { useNavigate } from 'react-router-dom';
+
 
 const HeroSection = ({ Loaded }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -88,6 +90,12 @@ const HeroSection = ({ Loaded }) => {
       ? 'text-white font-semibold border-b-2 border-white'
       : 'text-gray-300 hover:text-white';
 
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+      navigate("/upload");
+    };
+
   return (
     <div className="relative h-screen bg-transparent text-white overflow-hidden" id="home" ref={heroRef}>
       <GeometricAnimation paused={!isHeroInView} disableTracking={isMobile} />
@@ -138,7 +146,9 @@ const HeroSection = ({ Loaded }) => {
         <p className="mt-6 text-sm sm:text-base md:text-lg text-gray-300">
           Discover the new age of security
         </p>
-        <button className="mt-8 bg-orange-400 hover:bg-orange-500 text-white px-6 py-3 rounded-full text-sm font-semibold transition pointer-events-auto">
+        <button className="mt-8 bg-orange-400 hover:bg-orange-500 text-white px-6 py-3 rounded-full text-sm font-semibold transition pointer-events-auto"
+          onClick={handleClick}
+        >
           Get Started →
         </button>
       </div>
