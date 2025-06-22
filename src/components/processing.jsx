@@ -42,14 +42,17 @@ const Processing = () => {
       className="w-screen h-screen text-white flex flex-col items-center justify-center font-sans relative overflow-hidden px-4"
       style={{ backgroundColor: interpolateColor() }}
     >
-      {/* Logo */}
-      <div className="relative mb-6 w-48 h-48 rounded-full border-2 border-cyan-400 overflow-hidden bg-gray-800">
+    {/* Logo */}
+    <div className="relative mb-6">
+      <div className="w-44 h-44 rounded-full bg-[#333232] flex items-center justify-center border-4 border-cyan-400 shadow-lg">
         <img
           src="/logoGenReal.png"
           alt="GenReal.AI Logo"
-          className="absolute inset-0 w-full h-full object-contain p-4"
+          className="w-28 h-28 object-contain"
         />
       </div>
+    </div>
+
 
       {/* Title */}
       <h2 className="text-cyan-400 font-semibold text-sm uppercase tracking-widest mb-2">
