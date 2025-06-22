@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { FaInfoCircle } from 'react-icons/fa';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom'; // <-- Add this
 
 const Processing = () => {
   const [progress, setProgress] = useState(0);
-  const [showNotification, setShowNotification] = useState(false); // start hidden
+  const [showNotification, setShowNotification] = useState(false);
+  const navigate = useNavigate(); // <-- Hook for navigation
 
   useEffect(() => {
-    // Start progress bar
     const interval = setInterval(() => {
       setProgress(prev => {
         if (prev >= 100) {
@@ -20,7 +21,7 @@ const Processing = () => {
 
     const timeout = setTimeout(() => {
       setShowNotification(true);
-    }, 1000);
+    }, 500);
 
     return () => {
       clearInterval(interval);
@@ -83,7 +84,7 @@ const Processing = () => {
             </p>
             <button
               className="bg-cyan-500 hover:bg-cyan-600 text-white text-sm px-5 py-2 rounded-full font-semibold"
-              onClick={() => console.log("Redirecting to quiz...")}
+              onClick={() => navigate('/quiz')} // <-- Navigate on click
             >
               Take Quiz
             </button>
