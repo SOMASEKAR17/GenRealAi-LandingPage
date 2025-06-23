@@ -231,12 +231,11 @@ const Result = () => {
             >
               <button
                 onClick={() => {
-                  setShowDetailed(false);
-                  setExpandedModel(-1);
+                  navigate("/");
                 }}
                 className="bg-[#247875] text-white px-6 py-3 rounded-full font-semibold hover:bg-[#2d8a86] transition cursor-pointer"
               >
-                Back to Summary
+                Back to Home
               </button>
             </motion.div>
           </motion.div>
