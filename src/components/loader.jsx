@@ -21,7 +21,8 @@ const Loader = ({ onFinish }) => {
       onComplete: () => {
         // Animate shrink + fade out
         gsap.to(containerRef.current, {
-          scale:1,
+          scale:1.1,
+          translateY: '6%',
           opacity: 0.5,
           duration: 1,
           ease: 'power2.inOut',

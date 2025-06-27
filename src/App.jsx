@@ -4,7 +4,6 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import Loader from './components/Loader';
 import Hero from './components/hero';
 import About from './components/about';
-import CircularCards from './components/aboutCards';
 import Team from './components/team';
 import News from './components/news';
 import ContactUs from './components/ContactUs';
@@ -13,12 +12,12 @@ import Footer from './components/Footer';
 import FAQ from './components/FAQ';
 import Upload from './components/upload';
 import Processing from './components/processing';
+import LocomotiveScroll from 'locomotive-scroll';
 
 const Home = ({ isLoaded }) => (
   <div className='z-10' style={{ visibility: isLoaded ? 'visible' : 'hidden' }}>
     <Hero Loaded={isLoaded} />
     <About id="about" />
-    <CircularCards />
     <News id="news" />
     <Education id="education" />
     <FAQ id="faq" />
@@ -55,6 +54,7 @@ const AppContent = () => {
 };
 
 const App = () => {
+  const locomotiveScroll = new LocomotiveScroll();
   return (
     <Router>
       <AppContent />
