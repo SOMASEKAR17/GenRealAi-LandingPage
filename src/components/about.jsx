@@ -38,6 +38,7 @@ const AboutUsSection = () => {
 
   return (
     <section
+      data-scroll data-scroll-section data-scroll-speed='-.6'
       ref={sectionRef}
       className="bg-gradient-to-br from-black to-cyan-950 text-white pb-10 lg:pb-30 pt-30 px-6 md:px-20"
     >
