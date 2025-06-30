@@ -32,6 +32,13 @@ const HeroSection = ({ Loaded }) => {
     }
   }, [Loaded]);
 
+  const [animateScroll, setAnimateScroll] = useState(false);
+
+
+    const timer = setTimeout(() => {
+        setAnimateScroll(!animateScroll);
+      }, 2000);
+
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollPos = window.scrollY;
@@ -103,7 +110,7 @@ const HeroSection = ({ Loaded }) => {
 
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/70 via-black/40 to-black z-20 pointer-events-none" />
 
-      <nav className={`w-full fixed top-0 z-50 transition-transform duration-300 bg-black/30 backdrop-blur-md shadow-md ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
+      <nav className={`w-full fixed top-0 z-50 transition-transform duration-300 bg-gradient-to-b from-black to-transparent ${visible ? 'translate-y-0' : '-translate-y-full'}`}>
         <div className="flex justify-between items-center px-[4vw] py-4 w-full">
           <img src="/logoGenReal.png" alt="GenReal AI" className="h-[12vw] w-[12vw] sm:h-[8vw] sm:w-[8vw] md:h-[6.5vw] md:w-[6.5vw] lg:h-[6vw] lg:w-[6vw] xl:h-[5vw] xl:w-[5vw]" />
 
@@ -157,13 +164,14 @@ const HeroSection = ({ Loaded }) => {
       <div
         ref={statsRef}
         className="absolute opacity-0 w-full bottom-0 z-40 flex flex-col md:flex-row justify-around items-center px-8 py-4 space-y-6 md:space-y-0 pointer-events-auto"
-        style={{
-          background: 'linear-gradient(3.22deg, #383838 -10.06%, #3B3636 18.86%, #2E2929 49.72%, #242121 64.62%, #171515 78.13%, #080707 97.6%)',
-        }}
       >
         <div className="text-center">
           <h2 className="text-cyan-400 text-4xl font-bold">80%</h2>
           <p className="text-gray-400 mt-2 text-sm max-w-xs">of companies lack protocols to handle deepfake attacks</p>
+        </div>
+        <div className=' translate-y-6 h-[4vw] flex justify-center items-center flex-col'>
+            <p className={`relative transition-all text-white/60 duration-1000 ease-out ${animateScroll ? 'top-0' : 'top-[20px]'}`}>Scroll Down</p>
+            <div className='w-full -mt-1 z-[99] h-[20px] bg-black'></div>
         </div>
         <div className="text-center">
           <h2 className="text-cyan-400 text-4xl font-bold">60%</h2>
