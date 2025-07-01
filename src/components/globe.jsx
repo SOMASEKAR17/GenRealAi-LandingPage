@@ -1,8 +1,11 @@
 import createGlobe from "cobe";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import * as THREE from "three";
+import getStarfield from "./Starfield"
 
 export default function Globe() {
-  const canvasRef = useRef(null);
+  const globeCanvasRef = useRef(null);
+  const starCanvasRef = useRef(null);
   const globeState = useRef({ phi: 0, theta: 0 });
   const pointerInteraction = useRef({ dragging: false, lastX: 0, velocity: 0 });
   const hovering = useRef(false);
@@ -15,16 +18,46 @@ export default function Globe() {
     { location: [40.7128, -74.006], size: 0.1, label: "New York" },
   ];
 
+  useEffect(() => {
+    // === STARFIELD ===
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1000);
+    camera.position.z = 60;
+
+    const renderer = new THREE.WebGLRenderer({ canvas: starCanvasRef.current, alpha: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+
+    const starfield = getStarfield();
+    scene.add(starfield);
+
+    let animationFrame;
+    const animate = () => {
+      starfield.rotation.y += 0.0005;
+      renderer.render(scene, camera);
+      animationFrame = requestAnimationFrame(animate);
+    };
+    animate();
+
+    window.addEventListener("resize", () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+
+    return () => cancelAnimationFrame(animationFrame);
+  }, []);
+
   useLayoutEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = globeCanvasRef.current;
     const dpr = window.devicePixelRatio || 1;
 
-    function resizeCanvas() {
+    const resizeCanvas = () => {
       const width = canvas.offsetWidth;
       const height = canvas.offsetHeight;
       canvas.width = width * dpr;
       canvas.height = height * dpr;
-    }
+    };
 
     resizeCanvas();
 
@@ -49,9 +82,8 @@ export default function Globe() {
         state.phi = globeState.current.phi;
         state.theta = globeState.current.theta;
 
-        const autoRotationSpeed = 0.001;
         if (!pointerInteraction.current.dragging && !hovering.current) {
-          globeState.current.phi += autoRotationSpeed;
+          globeState.current.phi += 0.001;
         }
 
         globeState.current.phi += pointerInteraction.current.velocity;
@@ -76,7 +108,6 @@ export default function Globe() {
         pointerInteraction.current.velocity = deltaX * 0.0005;
       }
 
-      // ⬇️ Determine if inside globe's circular area
       const cx = rect.width / 2;
       const cy = rect.height / 2;
       const r = Math.min(rect.width, rect.height) / 2;
@@ -85,7 +116,6 @@ export default function Globe() {
       const distFromCenter = Math.sqrt(dx * dx + dy * dy);
       hovering.current = distFromCenter <= r;
 
-      // Marker detection
       let found = null;
       for (const marker of markers) {
         const [lat, lng] = marker.location;
@@ -139,12 +169,27 @@ export default function Globe() {
       }}
     >
       <canvas
-        ref={canvasRef}
+        ref={starCanvasRef}
         style={{
+          position: "absolute",
           width: "100%",
           height: "100%",
+          top: 0,
+          left: 0,
+          zIndex: 0,
+        }}
+      />
+      <canvas
+        ref={globeCanvasRef}
+        style={{
+          position: "absolute",
+          width: "100%",
+          height: "100%",
+          top: 0,
+          left: 0,
           display: "block",
           cursor: "grab",
+          zIndex: 1,
         }}
       />
       {hoveredMarker && (
