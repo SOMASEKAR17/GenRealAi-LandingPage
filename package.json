@@ -14,6 +14,7 @@
     "@react-three/drei": "^10.1.2",
     "@react-three/fiber": "^9.1.2",
     "@tailwindcss/vite": "^4.1.8",
+    "@turf/turf": "^7.2.0",
     "cobe": "^0.6.4",
     "framer-motion": "^12.19.2",
     "gsap": "^3.13.0",
