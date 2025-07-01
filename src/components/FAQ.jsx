@@ -4,22 +4,22 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 const faqs = [
   {
-    question: 'What does GenReal.ai do?',
+    question: 'How does your detection work?',
     answer:
       'G enReal.ai is an AI-powered platform that helps users distinguish between authentic and generated content using advanced deepfake detection algorithms. It provides real-time analysis and educational resources to raise media literacy.',
   },
   {
-    question: 'Why use GenReal.ai?',
+    question: 'What contents can be uploaded?',
     answer:
       'B y using GenReal.ai, users can ensure the integrity of digital content. Whether it’s verifying news, videos, or voice clips, our platform helps prevent misinformation and protects your digital trust.',
   },
   {
-    question: 'What are the pricing options?',
+    question: 'What is the accuracy of the detection model?',
     answer:
       'W e offer flexible pricing for individuals, educators, and enterprises. Starting with a free tier that includes basic features, users can upgrade to Pro for advanced tools, batch analysis, and priority support.',
   },
   {
-    question: 'When do I use GenReal.ai?',
+    question: 'What are the pricing options?',
     answer:
       'G enReal.ai is ideal anytime you come across suspicious digital content — such as social media videos, viral images, or even deepfake threats in business settings. Stay informed and ahead of deception.',
   },
