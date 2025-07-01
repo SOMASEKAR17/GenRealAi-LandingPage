@@ -1,0 +1,16 @@
+{
+  "U.S.": { "fraudRise": "3,000%", "note": "Highest in North America" },
+  "Vietnam": { "fraudRise": "3,050%", "note": "Highest in Asia" },
+  "Philippines": { "fraudRise": "4,500%", "note": "Global highest" },
+  "UAE": { "fraudRise": "2,200%", "note": "Middle East spike" },
+  "South Africa": { "fraudRise": "1,200%", "note": "Africa leader" },
+  "Japan": { "fraudRise": "2,800%", "note": "" },
+  "Romania": { "fraudRise": "1,766%", "note": "" },
+  "Belgium": { "fraudRise": "2,950%", "note": "" },
+  "Slovakia": { "fraudRise": "1,500%", "note": "" },
+  "Mexico": { "fraudRise": "700%", "note": "" },
+  "Brazil": { "fraudRise": "828%", "note": "" },
+  "Argentina": { "fraudRise": "766%", "note": "" },
+  "Canada": { "fraudRise": "477%", "note": "" },
+  "Algeria": { "fraudRise": "1,000%", "note": "" }
+}
