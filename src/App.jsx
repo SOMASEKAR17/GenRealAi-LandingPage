@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
-import Loader from './components/Loader';
+import Loader from './components/loader';
 import Hero from './components/hero';
 import About from './components/about';
 import Team from './components/team';
