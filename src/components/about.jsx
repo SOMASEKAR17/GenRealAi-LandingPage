@@ -44,7 +44,8 @@ const AboutUsSection = () => {
     >
       <div className="max-w-5xl mx-auto" id="about">
         <p className="text-lg md:text-xl font-semibold leading-loose animate-on-scroll from-left">
-          We aim to build a safer digital world where trust is <strong>verifiable</strong>. Whether you're protecting customer onboarding, moderating user content, or safeguarding public communications, <span className="text-cyan-400 font-semibold">GenReal.ai</span> helps you stay ahead of deepfake threats.
+          Our mission is to assist in creating a safer, more reliable digital environment where trust isn’t compromised. Whether you’re moderating user content or safeguarding public communications,  <span className="text-cyan-400 font-semibold">GenReal.ai</span> is here to help you lead with confidence.
+
         </p>
 
         <div className="flex flex-col md:flex-row items-center gap-6 mt-12 animate-on-scroll from-right">
@@ -65,7 +66,8 @@ const AboutUsSection = () => {
             What Makes <br /> Us Unique
           </div>
           <div className="border-2 border-cyan-400 rounded-xl p-4 leading-relaxed max-w-xl">
-            We offer a robust suite of tools, including real-time APIs, batch processing systems, and a full-featured platform tailored to industries like fintech, media, law enforcement, and social media. Our solutions detect visual and audio manipulation using cutting-edge deep learning, enabling high-speed and high-accuracy verification of user-generated and public content.
+            The algorithms, accuracy and the real-time detection at scale makes our services ideal for detecting the reliability of live video streams, social media moderation, and virtual conferencing tools.  Beyond tech, we’re also committed to fighting misinformation and helping the public be more educated on deepfake technology.
+
           </div>
         </div>
       </div>
