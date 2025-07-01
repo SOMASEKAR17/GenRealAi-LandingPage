@@ -3,7 +3,10 @@ import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 export default function Globe() {
   const canvasRef = useRef(null);
-  const globeState = useRef({ phi: 0 });
+  const globeState = useRef({ phi: 0, theta: 0 });
+  const pointerInteraction = useRef({ dragging: false, lastX: 0, velocity: 0 });
+  const hovering = useRef(false);
+
   const [hoveredMarker, setHoveredMarker] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
 
@@ -23,14 +26,14 @@ export default function Globe() {
       canvas.height = height * dpr;
     }
 
-    resizeCanvas(); // Set correct canvas size
+    resizeCanvas();
 
     const globe = createGlobe(canvas, {
       devicePixelRatio: dpr,
       width: canvas.width,
       height: canvas.height,
       phi: 0,
-      theta: 0,
+      theta: 0.3,
       dark: 1,
       diffuse: 1.2,
       mapSamples: 16000,
@@ -44,23 +47,48 @@ export default function Globe() {
       })),
       onRender: (state) => {
         state.phi = globeState.current.phi;
-        globeState.current.phi += 0.001;
+        state.theta = globeState.current.theta;
+
+        const autoRotationSpeed = 0.001;
+        if (!pointerInteraction.current.dragging && !hovering.current) {
+          globeState.current.phi += autoRotationSpeed;
+        }
+
+        globeState.current.phi += pointerInteraction.current.velocity;
+        pointerInteraction.current.velocity *= 0.95;
       },
     });
 
-    const handleMouseMove = (event) => {
-      const rect = canvas.getBoundingClientRect();
-      const mouseX = event.clientX - rect.left;
-      const mouseY = event.clientY - rect.top;
+    const handleMouseDown = (e) => {
+      pointerInteraction.current.dragging = true;
+      pointerInteraction.current.lastX = e.clientX;
+    };
 
+    const handleMouseMove = (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const mouseX = e.clientX - rect.left;
+      const mouseY = e.clientY - rect.top;
+
+      if (pointerInteraction.current.dragging) {
+        const deltaX = e.clientX - pointerInteraction.current.lastX;
+        pointerInteraction.current.lastX = e.clientX;
+        globeState.current.phi += deltaX * 0.005;
+        pointerInteraction.current.velocity = deltaX * 0.0005;
+      }
+
+      // ⬇️ Determine if inside globe's circular area
       const cx = rect.width / 2;
       const cy = rect.height / 2;
       const r = Math.min(rect.width, rect.height) / 2;
+      const dx = mouseX - cx;
+      const dy = mouseY - cy;
+      const distFromCenter = Math.sqrt(dx * dx + dy * dy);
+      hovering.current = distFromCenter <= r;
 
+      // Marker detection
       let found = null;
       for (const marker of markers) {
         const [lat, lng] = marker.location;
-
         const latRad = (lat * Math.PI) / 180;
         const lngRad = (lng * Math.PI) / 180 + globeState.current.phi;
 
@@ -68,7 +96,6 @@ export default function Globe() {
         const y = Math.sin(latRad);
         const z = Math.cos(latRad) * Math.cos(lngRad);
 
-        // 2D projection
         const screenX = cx + x * r;
         const screenY = cy - y * r;
 
@@ -83,14 +110,22 @@ export default function Globe() {
       }
 
       setHoveredMarker(found);
-      setTooltipPos({ x: event.clientX, y: event.clientY });
+      setTooltipPos({ x: e.clientX, y: e.clientY });
     };
 
+    const handleMouseUp = () => {
+      pointerInteraction.current.dragging = false;
+    };
+
+    canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
 
     return () => {
       globe.destroy();
+      canvas.removeEventListener("mousedown", handleMouseDown);
       canvas.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
     };
   }, []);
 
@@ -109,6 +144,7 @@ export default function Globe() {
           width: "100%",
           height: "100%",
           display: "block",
+          cursor: "grab",
         }}
       />
       {hoveredMarker && (
