@@ -3,23 +3,18 @@ import * as THREE from "three";
 
 export default function ThreeGlobe() {
   const mountRef = useRef(null);
-  const [isHovering, setIsHovering] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
   const [containerSize, setContainerSize] = useState({ width: 800, height: 600 });
+  const [countryData, setCountryData] = useState({});
 
   const sceneRef = useRef(null);
   const cameraRef = useRef(null);
   const rendererRef = useRef(null);
   const raycasterRef = useRef(new THREE.Raycaster());
   const mouseRef = useRef(new THREE.Vector2());
-  const countryLinesRef = useRef([]);
-  const [countryData] = useState({
-    "United States": { fraudRise: "15%", note: "Increase in online fraud" },
-    "China": { fraudRise: "8%", note: "Mobile payment fraud rising" },
-    "India": { fraudRise: "22%", note: "Digital fraud surge" },
-    "Brazil": { fraudRise: "18%", note: "Banking fraud increase" }
-  });
+  const countryMeshesRef = useRef([]); // Used for raycasting
+  const countryLinesRef = useRef([]);  // Used for visible lines
 
   useEffect(() => {
     const handleResize = () => {
@@ -34,7 +29,14 @@ export default function ThreeGlobe() {
   }, []);
 
   useEffect(() => {
-    if (!containerSize.width || !containerSize.height) return;
+    fetch("/country_data.json")
+      .then((res) => res.json())
+      .then(setCountryData)
+      .catch((err) => console.error("Failed to load fraud data:", err));
+  }, []);
+
+  useEffect(() => {
+    if (!containerSize.width || !containerSize.height || !countryData) return;
 
     const width = containerSize.width;
     const height = containerSize.height;
@@ -54,9 +56,7 @@ export default function ThreeGlobe() {
     rendererRef.current = renderer;
 
     if (mountRef.current) {
-      while (mountRef.current.firstChild) {
-        mountRef.current.removeChild(mountRef.current.firstChild);
-      }
+      mountRef.current.innerHTML = "";
       mountRef.current.appendChild(renderer.domElement);
     }
 
@@ -65,7 +65,6 @@ export default function ThreeGlobe() {
       new THREE.MeshBasicMaterial({ color: 0x111133, transparent: true, opacity: 0.3 })
     );
     scene.add(globe);
-
     scene.add(new THREE.AmbientLight(0xffffff, 1.2));
 
     const latLngToVector3 = (lat, lng, r = radius + 0.01) => {
@@ -94,8 +93,28 @@ export default function ThreeGlobe() {
             const material = new THREE.LineBasicMaterial({ color });
             const line = new THREE.Line(geometry, material);
             line.userData.countryName = name;
-            countryLinesRef.current.push(line);
             scene.add(line);
+            countryLinesRef.current.push(line);
+
+            // For raycasting: create flat mesh on YZ plane (orthographic)
+            if (points.length >= 3) {
+              const shape = new THREE.Shape();
+              shape.moveTo(points[0].x, points[0].y);
+              for (let i = 1; i < points.length; i++) {
+                shape.lineTo(points[i].x, points[i].y);
+              }
+
+              const shapeGeometry = new THREE.ShapeGeometry(shape);
+              const invisibleMaterial = new THREE.MeshBasicMaterial({
+                visible: false,
+                side: THREE.DoubleSide,
+              });
+              const mesh = new THREE.Mesh(shapeGeometry, invisibleMaterial);
+              mesh.userData.countryName = name;
+              mesh.position.z = points[0].z; // approximate curve depth
+              scene.add(mesh);
+              countryMeshesRef.current.push(mesh);
+            }
           });
         };
 
@@ -109,34 +128,31 @@ export default function ThreeGlobe() {
       .then(drawGeoJSONBorders)
       .catch((err) => console.error("Failed to load GeoJSON:", err));
 
-    // Mouse interactions
+    // Drag Interaction - Only horizontal
     let isDragging = false;
-    let previousMousePosition = { x: 0, y: 0 };
-    let targetRotation = { x: 0, y: 0 };
-    let currentRotation = { x: 0, y: 0 };
+    let lastMouseX = 0;
+    let rotationY = 0;
+    let autoRotate = true;
 
     const handleMouseDown = (e) => {
       isDragging = true;
-      previousMousePosition = { x: e.clientX, y: e.clientY };
+      lastMouseX = e.clientX;
+      autoRotate = false;
     };
 
     const handleMouseMove = (e) => {
-      const rect = renderer.domElement.getBoundingClientRect();
-      mouseRef.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      mouseRef.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-
       if (isDragging) {
-        const deltaX = e.clientX - previousMousePosition.x;
-        const deltaY = e.clientY - previousMousePosition.y;
-        targetRotation.y += deltaX * 0.005;
-        targetRotation.x += deltaY * 0.005;
-        targetRotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotation.x));
-        previousMousePosition = { x: e.clientX, y: e.clientY };
+        const deltaX = e.clientX - lastMouseX;
+        rotationY += deltaX * 0.005;
+        lastMouseX = e.clientX;
       }
     };
 
     const handleMouseUp = () => {
       isDragging = false;
+      setTimeout(() => {
+        autoRotate = true;
+      }, 500);
     };
 
     const handleClick = (e) => {
@@ -146,7 +162,7 @@ export default function ThreeGlobe() {
       mouseRef.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
 
       raycasterRef.current.setFromCamera(mouseRef.current, camera);
-      const intersects = raycasterRef.current.intersectObjects(countryLinesRef.current);
+      const intersects = raycasterRef.current.intersectObjects(countryMeshesRef.current);
 
       if (intersects.length > 0) {
         const countryName = intersects[0].object.userData.countryName;
@@ -160,32 +176,19 @@ export default function ThreeGlobe() {
       }
     };
 
-    const handleWheel = (e) => {
-      e.preventDefault();
-      camera.position.z += e.deltaY * 0.002;
-      camera.position.z = Math.max(1.8, Math.min(6, camera.position.z));
-    };
-
     const canvas = renderer.domElement;
     canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mouseup", handleMouseUp);
     canvas.addEventListener("click", handleClick);
-    canvas.addEventListener("wheel", handleWheel, { passive: false });
 
-    let autoRotation = 0;
     let animationId;
     const animate = () => {
-      currentRotation.x += (targetRotation.x - currentRotation.x) * 0.1;
-      currentRotation.y += (targetRotation.y - currentRotation.y) * 0.1;
-      if (!isDragging && !isHovering) {
-        autoRotation += 0.003;
-        targetRotation.y = autoRotation;
+      if (autoRotate && !isDragging) {
+        rotationY += 0.0015;
       }
 
-      scene.rotation.x = currentRotation.x;
-      scene.rotation.y = currentRotation.y;
-
+      scene.rotation.set(0, rotationY, 0); // Rotate only on Y-axis
       renderer.render(scene, camera);
       animationId = requestAnimationFrame(animate);
     };
@@ -197,10 +200,9 @@ export default function ThreeGlobe() {
       canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mouseup", handleMouseUp);
       canvas.removeEventListener("click", handleClick);
-      canvas.removeEventListener("wheel", handleWheel);
       renderer.dispose();
     };
-  }, [countryData, containerSize, isHovering]);
+  }, [countryData, containerSize]);
 
   return (
     <div style={{ width: "100%", height: "100vh", position: "relative" }}>
@@ -216,7 +218,7 @@ export default function ThreeGlobe() {
             padding: "12px 16px",
             borderRadius: "8px",
             fontSize: "14px",
-            zIndex: 1000
+            zIndex: 1000,
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between" }}>
