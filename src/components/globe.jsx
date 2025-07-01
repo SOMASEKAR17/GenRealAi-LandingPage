@@ -13,8 +13,8 @@ export default function ThreeGlobe() {
   const rendererRef = useRef(null);
   const raycasterRef = useRef(new THREE.Raycaster());
   const mouseRef = useRef(new THREE.Vector2());
-  const countryMeshesRef = useRef([]); // Used for raycasting
-  const countryLinesRef = useRef([]);  // Used for visible lines
+  const countryMeshesRef = useRef([]);
+  const countryLinesRef = useRef([]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -40,7 +40,7 @@ export default function ThreeGlobe() {
 
     const width = containerSize.width;
     const height = containerSize.height;
-    const radius = 1.4;
+    const radius = 1.5;
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0x000011);
@@ -96,7 +96,7 @@ export default function ThreeGlobe() {
             scene.add(line);
             countryLinesRef.current.push(line);
 
-            // For raycasting: create flat mesh on YZ plane (orthographic)
+            // Mesh for raycasting
             if (points.length >= 3) {
               const shape = new THREE.Shape();
               shape.moveTo(points[0].x, points[0].y);
@@ -111,7 +111,7 @@ export default function ThreeGlobe() {
               });
               const mesh = new THREE.Mesh(shapeGeometry, invisibleMaterial);
               mesh.userData.countryName = name;
-              mesh.position.z = points[0].z; // approximate curve depth
+              mesh.position.z = points[0].z;
               scene.add(mesh);
               countryMeshesRef.current.push(mesh);
             }
@@ -128,23 +128,32 @@ export default function ThreeGlobe() {
       .then(drawGeoJSONBorders)
       .catch((err) => console.error("Failed to load GeoJSON:", err));
 
-    // Drag Interaction - Only horizontal
+    // Interaction - Horizontal and Vertical Rotation
     let isDragging = false;
-    let lastMouseX = 0;
-    let rotationY = 0;
+    let lastMouse = { x: 0, y: 0 };
+    let rotation = { x: 0, y: 0 };
     let autoRotate = true;
 
     const handleMouseDown = (e) => {
       isDragging = true;
-      lastMouseX = e.clientX;
+      lastMouse = { x: e.clientX, y: e.clientY };
       autoRotate = false;
     };
 
     const handleMouseMove = (e) => {
       if (isDragging) {
-        const deltaX = e.clientX - lastMouseX;
-        rotationY += deltaX * 0.005;
-        lastMouseX = e.clientX;
+        const deltaX = e.clientX - lastMouse.x;
+        const deltaY = e.clientY - lastMouse.y;
+
+        rotation.y += deltaX * 0.005;
+        rotation.x += deltaY * 0.005;
+
+        // Clamp vertical rotation
+        const maxX = Math.PI / 2;
+        const minX = -Math.PI / 2;
+        rotation.x = Math.max(minX, Math.min(maxX, rotation.x));
+
+        lastMouse = { x: e.clientX, y: e.clientY };
       }
     };
 
@@ -185,10 +194,9 @@ export default function ThreeGlobe() {
     let animationId;
     const animate = () => {
       if (autoRotate && !isDragging) {
-        rotationY += 0.0015;
+        rotation.y += 0.0015;
       }
-
-      scene.rotation.set(0, rotationY, 0); // Rotate only on Y-axis
+      scene.rotation.set(rotation.x, rotation.y, 0);
       renderer.render(scene, camera);
       animationId = requestAnimationFrame(animate);
     };
