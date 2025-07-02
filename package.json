@@ -21,6 +21,7 @@
     "d3": "^7.9.0",
     "d3-geo": "^3.1.1",
     "deck.gl": "^9.1.12",
+    "earcut": "^3.0.1",
     "framer-motion": "^12.19.2",
     "gsap": "^3.13.0",
     "locomotive-scroll": "^4.1.4",
@@ -35,7 +36,8 @@
     "react-router-dom": "^7.6.3",
     "tailwind-scrollbar-hide": "^2.0.0",
     "tailwindcss": "^4.1.8",
-    "three": "^0.176.0"
+    "three": "^0.176.0",
+    "three-geojson-geometry": "^2.1.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",

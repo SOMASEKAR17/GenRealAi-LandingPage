@@ -1,10 +1,11 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as THREE from "three";
+import earcut from "earcut";
 
 export default function ThreeGlobe() {
   const mountRef = useRef(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
-  const [clickPosition, setClickPosition] = useState({ x: 0, y: 0 });
+  const [hoverPosition, setHoverPosition] = useState({ x: 0, y: 0 });
   const [containerSize, setContainerSize] = useState({ width: 800, height: 600 });
   const [countryData, setCountryData] = useState({});
 
@@ -14,7 +15,6 @@ export default function ThreeGlobe() {
   const raycasterRef = useRef(new THREE.Raycaster());
   const mouseRef = useRef(new THREE.Vector2());
   const countryMeshesRef = useRef([]);
-  const countryLinesRef = useRef([]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -34,6 +34,25 @@ export default function ThreeGlobe() {
       .then(setCountryData)
       .catch((err) => console.error("Failed to load fraud data:", err));
   }, []);
+
+  const getCountryColor = (countryName) => {
+    const info = countryData?.[countryName];
+    if (!info) return 0x00ffff;
+    if (info.fraudRise === "High") return 0xff0000;
+    if (info.fraudRise === "Medium") return 0xffa500;
+    if (info.fraudRise === "Low") return 0x00ff00;
+    return 0x999999;
+  };
+
+  const latLngToVector3 = (lat, lng, radius) => {
+    const phi = (90 - lat) * (Math.PI / 180);
+    const theta = (lng + 180) * (Math.PI / 180);
+    return new THREE.Vector3(
+      radius * Math.sin(phi) * Math.cos(theta),
+      radius * Math.cos(phi),
+      radius * Math.sin(phi) * Math.sin(theta)
+    );
+  };
 
   useEffect(() => {
     if (!containerSize.width || !containerSize.height || !countryData) return;
@@ -67,68 +86,49 @@ export default function ThreeGlobe() {
     scene.add(globe);
     scene.add(new THREE.AmbientLight(0xffffff, 1.2));
 
-    const latLngToVector3 = (lat, lng, r = radius + 0.01) => {
-      const phi = (90 - lat) * (Math.PI / 180);
-      const theta = (lng + 180) * (Math.PI / 180);
-      return new THREE.Vector3(
-        r * Math.sin(phi) * Math.cos(theta),
-        r * Math.cos(phi),
-        r * Math.sin(phi) * Math.sin(theta)
-      );
-    };
-
-    const drawGeoJSONBorders = (geoJson) => {
-      geoJson.features.forEach((feature) => {
-        const name = feature.properties.ADMIN || feature.properties.name;
-        const hasData = countryData?.[name]?.fraudRise;
-        const color = hasData ? 0xff4444 : 0x00ffff;
-
-        const coords = feature.geometry.coordinates;
-        const type = feature.geometry.type;
-
-        const drawPolygon = (polygon) => {
-          polygon.forEach((ring) => {
-            const points = ring.map(([lng, lat]) => latLngToVector3(lat, lng));
-            const geometry = new THREE.BufferGeometry().setFromPoints(points);
-            const material = new THREE.LineBasicMaterial({ color });
-            const line = new THREE.Line(geometry, material);
-            line.userData.countryName = name;
-            scene.add(line);
-            countryLinesRef.current.push(line);
-
-            // Mesh for raycasting
-            if (points.length >= 3) {
-              const shape = new THREE.Shape();
-              shape.moveTo(points[0].x, points[0].y);
-              for (let i = 1; i < points.length; i++) {
-                shape.lineTo(points[i].x, points[i].y);
-              }
-
-              const shapeGeometry = new THREE.ShapeGeometry(shape);
-              const invisibleMaterial = new THREE.MeshBasicMaterial({
-                visible: false,
-                side: THREE.DoubleSide,
-              });
-              const mesh = new THREE.Mesh(shapeGeometry, invisibleMaterial);
-              mesh.userData.countryName = name;
-              mesh.position.z = points[0].z;
-              scene.add(mesh);
-              countryMeshesRef.current.push(mesh);
-            }
-          });
-        };
-
-        if (type === "Polygon") drawPolygon(coords);
-        else if (type === "MultiPolygon") coords.forEach(drawPolygon);
-      });
-    };
-
     fetch("/countries.geojson")
       .then((res) => res.json())
-      .then(drawGeoJSONBorders)
-      .catch((err) => console.error("Failed to load GeoJSON:", err));
+      .then((geoJson) => {
+        geoJson.features.forEach((feature) => {
+          const coords = feature.geometry.coordinates;
+          const type = feature.geometry.type;
+          const name = feature.properties.ADMIN || feature.properties.name;
+          const color = getCountryColor(name);
 
-    // Interaction - Horizontal and Vertical Rotation
+          const drawPolygon = (polygon) => {
+            polygon.forEach((ring) => {
+              if (ring.length < 3) return;
+
+              // Flatten ring for earcut in lat/lng space
+              const flat = ring.flat();
+              const indices = earcut(flat);
+
+              const geometry = new THREE.BufferGeometry();
+              const vertices = [];
+
+              for (let i = 0; i < indices.length; i++) {
+                const idx = indices[i];
+                const lng = ring[idx][0];
+                const lat = ring[idx][1];
+                const vertex = latLngToVector3(lat, lng, radius + 0.01);
+                vertices.push(vertex.x, vertex.y, vertex.z);
+              }
+
+              geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(vertices), 3));
+              geometry.computeVertexNormals();
+              const material = new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide });
+              const mesh = new THREE.Mesh(geometry, material);
+              mesh.userData.countryName = name;
+              scene.add(mesh);
+              countryMeshesRef.current.push(mesh);
+            });
+          };
+
+          if (type === "Polygon") drawPolygon(coords);
+          else if (type === "MultiPolygon") coords.forEach(drawPolygon);
+        });
+      });
+
     let isDragging = false;
     let lastMouse = { x: 0, y: 0 };
     let rotation = { x: 0, y: 0 };
@@ -141,61 +141,51 @@ export default function ThreeGlobe() {
     };
 
     const handleMouseMove = (e) => {
+      const rect = renderer.domElement.getBoundingClientRect();
+      mouseRef.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+      mouseRef.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
+
+      raycasterRef.current.setFromCamera(mouseRef.current, cameraRef.current);
+      const intersects = raycasterRef.current.intersectObjects(countryMeshesRef.current);
+
+      if (intersects.length > 0) {
+        const name = intersects[0].object.userData.countryName;
+        const data = countryData?.[name];
+        if (data?.fraudRise) {
+          setSelectedCountry({ name, data });
+          setHoverPosition({ x: e.clientX, y: e.clientY });
+        } else {
+          setSelectedCountry(null);
+        }
+      } else {
+        setSelectedCountry(null);
+      }
+
       if (isDragging) {
         const deltaX = e.clientX - lastMouse.x;
         const deltaY = e.clientY - lastMouse.y;
-
         rotation.y += deltaX * 0.005;
         rotation.x += deltaY * 0.005;
-
-        // Clamp vertical rotation
         const maxX = Math.PI / 2;
         const minX = -Math.PI / 2;
         rotation.x = Math.max(minX, Math.min(maxX, rotation.x));
-
         lastMouse = { x: e.clientX, y: e.clientY };
       }
     };
 
     const handleMouseUp = () => {
       isDragging = false;
-      setTimeout(() => {
-        autoRotate = true;
-      }, 500);
-    };
-
-    const handleClick = (e) => {
-      if (isDragging) return;
-      const rect = renderer.domElement.getBoundingClientRect();
-      mouseRef.current.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      mouseRef.current.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
-
-      raycasterRef.current.setFromCamera(mouseRef.current, camera);
-      const intersects = raycasterRef.current.intersectObjects(countryMeshesRef.current);
-
-      if (intersects.length > 0) {
-        const countryName = intersects[0].object.userData.countryName;
-        const countryInfo = countryData?.[countryName];
-        if (countryInfo?.fraudRise) {
-          setSelectedCountry({ name: countryName, data: countryInfo });
-          setClickPosition({ x: e.clientX, y: e.clientY });
-        }
-      } else {
-        setSelectedCountry(null);
-      }
+      setTimeout(() => (autoRotate = true), 500);
     };
 
     const canvas = renderer.domElement;
     canvas.addEventListener("mousedown", handleMouseDown);
     canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mouseup", handleMouseUp);
-    canvas.addEventListener("click", handleClick);
 
     let animationId;
     const animate = () => {
-      if (autoRotate && !isDragging) {
-        rotation.y += 0.0015;
-      }
+      if (autoRotate && !isDragging) rotation.y += 0.0015;
       scene.rotation.set(rotation.x, rotation.y, 0);
       renderer.render(scene, camera);
       animationId = requestAnimationFrame(animate);
@@ -207,7 +197,6 @@ export default function ThreeGlobe() {
       canvas.removeEventListener("mousedown", handleMouseDown);
       canvas.removeEventListener("mousemove", handleMouseMove);
       canvas.removeEventListener("mouseup", handleMouseUp);
-      canvas.removeEventListener("click", handleClick);
       renderer.dispose();
     };
   }, [countryData, containerSize]);
@@ -219,8 +208,8 @@ export default function ThreeGlobe() {
         <div
           style={{
             position: "fixed",
-            top: clickPosition.y + 10,
-            left: clickPosition.x + 10,
+            top: hoverPosition.y + 10,
+            left: hoverPosition.x + 10,
             background: "rgba(0, 0, 0, 0.9)",
             color: "white",
             padding: "12px 16px",
@@ -231,9 +220,6 @@ export default function ThreeGlobe() {
         >
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <strong>{selectedCountry.name}</strong>
-            <button onClick={() => setSelectedCountry(null)} style={{ marginLeft: 10 }}>
-              ×
-            </button>
           </div>
           <div>
             <strong>Fraud Rise:</strong> {selectedCountry.data.fraudRise}
