@@ -10,11 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@deck.gl/layers": "^9.1.12",
+    "@deck.gl/react": "^9.1.12",
     "@gsap/react": "^2.1.2",
     "@react-three/drei": "^10.1.2",
     "@react-three/fiber": "^9.1.2",
     "@tailwindcss/vite": "^4.1.8",
+    "@turf/turf": "^7.2.0",
     "cobe": "^0.6.4",
+    "d3": "^7.9.0",
+    "d3-geo": "^3.1.1",
+    "deck.gl": "^9.1.12",
     "framer-motion": "^12.19.2",
     "gsap": "^3.13.0",
     "locomotive-scroll": "^4.1.4",
@@ -25,7 +31,8 @@
     "react-dom": "^19.1.0",
     "react-icons": "^5.5.0",
     "react-intersection-observer": "^9.16.0",
-    "react-router-dom": "^7.6.2",
+    "react-map-gl": "^8.0.4",
+    "react-router-dom": "^7.6.3",
     "tailwind-scrollbar-hide": "^2.0.0",
     "tailwindcss": "^4.1.8",
     "three": "^0.176.0"
