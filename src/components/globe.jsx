@@ -37,16 +37,17 @@ export default function ThreeGlobe() {
 
   const getCountryColor = (countryName) => {
     const info = countryData?.[countryName];
-    if (!info) return 0x00ffff;
-    if (info.fraudRise === "High") return 0xff0000;
-    if (info.fraudRise === "Medium") return 0xffa500;
-    if (info.fraudRise === "Low") return 0x00ff00;
-    return 0x999999;
+    if (!info) return 0x00ffff; // Default: Cyan
+    if (info.fraudRise === "High") return 0xff0000; // RED
+    if (info.fraudRise === "Medium") return 0xffa500; // ORANGE (brownish)
+    if (info.fraudRise === "Low") return 0x00ff00; // GREEN
+    return 0x999999; // fallback grey
   };
+
 
   const latLngToVector3 = (lat, lng, radius) => {
     const phi = (90 - lat) * (Math.PI / 180);
-    const theta = (lng + 180) * (Math.PI / 180);
+    const theta = (-lng + 180) * (Math.PI / 180);
     return new THREE.Vector3(
       radius * Math.sin(phi) * Math.cos(theta),
       radius * Math.cos(phi),

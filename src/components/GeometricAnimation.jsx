@@ -86,7 +86,7 @@ const GeometricAnimation = ({ paused }) => {
 
         ctx.save();
         ctx.globalAlpha = p.opacity * (0.5 + 0.5 * Math.sin(time * 0.002 + i));
-        ctx.fillStyle = `hsl(${p.hue}, 70%, 60%)`;
+        ctx.fillStyle = `hsl(${p.hue}, 100%, 80%)`;
         drawShape(ctx, p.x, p.y, p.size, p.shape);
         ctx.restore();
       });
