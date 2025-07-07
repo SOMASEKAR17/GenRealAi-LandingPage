@@ -106,9 +106,33 @@ const UploadModal = () => {
       .setCallback((data) => {
         if (data.action === window.google.picker.Action.PICKED) {
           const doc = data.docs[0];
-          alert(`Selected: ${doc.name}`);
+
+          const fileId = doc.id;
+          const fileName = doc.name;
+          const fileUrl = `https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
+
+          fetch(fileUrl, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`
+            }
+          })
+            .then((res) => {
+              if (!res.ok) throw new Error("Failed to download from Google Drive");
+              return res.blob();
+            })
+            .then((blob) => {
+              const downloadedFile = new File([blob], fileName, { type: blob.type });
+
+              // Show the file name in the upload box — just like drag & drop
+              setFile(downloadedFile);
+            })
+            .catch((err) => {
+              console.error("Drive Download Error:", err);
+              alert("Failed to download the file from Google Drive.");
+            });
         }
       })
+
       .build();
 
     picker.setVisible(true);
