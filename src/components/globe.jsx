@@ -14,7 +14,9 @@ export default function ThreeGlobe() {
   const raycasterRef = useRef(new THREE.Raycaster());
   const mouseRef = useRef(new THREE.Vector2());
   const countryMeshesRef = useRef([]);
+
   const globeGroupRef = useRef(new THREE.Group());
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -37,16 +39,20 @@ export default function ThreeGlobe() {
 
   const getCountryColor = (countryName) => {
     const info = countryData?.[countryName];
+
     if (!info) return 0x00ffff; // Default: Cyan
     if (info.fraudRise === "High") return 0xff3333; // Bright red
     if (info.fraudRise === "Medium") return 0xff6666; // Softer red
     if (info.fraudRise === "Low") return 0xffaaaa; // Light pink-red
+
     return 0x999999;
   };
 
   const latLngToVector3 = (lat, lng, radius) => {
     const phi = (90 - lat) * (Math.PI / 180);
+
     const theta = (-lng + 180) * (Math.PI / 180);
+
     return new THREE.Vector3(
       radius * Math.sin(phi) * Math.cos(theta),
       radius * Math.cos(phi),
@@ -61,6 +67,7 @@ export default function ThreeGlobe() {
     const height = containerSize.height;
     const radius = 1.5;
 
+
     // === SETUP SCENES ===
     const backgroundScene = new THREE.Scene();
     backgroundScene.background = new THREE.Color(0x000011);
@@ -69,6 +76,7 @@ export default function ThreeGlobe() {
     mainScene.add(globeGroupRef.current);
 
     // === CAMERA ===
+
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     camera.position.z = 3;
     cameraRef.current = camera;
@@ -96,6 +104,7 @@ export default function ThreeGlobe() {
     backgroundScene.add(stars);
 
     // === RENDERER ===
+
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -106,6 +115,7 @@ export default function ThreeGlobe() {
       mountRef.current.appendChild(renderer.domElement);
     }
 
+
     // === GLOBE ===
     const globe = new THREE.Mesh(
       new THREE.SphereGeometry(radius, 64, 64),
@@ -113,6 +123,7 @@ export default function ThreeGlobe() {
     );
     globeGroupRef.current.add(globe);
     mainScene.add(new THREE.AmbientLight(0xffffff, 1.2));
+
 
     fetch("/countries.geojson")
       .then((res) => res.json())
@@ -142,10 +153,12 @@ export default function ThreeGlobe() {
               }
 
               geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(vertices), 3));
+
               const material = new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide });
               const mesh = new THREE.Mesh(geometry, material);
               mesh.userData.countryName = name;
               globeGroupRef.current.add(mesh);
+
               countryMeshesRef.current.push(mesh);
             });
           };
@@ -155,7 +168,7 @@ export default function ThreeGlobe() {
         });
       });
 
-    // === INTERACTION ===
+
     let isDragging = false;
     let lastMouse = { x: 0, y: 0 };
     let rotation = { x: 0, y: 0 };
@@ -210,6 +223,7 @@ export default function ThreeGlobe() {
     canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mouseup", handleMouseUp);
 
+
     // === ANIMATION LOOP ===
     let animationId;
     const animate = () => {
@@ -225,6 +239,7 @@ export default function ThreeGlobe() {
       renderer.clear();
       renderer.render(backgroundScene, camera);
       renderer.render(mainScene, camera);
+
       animationId = requestAnimationFrame(animate);
     };
     animate();
