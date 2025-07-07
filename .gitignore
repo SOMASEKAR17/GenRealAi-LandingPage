@@ -13,10 +13,7 @@ dist
 dist-ssr
 *.local
 
-# .env files — now tracked by git (ignore removed)
-/env/        # Only if this is a folder you still want ignored
-# env        # Comment or remove this if you want to track files named 'env'
-# .env       # Commented to allow tracking
+.env
 
 # Editor directories and files
 .vscode/*
