@@ -1,14 +1,25 @@
 import React, { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
+
+import Processing from './processing';
+
 import Mypc from '/Mypc.png';
 import GoogleDrive from '/GoogleDrive.png';
 import OneDrive from '/OneDrive.png';
-import Processing from './processing'; 
+
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
+const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/drive.readonly';
+
 
 const UploadModal = () => {
   const [dragging, setDragging] = useState(false);
   const [file, setFile] = useState(null);
-  const [showProcessing, setShowProcessing] = useState(false); 
+
+  const [showProcessing, setShowProcessing] = useState(false);
+  const [gisReady, setGisReady] = useState(false);
+  const [pickerReady, setPickerReady] = useState(false);
+
 
   const fileInputRef = useRef(null);
   const modalRef = useRef(null);
@@ -21,32 +32,87 @@ const UploadModal = () => {
     );
   }, []);
 
+
+  // === Load Google Identity and Picker APIs ===
+  useEffect(() => {
+    const loadGIS = () => {
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.onload = () => setGisReady(true);
+      document.body.appendChild(script);
+    };
+
+    const loadPicker = () => {
+      const script = document.createElement('script');
+      script.src = 'https://apis.google.com/js/api.js';
+      script.onload = () => {
+        window.gapi.load('picker', () => setPickerReady(true));
+      };
+      document.body.appendChild(script);
+    };
+
+    loadGIS();
+    loadPicker();
+  }, []);
+
   const handleDrop = (e) => {
     e.preventDefault();
     setDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+    if (e.dataTransfer.files?.length > 0) {
+
       setFile(e.dataTransfer.files[0]);
       e.dataTransfer.clearData();
     }
   };
 
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    setDragging(true);
-  };
-
-  const handleDragLeave = () => {
-    setDragging(false);
-  };
 
   const handleFileChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
+    if (e.target.files?.length > 0) {
       setFile(e.target.files[0]);
     }
   };
 
   const triggerFilePicker = () => {
     fileInputRef.current?.click();
+  };
+
+  const handleGoogleDrivePick = () => {
+    if (!gisReady || !pickerReady) {
+      alert("Google API is still loading. Please wait a moment.");
+      return;
+    }
+
+    const tokenClient = window.google.accounts.oauth2.initTokenClient({
+      client_id: GOOGLE_CLIENT_ID,
+      scope: GOOGLE_SCOPE,
+      callback: (tokenResponse) => {
+        const accessToken = tokenResponse.access_token;
+        openPicker(accessToken);
+      }
+    });
+
+    tokenClient.requestAccessToken();
+  };
+
+  const openPicker = (accessToken) => {
+    const view = new window.google.picker.DocsView()
+      .setIncludeFolders(true)
+      .setSelectFolderEnabled(false);
+
+    const picker = new window.google.picker.PickerBuilder()
+      .setDeveloperKey(GOOGLE_API_KEY)
+      .setOAuthToken(accessToken)
+      .addView(view)
+      .setCallback((data) => {
+        if (data.action === window.google.picker.Action.PICKED) {
+          const doc = data.docs[0];
+          alert(`Selected: ${doc.name}`);
+        }
+      })
+      .build();
+
+    picker.setVisible(true);
+
   };
 
   if (showProcessing) return <Processing />;
@@ -70,8 +136,13 @@ const UploadModal = () => {
 
         <div
           onDrop={handleDrop}
-          onDragOver={handleDragOver}
-          onDragLeave={handleDragLeave}
+
+          onDragOver={(e) => {
+            e.preventDefault();
+            setDragging(true);
+          }}
+          onDragLeave={() => setDragging(false)}
+
           className={`border-2 border-dashed rounded-xl p-6 mb-6 text-center transition-all duration-200 font-inter ${
             dragging ? 'border-[#42DED9] bg-cyan-400/10' : 'border-[#42DED9]'
           }`}
@@ -107,7 +178,12 @@ const UploadModal = () => {
             <img src={Mypc} alt="My PC" className="mx-auto h-10 mb-2" />
             <p className="text-sm">My Computer</p>
           </div>
-          <div className="border border-cyan-500 rounded-xl py-4 px-2 hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer">
+
+          <div
+            onClick={handleGoogleDrivePick}
+            className="border border-cyan-500 rounded-xl py-4 px-2 hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer"
+          >
+
             <img src={GoogleDrive} alt="Google Drive" className="mx-auto h-10 mb-2" />
             <p className="text-sm">Google Drive</p>
           </div>
@@ -126,7 +202,9 @@ const UploadModal = () => {
           </button>
           <button
             className="bg-cyan-500 hover:bg-cyan-600 cursor-pointer text-white px-5 py-2 rounded-xl font-bold transition"
-            onClick={() => setShowProcessing(true)} 
+
+            onClick={() => setShowProcessing(true)}
+
           >
             Confirm
           </button>

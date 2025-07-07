@@ -9,12 +9,14 @@ export default function ThreeGlobe() {
   const [containerSize, setContainerSize] = useState({ width: 800, height: 600 });
   const [countryData, setCountryData] = useState({});
 
-  const sceneRef = useRef(null);
   const cameraRef = useRef(null);
   const rendererRef = useRef(null);
   const raycasterRef = useRef(new THREE.Raycaster());
   const mouseRef = useRef(new THREE.Vector2());
   const countryMeshesRef = useRef([]);
+
+  const globeGroupRef = useRef(new THREE.Group());
+
 
   useEffect(() => {
     const handleResize = () => {
@@ -37,16 +39,20 @@ export default function ThreeGlobe() {
 
   const getCountryColor = (countryName) => {
     const info = countryData?.[countryName];
-    if (!info) return 0x00ffff;
-    if (info.fraudRise === "High") return 0xff0000;
-    if (info.fraudRise === "Medium") return 0xffa500;
-    if (info.fraudRise === "Low") return 0x00ff00;
+
+    if (!info) return 0x00ffff; // Default: Cyan
+    if (info.fraudRise === "High") return 0xff3333; // Bright red
+    if (info.fraudRise === "Medium") return 0xff6666; // Softer red
+    if (info.fraudRise === "Low") return 0xffaaaa; // Light pink-red
+
     return 0x999999;
   };
 
   const latLngToVector3 = (lat, lng, radius) => {
     const phi = (90 - lat) * (Math.PI / 180);
-    const theta = (lng + 180) * (Math.PI / 180);
+
+    const theta = (-lng + 180) * (Math.PI / 180);
+
     return new THREE.Vector3(
       radius * Math.sin(phi) * Math.cos(theta),
       radius * Math.cos(phi),
@@ -61,13 +67,43 @@ export default function ThreeGlobe() {
     const height = containerSize.height;
     const radius = 1.5;
 
-    const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0x000011);
-    sceneRef.current = scene;
+
+    // === SETUP SCENES ===
+    const backgroundScene = new THREE.Scene();
+    backgroundScene.background = new THREE.Color(0x000011);
+
+    const mainScene = new THREE.Scene();
+    mainScene.add(globeGroupRef.current);
+
+    // === CAMERA ===
 
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     camera.position.z = 3;
     cameraRef.current = camera;
+
+    // === STARFIELD ===
+    const starGeometry = new THREE.BufferGeometry();
+    const starCount = 1000;
+    const starVertices = [];
+
+    for (let i = 0; i < starCount; i++) {
+      const x = (Math.random() - 0.5) * 100;
+      const y = (Math.random() - 0.5) * 100;
+      const z = (Math.random() - 0.5) * 100;
+      starVertices.push(x, y, z);
+    }
+
+    starGeometry.setAttribute("position", new THREE.Float32BufferAttribute(starVertices, 4));
+    const starMaterial = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 0.15,
+      transparent: true,
+      opacity: 0.8,
+    });
+    const stars = new THREE.Points(starGeometry, starMaterial);
+    backgroundScene.add(stars);
+
+    // === RENDERER ===
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(width, height);
@@ -79,12 +115,15 @@ export default function ThreeGlobe() {
       mountRef.current.appendChild(renderer.domElement);
     }
 
+
+    // === GLOBE ===
     const globe = new THREE.Mesh(
       new THREE.SphereGeometry(radius, 64, 64),
-      new THREE.MeshBasicMaterial({ color: 0x111133, transparent: true, opacity: 0.3 })
+      new THREE.MeshStandardMaterial({ color: 0x111133, transparent: true, opacity: 0.3, metalness: 0.3, roughness: 0.7 })
     );
-    scene.add(globe);
-    scene.add(new THREE.AmbientLight(0xffffff, 1.2));
+    globeGroupRef.current.add(globe);
+    mainScene.add(new THREE.AmbientLight(0xffffff, 1.2));
+
 
     fetch("/countries.geojson")
       .then((res) => res.json())
@@ -99,7 +138,6 @@ export default function ThreeGlobe() {
             polygon.forEach((ring) => {
               if (ring.length < 3) return;
 
-              // Flatten ring for earcut in lat/lng space
               const flat = ring.flat();
               const indices = earcut(flat);
 
@@ -115,11 +153,12 @@ export default function ThreeGlobe() {
               }
 
               geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(vertices), 3));
-              geometry.computeVertexNormals();
+
               const material = new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide });
               const mesh = new THREE.Mesh(geometry, material);
               mesh.userData.countryName = name;
-              scene.add(mesh);
+              globeGroupRef.current.add(mesh);
+
               countryMeshesRef.current.push(mesh);
             });
           };
@@ -128,6 +167,7 @@ export default function ThreeGlobe() {
           else if (type === "MultiPolygon") coords.forEach(drawPolygon);
         });
       });
+
 
     let isDragging = false;
     let lastMouse = { x: 0, y: 0 };
@@ -183,11 +223,23 @@ export default function ThreeGlobe() {
     canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mouseup", handleMouseUp);
 
+
+    // === ANIMATION LOOP ===
     let animationId;
     const animate = () => {
       if (autoRotate && !isDragging) rotation.y += 0.0015;
-      scene.rotation.set(rotation.x, rotation.y, 0);
-      renderer.render(scene, camera);
+      globeGroupRef.current.rotation.set(rotation.x, rotation.y, 0);
+
+      // Star twinkle & slight drift
+      const time = Date.now() * 0.001;
+      starMaterial.opacity = 0.5 + 0.3 * Math.sin(time * 2);
+      stars.rotation.y += 0.0001;
+
+      renderer.autoClear = false;
+      renderer.clear();
+      renderer.render(backgroundScene, camera);
+      renderer.render(mainScene, camera);
+
       animationId = requestAnimationFrame(animate);
     };
     animate();
