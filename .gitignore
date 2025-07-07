@@ -7,14 +7,16 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependency directories
 node_modules
 dist
 dist-ssr
 *.local
 
-.env
-/env
-env
+# .env files — now tracked by git (ignore removed)
+/env/        # Only if this is a folder you still want ignored
+# env        # Comment or remove this if you want to track files named 'env'
+# .env       # Commented to allow tracking
 
 # Editor directories and files
 .vscode/*
