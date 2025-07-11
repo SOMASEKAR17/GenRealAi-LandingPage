@@ -24,6 +24,8 @@ const UploadModal = () => {
   const fileInputRef = useRef(null);
   const modalRef = useRef(null);
 
+  const [toastMessage, setToastMessage] = useState(null);
+
   useEffect(() => {
     gsap.fromTo(
       modalRef.current,
@@ -55,6 +57,26 @@ const UploadModal = () => {
     loadPicker();
   }, []);
 
+  //Paste from Clipboard
+  useEffect(() => {
+  const handlePaste = (e) => {
+    const items = e.clipboardData.items;
+    for (let item of items) {
+      if (item.kind === 'file') {
+        const blob = item.getAsFile();
+        setFile(blob);
+        setToastMessage("📋 File pasted from clipboard!");
+        setTimeout(() => setToastMessage(null), 3000);  
+        break;
+      }
+    }
+  };
+
+  window.addEventListener("paste", handlePaste);
+  return () => window.removeEventListener("paste", handlePaste);
+}, []);
+
+
   const handleDrop = (e) => {
     e.preventDefault();
     setDragging(false);
@@ -63,6 +85,7 @@ const UploadModal = () => {
       setFile(e.dataTransfer.files[0]);
       e.dataTransfer.clearData();
     }
+    setToastMessage("📋 File Dropped!");
   };
 
 
@@ -70,6 +93,8 @@ const UploadModal = () => {
     if (e.target.files?.length > 0) {
       setFile(e.target.files[0]);
     }
+    setToastMessage("💾 File selected from your computer!");
+    setTimeout(() => setToastMessage(null), 3000);
   };
 
   const triggerFilePicker = () => {
@@ -125,10 +150,12 @@ const UploadModal = () => {
 
               // Show the file name in the upload box — just like drag & drop
               setFile(downloadedFile);
+
+              setToastMessage("💾 File selected from Google Drive!");
+              setTimeout(() => setToastMessage(null), 3000);
             })
             .catch((err) => {
               console.error("Drive Download Error:", err);
-              alert("Failed to download the file from Google Drive.");
             });
         }
       })
@@ -234,6 +261,11 @@ const UploadModal = () => {
           </button>
         </div>
       </div>
+          {toastMessage && (
+          <div className="fixed bottom-6 right-6 bg-cyan-500 text-white px-4 py-2 rounded-lg shadow-lg animate-fade-in-out z-50">
+            {toastMessage}
+          </div>
+        )}
     </div>
   );
 };
