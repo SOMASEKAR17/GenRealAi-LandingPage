@@ -3,7 +3,8 @@ import { gsap } from 'gsap';
 import GeometricAnimation from './GeometricAnimation';
 import FaceModel from './FaceModel';
 import { useNavigate } from 'react-router-dom';
-
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+gsap.registerPlugin(ScrollTrigger);
 
 const HeroSection = ({ Loaded }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -15,9 +16,10 @@ const HeroSection = ({ Loaded }) => {
   const [isHeroInView, setIsHeroInView] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
+
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    handleResize(); // Check on mount
+    handleResize(); 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -52,7 +54,7 @@ const HeroSection = ({ Loaded }) => {
   }, [prevScrollPos]);
 
   useEffect(() => {
-    const sections = ['home', 'about', 'features', 'news', 'education', 'faq', 'contact-us'];
+    const sections = ['home', 'about', 'news', 'education', 'faq','team', 'contact-us'];
 
     const observers = sections.map(id => {
       const section = document.getElementById(id);
@@ -84,11 +86,12 @@ const HeroSection = ({ Loaded }) => {
   }, []);
 
   const navLinks = [
+    { id: 'home', label: 'Home' },
     { id: 'about', label: 'About' },
-    { id: 'features', label: 'Features' },
     { id: 'news', label: 'News' },
     { id: 'education', label: 'Education' },
     { id: 'faq', label: 'FAQ' },
+    { id: 'team', label: 'Team' },
     { id: 'contact-us', label: 'Contact Us' },
   ];
 
@@ -143,7 +146,8 @@ const HeroSection = ({ Loaded }) => {
         )}
       </nav>
 
-      <div className="absolute inset-0 flex flex-col items-center justify-start pt-[26vh] sm:pt-[26vh] md:pt-[30vh] xl:pt-[24vh] text-center z-30 pointer-events-none px-4">
+      <div 
+      className="absolute inset-0 flex flex-col items-center justify-start pt-[26vh] sm:pt-[26vh] md:pt-[30vh] xl:pt-[24vh] text-center z-30 pointer-events-none px-4">
         <h1 className="text-[clamp(2.75rem,10vw,5rem)] sm:text-[clamp(3rem,8vw,5.5rem)] lg:text-[5.5rem] xl:text-[6rem] leading-[clamp(2.75rem,7vw,4.5rem)] sm:leading-[clamp(3rem,7vw,5rem)] lg:leading-[5.5rem] text-center font-bold">
           Welcome to<br />
           <span className="bg-gradient-to-r from-[#6EE5F5] via-[#29A3B3] to-[#1397A9] bg-clip-text text-transparent">

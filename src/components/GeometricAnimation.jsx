@@ -19,8 +19,6 @@ const GeometricAnimation = ({ paused }) => {
     const createParticles = () => {
       const area = window.innerWidth * window.innerHeight;
       const count = area < 500000 ? 80 : 150;
-
-      // Base size scales with width
       const baseSize = window.innerWidth < 500 ? 0.8 : window.innerWidth < 900 ? 1.2 : 1.5;
 
       particlesRef.current = Array.from({ length: count }, () => ({
@@ -30,7 +28,7 @@ const GeometricAnimation = ({ paused }) => {
         vy: (Math.random() - 0.5) * 0.7,
         size: baseSize + Math.random() * 1.5,
         opacity: Math.random() * 0.5 + 0.2,
-        hue: Math.random() * 30 + 240, // blue-violet
+        hue: Math.random() * 30 + 240,
         shape: Math.random() < 0.1 ? 'triangle' : (Math.random() < 0.2 ? 'square' : 'circle')
       }));
     };
@@ -58,7 +56,6 @@ const GeometricAnimation = ({ paused }) => {
 
       const particles = particlesRef.current;
 
-      // Draw sparser connecting lines
       particles.forEach((p1, i) => {
         for (let j = i + 1; j < particles.length; j++) {
           const p2 = particles[j];
@@ -75,7 +72,6 @@ const GeometricAnimation = ({ paused }) => {
         }
       });
 
-      // Draw particles
       particles.forEach((p, i) => {
         p.x += p.vx;
         p.y += p.vy;
@@ -86,9 +82,7 @@ const GeometricAnimation = ({ paused }) => {
 
         ctx.save();
         ctx.globalAlpha = p.opacity * (0.5 + 0.5 * Math.sin(time * 0.002 + i));
-
         ctx.fillStyle = `hsl(${p.hue}, 100%, 80%)`;
-
         drawShape(ctx, p.x, p.y, p.size, p.shape);
         ctx.restore();
       });
