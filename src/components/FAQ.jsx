@@ -61,7 +61,7 @@ const FAQ = () => {
   };
 
   return (
-    <div className="w-screen min-h-screen flex flex-col items-center justify-center bg-[radial-gradient(ellipse_at_center,_rgba(11,151,132,0.708)_0%,_rgba(0,255,255,0.12)_8%,_rgba(0,40,50,0.18)_14%,_rgba(10,30,35,0.65)_18%,_rgba(5,15,20,0.92)_22%,_#01080d_32%,_#000b10_100%)] text-[#e3eaf0] p-0 m-0">
+    <div className="w-screen min-h-screen flex flex-col items-center justify-center bg-[radial-gradient(ellipse_at_center,_rgba(11,151,132,0.708)_0%,_rgba(0,255,255,0.12)_8%,_rgba(0,40,50,0.18)_14%,_rgba(10,30,35,0.65)_18%,_rgba(5,15,20,0.92)_22%,_#01080d_32%,_#000b10_100%)] text-[#e3eaf0] p-0 m-0" id="faq">
       <h2 className="text-white text-[2.8rem] font-extrabold tracking-[2.5px] text-center mt-16 mb-12">
         Frequently Asked Questions
       </h2>

@@ -36,7 +36,7 @@ const ContactUs = () => {
 
 
   return (
-    <div className="min-h-screen w-screen bg-black flex items-center justify-center relative font-exo">
+    <div className="min-h-screen w-screen bg-black flex items-center justify-center relative font-exo" id="contact-us">
       <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-cyan-400 opacity-20 blur-[100px] rounded-full pointer-events-none animate-pulseGlow" />
       <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-cyan-400 opacity-20 blur-[100px] rounded-full pointer-events-none animate-pulseGlow" />
 
