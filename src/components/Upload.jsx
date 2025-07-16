@@ -11,15 +11,12 @@ const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 const GOOGLE_API_KEY = import.meta.env.VITE_GOOGLE_API_KEY;
 const GOOGLE_SCOPE = 'https://www.googleapis.com/auth/drive.readonly';
 
-
 const UploadModal = () => {
   const [dragging, setDragging] = useState(false);
   const [file, setFile] = useState(null);
-
   const [showProcessing, setShowProcessing] = useState(false);
   const [gisReady, setGisReady] = useState(false);
   const [pickerReady, setPickerReady] = useState(false);
-
 
   const fileInputRef = useRef(null);
   const modalRef = useRef(null);
@@ -33,7 +30,6 @@ const UploadModal = () => {
       { x: 0, opacity: 1, duration: 1.8, ease: 'power3.out' }
     );
   }, []);
-
 
   // === Load Google Identity and Picker APIs ===
   useEffect(() => {
@@ -59,35 +55,32 @@ const UploadModal = () => {
 
   //Paste from Clipboard
   useEffect(() => {
-  const handlePaste = (e) => {
-    const items = e.clipboardData.items;
-    for (let item of items) {
-      if (item.kind === 'file') {
-        const blob = item.getAsFile();
-        setFile(blob);
-        setToastMessage("📋 File pasted from clipboard!");
-        setTimeout(() => setToastMessage(null), 3000);  
-        break;
+    const handlePaste = (e) => {
+      const items = e.clipboardData.items;
+      for (let item of items) {
+        if (item.kind === 'file') {
+          const blob = item.getAsFile();
+          setFile(blob);
+          setToastMessage("📋 File pasted from clipboard!");
+          setTimeout(() => setToastMessage(null), 3000);  
+          break;
+        }
       }
-    }
-  };
+    };
 
-  window.addEventListener("paste", handlePaste);
-  return () => window.removeEventListener("paste", handlePaste);
-}, []);
-
+    window.addEventListener("paste", handlePaste);
+    return () => window.removeEventListener("paste", handlePaste);
+  }, []);
 
   const handleDrop = (e) => {
     e.preventDefault();
     setDragging(false);
     if (e.dataTransfer.files?.length > 0) {
-
       setFile(e.dataTransfer.files[0]);
       e.dataTransfer.clearData();
     }
     setToastMessage("📋 File Dropped!");
   };
-
 
   const handleFileChange = (e) => {
     if (e.target.files?.length > 0) {
@@ -147,10 +140,7 @@ const UploadModal = () => {
             })
             .then((blob) => {
               const downloadedFile = new File([blob], fileName, { type: blob.type });
-
-              // Show the file name in the upload box — just like drag & drop
               setFile(downloadedFile);
-
               setToastMessage("💾 File selected from Google Drive!");
               setTimeout(() => setToastMessage(null), 3000);
             })
@@ -159,22 +149,26 @@ const UploadModal = () => {
             });
         }
       })
-
       .build();
 
     picker.setVisible(true);
-
   };
 
   if (showProcessing) return <Processing />;
 
   return (
-    <div className="w-screen h-screen flex items-center justify-center bg-[#0E1010] relative font-exo text-white overflow-hidden">
-      <div className="absolute inset-0 w-full h-full pointer-events-none bg-[radial-gradient(ellipse_75%_140%_at_center,_#175553_0%,_transparent_50%)]" />
+    <div className="w-screen h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 relative font-exo text-white overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 left-20 w-32 h-32 bg-cyan-400/10 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute bottom-32 right-32 w-48 h-48 bg-blue-400/10 rounded-full blur-xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-teal-400/10 rounded-full blur-xl animate-pulse delay-2000"></div>
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+      </div>
 
       <div
         ref={modalRef}
-        className="relative bg-[linear-gradient(239.6deg,_#175553_-4.57%,_#062221_83.91%)] border border-cyan-400 rounded-3xl px-6 sm:px-10 md:px-12 py-8 w-[95vw] max-w-[800px] shadow-[0_0_30px_#00ffff55] z-10"
+        className="relative bg-slate-800/90 backdrop-blur-sm border border-cyan-400/30 rounded-3xl px-6 sm:px-10 md:px-12 py-8 w-[95vw] max-w-[800px] shadow-2xl z-10"
       >
         <button
           onClick={() => window.location.replace('/')}
@@ -183,31 +177,31 @@ const UploadModal = () => {
           &times;
         </button>
 
-        <h2 className="text-2xl font-bold mb-6 text-center">Upload your file</h2>
+        <h2 className="text-3xl font-bold mb-6 text-center bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+          Upload your file
+        </h2>
 
         <div
           onDrop={handleDrop}
-
           onDragOver={(e) => {
             e.preventDefault();
             setDragging(true);
           }}
           onDragLeave={() => setDragging(false)}
-
-          className={`border-2 border-dashed rounded-xl p-6 mb-6 text-center transition-all duration-200 font-inter ${
-            dragging ? 'border-[#42DED9] bg-cyan-400/10' : 'border-[#42DED9]'
+          className={`border-2 border-dashed rounded-xl p-8 mb-6 text-center transition-all duration-300 font-inter ${
+            dragging ? 'border-cyan-400 bg-cyan-400/10 scale-105' : 'border-cyan-400/50 bg-slate-700/30'
           }`}
         >
           <label htmlFor="file-upload" className="cursor-pointer block">
             <div className="mb-4">
-              <img src="/letter.png" alt="Upload" className="h-16 w-16 mx-auto" />
+              <img src="/letter.png" alt="Upload" className="h-16 w-16 mx-auto opacity-80" />
             </div>
-            <p className="font-semibold">
+            <p className="font-semibold text-lg mb-2">
               {file ? file.name : 'Drag and drop files here'}
             </p>
-            <p className="text-sm text-gray-300 mt-2">
+            <p className="text-sm text-slate-300 mt-2 leading-relaxed">
               Supported formats: Pdf, Docx, xlsx, pptx, txt, jpeg, jpg, png <br />
-              Max file size: 25MB
+              <span className="text-cyan-400">Max file size: 25MB</span>
             </p>
             <input
               id="file-upload"
@@ -219,53 +213,57 @@ const UploadModal = () => {
           </label>
         </div>
 
-        <div className="text-center text-gray-300 mb-4">or</div>
+        <div className="text-center text-slate-400 mb-6 relative">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-slate-600"></div>
+          </div>
+          <div className="relative bg-slate-800 px-4 text-sm">or choose from</div>
+        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 text-center">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8 text-center">
           <div
             onClick={triggerFilePicker}
-            className="border border-cyan-500 rounded-xl py-4 px-2 hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer"
+            className="bg-slate-700/50 backdrop-blur-sm border border-cyan-400/30 rounded-xl py-6 px-4 hover:border-cyan-400 hover:bg-slate-700/70 hover:scale-105 transition-all duration-300 cursor-pointer group"
           >
-            <img src={Mypc} alt="My PC" className="mx-auto h-10 mb-2" />
-            <p className="text-sm">My Computer</p>
+            <img src={Mypc} alt="My PC" className="mx-auto h-12 mb-3 group-hover:scale-110 transition-transform duration-300" />
+            <p className="text-sm font-medium">My Computer</p>
           </div>
 
           <div
             onClick={handleGoogleDrivePick}
-            className="border border-cyan-500 rounded-xl py-4 px-2 hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer"
+            className="bg-slate-700/50 backdrop-blur-sm border border-cyan-400/30 rounded-xl py-6 px-4 hover:border-cyan-400 hover:bg-slate-700/70 hover:scale-105 transition-all duration-300 cursor-pointer group"
           >
-
-            <img src={GoogleDrive} alt="Google Drive" className="mx-auto h-10 mb-2" />
-            <p className="text-sm">Google Drive</p>
+            <img src={GoogleDrive} alt="Google Drive" className="mx-auto h-12 mb-3 group-hover:scale-110 transition-transform duration-300" />
+            <p className="text-sm font-medium">Google Drive</p>
           </div>
-          <div className="border border-cyan-500 rounded-xl py-4 px-2 hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-pointer">
-            <img src={OneDrive} alt="One Drive" className="mx-auto h-10 mb-2" />
-            <p className="text-sm">One Drive</p>
+
+          <div className="bg-slate-700/50 backdrop-blur-sm border border-cyan-400/30 rounded-xl py-6 px-4 hover:border-cyan-400 hover:bg-slate-700/70 hover:scale-105 transition-all duration-300 cursor-pointer group">
+            <img src={OneDrive} alt="One Drive" className="mx-auto h-12 mb-3 group-hover:scale-110 transition-transform duration-300" />
+            <p className="text-sm font-medium">One Drive</p>
           </div>
         </div>
 
         <div className="flex justify-end gap-4">
           <button
-            className="bg-white text-black px-4 py-2 rounded-xl font-semibold hover:bg-gray-200 cursor-pointer transition"
+            className="bg-slate-600 hover:bg-slate-500 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
             onClick={() => window.location.replace('/')}
           >
             Cancel
           </button>
           <button
-            className="bg-cyan-500 hover:bg-cyan-600 cursor-pointer text-white px-5 py-2 rounded-xl font-bold transition"
-
+            className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-8 py-3 rounded-xl font-bold transition-all duration-300 hover:scale-105 shadow-lg"
             onClick={() => setShowProcessing(true)}
-
           >
             Confirm
           </button>
         </div>
       </div>
-          {toastMessage && (
-          <div className="fixed bottom-6 right-6 bg-cyan-500 text-white px-4 py-2 rounded-lg shadow-lg animate-fade-in-out z-50">
-            {toastMessage}
-          </div>
-        )}
+
+      {toastMessage && (
+        <div className="fixed bottom-6 right-6 bg-gradient-to-r from-cyan-500 to-blue-600 text-white px-6 py-3 rounded-xl shadow-2xl animate-fade-in-out z-50 backdrop-blur-sm border border-cyan-400/30">
+          {toastMessage}
+        </div>
+      )}
     </div>
   );
 };

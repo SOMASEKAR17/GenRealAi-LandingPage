@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FaInfoCircle, FaTimes, FaEye } from 'react-icons/fa';
+import { FaInfoCircle, FaTimes, FaEye, FaUpload, FaCheck } from 'react-icons/fa';
 import { motion } from 'framer-motion';
 import DeepfakeQuiz from './Quiz';
 import Result from "./result";
@@ -11,102 +11,187 @@ const Processing = () => {
   const [processingComplete, setProcessingComplete] = useState(false);
   const [showResult, setShowResult] = useState(false);
 
-
   useEffect(() => {
-    const interval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setProcessingComplete(true);
-          return 100;
-        }
-        return prev + 0.5;
-      });
-    }, 50);
+    let start = null;
+    let animationFrame;
+
+    const step = (timestamp) => {
+      if (!start) start = timestamp;
+      const elapsed = timestamp - start;
+
+      const percentage = Math.min((elapsed / 10000) * 100, 100);
+      setProgress(prev => (percentage > prev ? Math.floor(percentage) : prev));
+
+      if (percentage < 100) {
+        animationFrame = requestAnimationFrame(step);
+      } else {
+        setProcessingComplete(true);
+      }
+    };
+
+    animationFrame = requestAnimationFrame(step);
 
     const timeout = setTimeout(() => {
       setShowNotification(true);
     }, 500);
 
     return () => {
-      clearInterval(interval);
       clearTimeout(timeout);
+      cancelAnimationFrame(animationFrame);
     };
   }, []);
-
-  const interpolateColor = () => {
-    const p = Math.min(progress / 100, 1);
-    const from = [14, 16, 16]; // #0E1010
-    const to = [13, 47, 45];   // #0D2F2D
-    const interpolated = from.map((f, i) => Math.round(f + (to[i] - f) * p));
-    return `rgb(${interpolated.join(',')})`;
-  };
 
   const handleSeeResults = () => {
     setShowResult(true);
   };
 
-  if (showResult) {
-    return <Result />;
-  }
+  if (showResult) return <Result />;
 
   return (
-    <div
-      className="w-screen h-screen text-white flex flex-col items-center justify-center font-sans relative overflow-hidden px-4"
-      style={{ backgroundColor: interpolateColor() }}
-    >
-    {/* Logo */}
-    <div className="relative mb-6">
-      <div className="w-44 h-44 rounded-full bg-[#333232] flex items-center justify-center border-4 border-cyan-400 shadow-lg">
-        <img
-          src="/logoGenReal.png"
-          alt="GenReal.AI Logo"
-          className="w-28 h-28 object-contain"
-        />
-      </div>
-    </div>
-
-      {/* Title */}
-      <h2 className="text-cyan-400 font-semibold text-sm uppercase tracking-widest mb-2">
-        Did you know
-      </h2>
-
-      {/* Fact */}
-      <p className="text-center text-sm sm:text-base text-gray-300 max-w-sm mb-6">
-        60% of people encountered a deepfake video in the past year
-      </p>
-
-      {/* Progress Bar */}
-      <div className="w-[80%] max-w-md h-2 bg-gray-600 rounded-full overflow-hidden mb-6">
-        <div
-          className="h-full bg-cyan-400 transition-all duration-100"
-          style={{ width: `${progress}%` }}
-        />
+    <div className="w-screen h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white flex flex-col items-center justify-center font-sans relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Floating orbs */}
+        <div className="absolute top-20 left-20 w-32 h-32 bg-cyan-400/10 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute bottom-32 right-32 w-48 h-48 bg-blue-400/10 rounded-full blur-xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-teal-400/10 rounded-full blur-xl animate-pulse delay-2000"></div>
+        
+        {/* Grid pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
       </div>
 
-      {/* See Results Button - appears when processing is complete */}
-      {processingComplete && (
-        <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          transition={{ 
-            duration: 0.6, 
-            ease: "easeOut",
-            delay: 0.3 
-          }}
-          className="mb-6"
+      {/* Main Content Container */}
+      <div className="relative z-10 flex flex-col items-center justify-center max-w-2xl mx-auto px-8">
+        
+        {/* Logo Section */}
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="mb-12"
         >
-          <motion.button
-            onClick={handleSeeResults}
-            className="bg-gradient-to-r from-cyan-500 to-cyan-600 hover:from-cyan-600 cursor-pointer hover:to-cyan-700 text-white font-semibold px-8 py-3 rounded-full shadow-lg flex items-center gap-3 transition-all duration-300 transform hover:scale-105"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            <FaEye className="text-lg" />
-            See Results
-          </motion.button>
+          <div className="relative">
+            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center border-2 border-cyan-400/30 shadow-2xl backdrop-blur-sm">
+              <img
+                src="/logoGenReal.png"
+                alt="GenReal.AI Logo"
+                className="w-20 h-20 object-contain"
+              />
+            </div>
+            {/* Glowing ring */}
+            <div className="absolute inset-0 rounded-full border-2 border-cyan-400/20 animate-ping"></div>
+          </div>
         </motion.div>
-      )}
+
+        {/* Processing Status */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="text-center mb-8"
+        >
+          <h1 className="text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+            Analyzing Content
+          </h1>
+          <p className="text-slate-300 text-lg mb-6">
+            Our AI is processing your media for deepfake detection
+          </p>
+          
+          {/* Processing Steps */}
+          <div className="flex justify-center items-center gap-4 mb-8">
+            <div className="flex items-center gap-2">
+              <div className={`w-3 h-3 rounded-full ${progress > 0 ? 'bg-cyan-400' : 'bg-slate-600'} transition-colors duration-500`}></div>
+              <span className="text-sm text-slate-400">Upload</span>
+            </div>
+            <div className="w-8 h-0.5 bg-slate-600"></div>
+            <div className="flex items-center gap-2">
+              <div className={`w-3 h-3 rounded-full ${progress > 30 ? 'bg-cyan-400' : 'bg-slate-600'} transition-colors duration-500`}></div>
+              <span className="text-sm text-slate-400">Analysis</span>
+            </div>
+            <div className="w-8 h-0.5 bg-slate-600"></div>
+            <div className="flex items-center gap-2">
+              <div className={`w-3 h-3 rounded-full ${progress > 70 ? 'bg-cyan-400' : 'bg-slate-600'} transition-colors duration-500`}></div>
+              <span className="text-sm text-slate-400">Verification</span>
+            </div>
+            <div className="w-8 h-0.5 bg-slate-600"></div>
+            <div className="flex items-center gap-2">
+              <div className={`w-3 h-3 rounded-full ${progress === 100 ? 'bg-green-400' : 'bg-slate-600'} transition-colors duration-500`}></div>
+              <span className="text-sm text-slate-400">Complete</span>
+            </div>
+          </div>
+        </motion.div>
+
+        {/* Progress Section */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
+          className="w-full max-w-md mb-12"
+        >
+          {/* Progress Bar */}
+          <div className="relative mb-4">
+            <div className="w-full h-3 bg-slate-700 rounded-full overflow-hidden shadow-inner">
+              <motion.div
+                className="h-full bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full shadow-lg"
+                style={{ width: `${progress}%` }}
+                transition={{ duration: 0.3 }}
+              />
+            </div>
+            <div className="absolute -top-8 left-0 right-0 text-center">
+              <span className="text-2xl font-bold text-cyan-400">{progress}%</span>
+            </div>
+          </div>
+
+          {/* Status Message */}
+          <div className="text-center">
+            <p className="text-slate-400 text-sm">
+              {progress < 30 ? 'Uploading and preprocessing...' :
+               progress < 70 ? 'Running deepfake detection algorithms...' :
+               progress < 100 ? 'Finalizing analysis...' :
+               'Analysis complete!'}
+            </p>
+          </div>
+        </motion.div>
+
+        {/* Fun Fact */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.6 }}
+          className="text-center mb-8"
+        >
+          <div className="bg-slate-800/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-700/50 shadow-xl">
+            <h3 className="text-cyan-400 font-semibold text-sm uppercase tracking-wider mb-3">
+              Did you know?
+            </h3>
+            <p className="text-slate-300 text-base leading-relaxed">
+              60% of people encountered a deepfake video in the past year, but only 
+              <span className="text-cyan-400 font-semibold"> 24% </span> 
+              could identify them correctly
+            </p>
+          </div>
+        </motion.div>
+
+        {/* See Results Button */}
+        {processingComplete && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
+            className="mb-8"
+          >
+            <motion.button
+              onClick={handleSeeResults}
+              className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold px-10 py-4 rounded-xl shadow-2xl flex items-center gap-3 transition-all duration-300 transform hover:scale-105 border border-cyan-400/20"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <FaEye className="text-lg" />
+              View Results
+            </motion.button>
+          </motion.div>
+        )}
+      </div>
 
       {/* Notification box */}
       {showNotification && (
@@ -114,16 +199,16 @@ const Processing = () => {
           initial={{ x: 100, opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.7, ease: 'easeOut', delay: 0.1 }}
-          className="fixed bottom-6 right-6 bg-[#123332] border border-cyan-400 px-6 py-5 rounded-xl shadow-xl flex items-start gap-4 max-w-xs"
+          className="fixed bottom-6 right-6 bg-slate-800/90 backdrop-blur-sm border border-cyan-400/30 px-6 py-5 rounded-xl shadow-2xl flex items-start gap-4 max-w-xs z-50"
         >
           <FaInfoCircle className="text-cyan-400 text-2xl mt-1" />
           <div>
-            <p className="text-sm mb-2 leading-snug">
+            <p className="text-sm mb-3 leading-snug text-slate-200">
               Think you're good at spotting deepfakes? Put your skills to the test.
             </p>
             <button
-              className="bg-cyan-500 hover:bg-cyan-600 text-white text-sm px-5 py-2 rounded-full font-semibold"
-              onClick={() => setShowQuiz(true)} 
+              className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white text-sm px-5 py-2 rounded-full font-semibold transition-all duration-300 transform hover:scale-105"
+              onClick={() => setShowQuiz(true)}
             >
               Take Quiz
             </button>
@@ -131,7 +216,7 @@ const Processing = () => {
         </motion.div>
       )}
 
-      {/* Quiz Popup Modal */}
+      {/* Quiz Modal */}
       {showQuiz && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -148,7 +233,6 @@ const Processing = () => {
             backdropFilter: 'blur(10px)',
           }}
         >
-          {/* Close button */}
           <button
             onClick={() => setShowQuiz(false)}
             className="absolute top-6 right-6 text-white hover:text-gray-300 transition-colors duration-200 z-10 hover:cursor-pointer"
@@ -156,7 +240,6 @@ const Processing = () => {
             <FaTimes className="text-2xl" />
           </button>
 
-          {/* Quiz Content */}
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
