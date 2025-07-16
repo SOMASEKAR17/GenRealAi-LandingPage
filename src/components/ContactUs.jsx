@@ -1,142 +1,233 @@
 import React, { useState } from 'react';
-import { FaLinkedin, FaInstagram, FaEnvelope } from 'react-icons/fa';
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
+import { Mail, MapPin, Send, MessageCircle, Linkedin, Clock } from 'lucide-react';
 
-const ContactUs = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
-  const [agree, setAgree] = useState(false);
-  const [hover, setHover] = useState(null);
-  const [buttonHover, setButtonHover] = useState(false);
+const ContactForm = () => {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: ''
+  });
+  const [focused, setFocused] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    if (!formData.name || !formData.email || !formData.message || !agree) {
-      alert('Please fill out all fields and agree to the terms.');
-      return;
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSubmitted(true);
+    setTimeout(() => setSubmitted(false), 3000);
+    setFormData({
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      subject: '',
+      message: ''
+    });
+  };
+
+  const contactInfo = [
+    {
+      icon: <Mail className="w-5 h-5" />,
+      title: "Email",
+      info: "hello@company.com",
+      subInfo: "24/7 Support"
+    },
+    {
+      icon: <Linkedin className="w-5 h-5" />,
+      title: "LinkedIn",
+      info: "linkedin.com/in/yourprofile",
+      subInfo: "Let's connect"
+    },
+    {
+      icon: <MapPin className="w-5 h-5" />,
+      title: "Visit Us",
+      info: "123 Business District",
+      subInfo: "New York, NY 10001"
+    },
+    {
+      icon: <Clock className="w-5 h-5" />,
+      title: "Response Time",
+      info: "Within 2 working days",
+      subInfo: "We'll get back to you soon"
     }
-    alert('Message sent!');
-    setFormData({ name: '', email: '', message: '' });
-    setAgree(false);
-  };
-
-  const iconList = [
-    { icon: <FaLinkedin />, label: 'LinkedIn' },
-    { icon: <FaInstagram />, label: 'Instagram' },
-    { icon: <FaEnvelope />, label: 'Email' },
   ];
 
-  const [refForm, inViewForm] = useInView({ triggerOnce: false, threshold: 0.1 });
-  const [refInfo, inViewInfo] = useInView({ triggerOnce: false, threshold: 0.1 });
-
-
   return (
-    <div className="min-h-screen w-screen bg-black flex items-center justify-center relative font-exo" id="contact-us">
-      <div className="absolute top-0 left-0 w-[400px] h-[400px] bg-cyan-400 opacity-20 blur-[100px] rounded-full pointer-events-none animate-pulseGlow" />
-      <div className="absolute bottom-0 right-0 w-[400px] h-[400px] bg-cyan-400 opacity-20 blur-[100px] rounded-full pointer-events-none animate-pulseGlow" />
+    <div className="bg-gradient-to-b from-[#0a0f1f] via-[#0b162c] to-[#050915] px-4 md:px-8 py-12 min-h-screen">
+      {/* Glow Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-cyan-500/20 rounded-full blur-[160px]" />
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-cyan-400/20 rounded-full blur-[160px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[32rem] h-[32rem] bg-cyan-500/5 rounded-full blur-[160px]" />
+      </div>
 
-      <div className="bg-[#0a2327e0] border-2 border-cyan-400 rounded-3xl shadow-[0_0_12px_#00ffff33,0_4px_16px_#00ffff11] p-12 md:p-8 w-[95vw] max-w-[980px] flex flex-col-reverse md:flex-row gap-8 md:gap-16 backdrop-blur-md z-10">
-
-        {/* Left Form */}
-        <motion.form
-          ref={refForm}
-          initial={{ opacity: 0, x: -40 }}
-          animate={inViewForm ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.8, ease: 'easeOut' }}
-          onSubmit={handleSubmit}
-          className="flex-1 flex flex-col w-full font-exo"
-        >
-          <label className="text-[#e3eaf0] text-lg font-medium mb-2 mt-4">Name</label>
-          <input
-            type="text"
-            name="name"
-            value={formData.name}
-            onChange={handleChange}
-            className="bg-black/30 border border-cyan-400 text-white text-lg p-4 rounded-xl mb-4 shadow-inner shadow-cyan-200/10 focus:outline-none"
-          />
-          <label className="text-[#e3eaf0] text-lg font-medium mb-2">E-mail</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            className="bg-black/30 border border-cyan-400 text-white text-lg p-4 rounded-xl mb-4 shadow-inner shadow-cyan-200/10 focus:outline-none"
-          />
-          <label className="text-[#e3eaf0] text-lg font-medium mb-2">Enter description</label>
-          <textarea
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            className="bg-black/30 border border-cyan-400 text-white text-lg p-4 rounded-xl mb-6 shadow-inner shadow-cyan-200/10 min-h-[100px] resize-none focus:outline-none"
-          />
-
-          <div className="flex items-center mb-6">
-            <input
-              type="checkbox"
-              checked={agree}
-              onChange={(e) => setAgree(e.target.checked)}
-              className="accent-cyan-400 w-5 h-5 mr-3 rounded focus:outline-none"
-              id="agree"
-            />
-            <label htmlFor="agree" className="text-[#e3eaf0] text-base">
-              I agree to the <span className="text-cyan-400 underline cursor-pointer">processing</span> of the personal data provided
-            </label>
-          </div>
-
-          <button
-            type="submit"
-            onMouseEnter={() => setButtonHover(true)}
-            onMouseLeave={() => setButtonHover(false)}
-            className={`w-full py-4 rounded-2xl text-white font-orbitron text-lg font-extrabold uppercase tracking-wide transition-all duration-200 ${
-              buttonHover
-                ? 'bg-gradient-to-r from-cyan-500 to-cyan-700 shadow-lg scale-[1.03]'
-                : 'bg-gradient-to-r from-cyan-700 to-cyan-500 shadow-md'
-            }`}
-          >
-            Send
-          </button>
-        </motion.form>
-
-        {/* Right Info */}
-        <motion.div
-          ref={refInfo}
-          initial={{ opacity: 0, x: 40 }}
-          animate={inViewInfo ? { opacity: 1, x: 0 } : {}}
-          transition={{ duration: 0.8, ease: 'easeOut' ,delay:0.3}}
-          className="flex-1 flex flex-col items-center justify-center text-center"
-        >
-          <div className="text-white text-3xl font-extrabold font-orbitron uppercase mb-4">
-            Contact Us
-          </div>
-          <p className="text-[#e3eaf0] text-base md:text-lg leading-relaxed mb-6">
-            Customer satisfaction is our top priority! Our support service is available 24/7 to assist you with any questions you may have about our Platform: not yet decided.
-            <br /><br />
-            You can contact us any way you prefer:
+      <div className="relative max-w-6xl mx-auto h-full">
+        {/* Heading */}
+        <div className="text-center mb-10">
+          <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-3">
+            Get In <span className="text-cyan-400">Touch</span>
+          </h1>
+          <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
+            Have a question or want to work together? We'd love to hear from you.
           </p>
-          <div className="flex flex-row gap-8">
-            {iconList.map((item, idx) => (
-              <span
-                key={item.label}
-                onMouseEnter={() => setHover(idx)}
-                onMouseLeave={() => setHover(null)}
-                title={item.label}
-                className={`text-cyan-400 text-2xl p-3 rounded-full bg-cyan-400/10 shadow-md transition-transform duration-200 cursor-pointer ${
-                  hover === idx ? 'scale-110 shadow-cyan-400/60 animate-pulse' : ''
-                }`}
+        </div>
+
+        {/* Content */}
+        <div className="grid lg:grid-cols-3 gap-8 h-full">
+          {/* Contact Info */}
+          <div className="flex flex-col justify-between space-y-6">
+            {contactInfo.map((item, index) => (
+              <div
+                key={index}
+                className="bg-[#10182f] border border-cyan-500/20 rounded-2xl p-6 hover:shadow-md hover:shadow-cyan-500/10 transition-all flex-1 flex items-center"
               >
-                {item.icon}
-              </span>
+                <div className="flex items-center space-x-4 w-full">
+                  <div className="bg-cyan-500/10 p-3 rounded-full text-cyan-400 flex-shrink-0">
+                    {item.icon}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-white font-semibold text-lg">{item.title}</h3>
+                    <p className="text-cyan-300 font-medium break-words">{item.info}</p>
+                    <p className="text-gray-500 text-sm">{item.subInfo}</p>
+                  </div>
+                </div>
+              </div>
             ))}
           </div>
-        </motion.div>
+
+          {/* Form */}
+          <div className="lg:col-span-2 flex flex-col">
+            <div className="bg-[#0e152b] border border-cyan-500/20 rounded-3xl p-6 md:p-10 flex-1">
+              <div className="flex items-center space-x-3 mb-6">
+                <MessageCircle className="w-6 h-6 text-cyan-400" />
+                <h2 className="text-2xl font-bold text-white">Send us a message</h2>
+              </div>
+
+              {submitted && (
+                <div className="mb-6 p-4 bg-green-500/10 border border-green-500/50 rounded-xl">
+                  <p className="text-green-300 font-medium">
+                    Message sent successfully! We'll get back to you soon.
+                  </p>
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-6 h-full flex flex-col">
+                <div className="grid md:grid-cols-2 gap-6">
+                  {["firstName", "lastName"].map((field) => (
+                    <div key={field}>
+                      <label className="block text-gray-300 font-medium mb-2 capitalize">
+                        {field.replace(/([A-Z])/g, " $1")}
+                      </label>
+                      <input
+                        type="text"
+                        name={field}
+                        value={formData[field]}
+                        onChange={handleChange}
+                        onFocus={() => setFocused(field)}
+                        onBlur={() => setFocused(null)}
+                        required
+                        className={`w-full bg-[#121c35] border rounded-xl px-4 py-3 text-white transition-all duration-300 ${
+                          focused === field
+                            ? 'border-cyan-400 shadow-md shadow-cyan-400/20'
+                            : 'border-slate-700 hover:border-slate-600'
+                        }`}
+                      />
+                    </div>
+                  ))}
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-gray-300 font-medium mb-2">Email</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      onFocus={() => setFocused('email')}
+                      onBlur={() => setFocused(null)}
+                      required
+                      className={`w-full bg-[#121c35] border rounded-xl px-4 py-3 text-white transition-all duration-300 ${
+                        focused === 'email'
+                          ? 'border-cyan-400 shadow-md shadow-cyan-400/20'
+                          : 'border-slate-700 hover:border-slate-600'
+                      }`}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-gray-300 font-medium mb-2">Phone (Optional)</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleChange}
+                      onFocus={() => setFocused('phone')}
+                      onBlur={() => setFocused(null)}
+                      className={`w-full bg-[#121c35] border rounded-xl px-4 py-3 text-white transition-all duration-300 ${
+                        focused === 'phone'
+                          ? 'border-cyan-400 shadow-md shadow-cyan-400/20'
+                          : 'border-slate-700 hover:border-slate-600'
+                      }`}
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-gray-300 font-medium mb-2">Subject</label>
+                  <input
+                    type="text"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    onFocus={() => setFocused('subject')}
+                    onBlur={() => setFocused(null)}
+                    required
+                    className={`w-full bg-[#121c35] border rounded-xl px-4 py-3 text-white transition-all duration-300 ${
+                      focused === 'subject'
+                        ? 'border-cyan-400 shadow-md shadow-cyan-400/20'
+                        : 'border-slate-700 hover:border-slate-600'
+                    }`}
+                  />
+                </div>
+
+                <div className="flex-1 flex flex-col">
+                  <label className="block text-gray-300 font-medium mb-2">Message</label>
+                  <textarea
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    onFocus={() => setFocused('message')}
+                    onBlur={() => setFocused(null)}
+                    required
+                    className={`w-full bg-[#121c35] border rounded-xl px-4 py-3 text-white resize-none transition-all duration-300 flex-1 min-h-[120px] ${
+                      focused === 'message'
+                        ? 'border-cyan-400 shadow-md shadow-cyan-400/20'
+                        : 'border-slate-700 hover:border-slate-600'
+                    }`}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  className="w-full bg-gradient-to-r from-cyan-600 to-cyan-400 hover:from-cyan-500 hover:to-cyan-300 text-white font-semibold py-4 px-8 rounded-xl transition-transform duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-cyan-400/25 flex items-center justify-center space-x-3"
+                >
+                  <Send className="w-5 h-5" />
+                  <span>Send Message</span>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
 };
 
-export default ContactUs;
+export default ContactForm;
