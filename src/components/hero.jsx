@@ -54,7 +54,7 @@ const HeroSection = ({ Loaded }) => {
   }, [prevScrollPos]);
 
   useEffect(() => {
-    const sections = ['home', 'about', 'news', 'education', 'faq','team', 'contact-us'];
+    const sections = ['home', 'about', 'news', 'faq','team', 'contact-us'];
 
     const observers = sections.map(id => {
       const section = document.getElementById(id);
@@ -89,7 +89,6 @@ const HeroSection = ({ Loaded }) => {
     { id: 'home', label: 'Home' },
     { id: 'about', label: 'About' },
     { id: 'news', label: 'News' },
-    { id: 'education', label: 'Education' },
     { id: 'faq', label: 'FAQ' },
     { id: 'team', label: 'Team' },
     { id: 'contact-us', label: 'Contact Us' },

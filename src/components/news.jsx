@@ -44,7 +44,7 @@ const NewsTimeline = () => {
       className="relative w-full h-screen bg-gradient-to-bl from-black to-cyan-950 text-white overflow-hidden"
     >
       <div className="absolute top-12 left-12 z-10" id="news">
-        <h2 className="text-3xl font-bold mb-2">News & Insights</h2>
+        <h2 className="text-3xl font-bold mb-2 pt-20">News & Insights</h2>
         <p className="text-sm text-gray-300">Combating Misinformation with Technology</p>
       </div>
 

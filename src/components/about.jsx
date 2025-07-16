@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { motion, useInView } from "framer-motion";
 
+
 const fadeInVariant = (direction = "up") => ({
   hidden: {
     opacity: 0,
@@ -31,7 +32,7 @@ const AboutUsSection = () => {
       data-scroll
       data-scroll-section
       data-scroll-speed="-.6"
-      className="bg-gradient-to-br from-black to-cyan-950 text-white pb-10 lg:pb-30 pt-30 px-6 md:px-20"
+      className="bg-black text-white pb-10 lg:pb-30 pt-30 px-6 md:px-20"
     >
       <div className="max-w-5xl mx-auto" id="about">
         <motion.p

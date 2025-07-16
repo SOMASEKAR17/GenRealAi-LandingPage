@@ -17,7 +17,6 @@ export default function ThreeGlobe() {
 
   const globeGroupRef = useRef(new THREE.Group());
 
-
   useEffect(() => {
     const handleResize = () => {
       if (mountRef.current) {
@@ -37,22 +36,18 @@ export default function ThreeGlobe() {
       .catch((err) => console.error("Failed to load fraud data:", err));
   }, []);
 
-  const getCountryColor = (countryName) => {
-    const info = countryData?.[countryName];
-
-    if (!info) return 0x00ffff; // Default: Cyan
-    if (info.fraudRise === "High") return 0xff3333; // Bright red
-    if (info.fraudRise === "Medium") return 0xff6666; // Softer red
-    if (info.fraudRise === "Low") return 0xffaaaa; // Light pink-red
-
-    return 0x999999;
+  const getCountryColor = (name) => {
+    const info = countryData?.[name];
+    if (!info) return new THREE.Color().setHSL(Math.random(), 0.6, 0.5); // Random fallback
+    if (info.fraudRise === "High") return new THREE.Color(1, 0.2, 0.2);
+    if (info.fraudRise === "Medium") return new THREE.Color(1, 0.5, 0.5);
+    if (info.fraudRise === "Low") return new THREE.Color(1, 0.7, 0.7);
+    return new THREE.Color(0.2, 0.7, 0.8); // default blueish
   };
 
   const latLngToVector3 = (lat, lng, radius) => {
     const phi = (90 - lat) * (Math.PI / 180);
-
     const theta = (-lng + 180) * (Math.PI / 180);
-
     return new THREE.Vector3(
       radius * Math.sin(phi) * Math.cos(theta),
       radius * Math.cos(phi),
@@ -61,27 +56,26 @@ export default function ThreeGlobe() {
   };
 
   useEffect(() => {
-    if (!containerSize.width || !containerSize.height || !countryData) return;
+    if (!containerSize.width || !containerSize.height) return;
 
     const width = containerSize.width;
     const height = containerSize.height;
     const radius = 1.5;
 
-
-    // === SETUP SCENES ===
     const backgroundScene = new THREE.Scene();
     backgroundScene.background = new THREE.Color(0x000011);
 
     const mainScene = new THREE.Scene();
     mainScene.add(globeGroupRef.current);
 
-    // === CAMERA ===
-
     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
     camera.position.z = 3;
     cameraRef.current = camera;
 
-    // === STARFIELD ===
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+    mainScene.add(ambientLight);
+
+    // Starfield
     const starGeometry = new THREE.BufferGeometry();
     const starCount = 1000;
     const starVertices = [];
@@ -103,8 +97,7 @@ export default function ThreeGlobe() {
     const stars = new THREE.Points(starGeometry, starMaterial);
     backgroundScene.add(stars);
 
-    // === RENDERER ===
-
+    // Renderer
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(width, height);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -115,16 +108,34 @@ export default function ThreeGlobe() {
       mountRef.current.appendChild(renderer.domElement);
     }
 
-
-    // === GLOBE ===
+    // Globe (Ocean)
     const globe = new THREE.Mesh(
       new THREE.SphereGeometry(radius, 64, 64),
-      new THREE.MeshStandardMaterial({ color: 0x111133, transparent: true, opacity: 0.3, metalness: 0.3, roughness: 0.7 })
+      new THREE.MeshStandardMaterial({
+        color: 0x003366,
+        roughness: 1,
+        metalness: 0,
+        transparent: true,
+        opacity: 1,
+      })
     );
     globeGroupRef.current.add(globe);
-    mainScene.add(new THREE.AmbientLight(0xffffff, 1.2));
 
+    // Cloud Layer
+    const cloudTexture = new THREE.TextureLoader().load("/cloud.webp");
+    const cloudMaterial = new THREE.MeshLambertMaterial({
+      map: cloudTexture,
+      transparent: true,
+      opacity: 0.4,
+      depthWrite: false,
+    });
+    const cloudMesh = new THREE.Mesh(
+      new THREE.SphereGeometry(radius + 0.015, 64, 64),
+      cloudMaterial
+    );
+    globeGroupRef.current.add(cloudMesh);
 
+    // Countries
     fetch("/countries.geojson")
       .then((res) => res.json())
       .then((geoJson) => {
@@ -132,43 +143,60 @@ export default function ThreeGlobe() {
           const coords = feature.geometry.coordinates;
           const type = feature.geometry.type;
           const name = feature.properties.ADMIN || feature.properties.name;
-          const color = getCountryColor(name);
 
           const drawPolygon = (polygon) => {
-            polygon.forEach((ring) => {
-              if (ring.length < 3) return;
+              const outerRing = polygon[0];
+              const holes = polygon.slice(1);
 
-              const flat = ring.flat();
-              const indices = earcut(flat);
+              const vertices3D = [];
+              const vertices2D = [];
+              const holeIndices = [];
+
+              // Outer ring
+              outerRing.forEach(([lng, lat]) => {
+                const v = latLngToVector3(lat, lng, radius + 0.09);
+                vertices3D.push(v.x, v.y, v.z);
+                const phi = (90 - lat) * (Math.PI / 180);
+                const theta = (-lng + 180) * (Math.PI / 180);
+                vertices2D.push((radius + 0.01) * Math.sin(phi) * Math.cos(theta));
+                vertices2D.push((radius + 0.01) * Math.cos(phi));
+              });
+
+              // Holes
+              holes.forEach((ring) => {
+                holeIndices.push(vertices2D.length / 2); // each vertex is 2D
+                ring.forEach(([lng, lat]) => {
+                  const v = latLngToVector3(lat, lng, radius + 0.01);
+                  vertices3D.push(v.x, v.y, v.z);
+                  const phi = (90 - lat) * (Math.PI / 180);
+                  const theta = (-lng + 180) * (Math.PI / 180);
+                  vertices2D.push((radius + 0.01) * Math.sin(phi) * Math.cos(theta));
+                  vertices2D.push((radius + 0.01) * Math.cos(phi));
+                });
+              });
+
+              const indices = earcut(vertices2D, holeIndices);
 
               const geometry = new THREE.BufferGeometry();
-              const vertices = [];
+              geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(vertices3D), 3));
+              geometry.setIndex(indices);
 
-              for (let i = 0; i < indices.length; i++) {
-                const idx = indices[i];
-                const lng = ring[idx][0];
-                const lat = ring[idx][1];
-                const vertex = latLngToVector3(lat, lng, radius + 0.01);
-                vertices.push(vertex.x, vertex.y, vertex.z);
-              }
+              const material = new THREE.MeshBasicMaterial({
+                color: getCountryColor(name),
+                side: THREE.DoubleSide,
+              });
 
-              geometry.setAttribute("position", new THREE.BufferAttribute(new Float32Array(vertices), 3));
-
-              const material = new THREE.MeshBasicMaterial({ color, side: THREE.DoubleSide });
               const mesh = new THREE.Mesh(geometry, material);
               mesh.userData.countryName = name;
               globeGroupRef.current.add(mesh);
-
               countryMeshesRef.current.push(mesh);
-            });
-          };
-
+            };
           if (type === "Polygon") drawPolygon(coords);
           else if (type === "MultiPolygon") coords.forEach(drawPolygon);
         });
       });
 
-
+    // Controls
     let isDragging = false;
     let lastMouse = { x: 0, y: 0 };
     let rotation = { x: 0, y: 0 };
@@ -206,9 +234,7 @@ export default function ThreeGlobe() {
         const deltaY = e.clientY - lastMouse.y;
         rotation.y += deltaX * 0.005;
         rotation.x += deltaY * 0.005;
-        const maxX = Math.PI / 2;
-        const minX = -Math.PI / 2;
-        rotation.x = Math.max(minX, Math.min(maxX, rotation.x));
+        rotation.x = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, rotation.x));
         lastMouse = { x: e.clientX, y: e.clientY };
       }
     };
@@ -223,25 +249,27 @@ export default function ThreeGlobe() {
     canvas.addEventListener("mousemove", handleMouseMove);
     canvas.addEventListener("mouseup", handleMouseUp);
 
-
-    // === ANIMATION LOOP ===
+    // Animation
     let animationId;
     const animate = () => {
-      if (autoRotate && !isDragging) rotation.y += 0.0015;
-      globeGroupRef.current.rotation.set(rotation.x, rotation.y, 0);
+  if (autoRotate && !isDragging) rotation.y += 0.0015;
+  globeGroupRef.current.rotation.set(rotation.x, rotation.y, 0);
 
-      // Star twinkle & slight drift
-      const time = Date.now() * 0.001;
-      starMaterial.opacity = 0.5 + 0.3 * Math.sin(time * 2);
-      stars.rotation.y += 0.0001;
+  const t = Date.now() * 0.001;
+  cloudMesh.rotation.y += 0.0002;
 
-      renderer.autoClear = false;
-      renderer.clear();
-      renderer.render(backgroundScene, camera);
-      renderer.render(mainScene, camera);
+  // 🌟 Add blinking/pulsing effect to stars
+  starMaterial.opacity = 0.5 + 0.3 * Math.sin(t * 2); // between 0.2 and 0.8
+  // Optional: starMaterial.size = 0.1 + 0.05 * Math.sin(t * 3);
 
-      animationId = requestAnimationFrame(animate);
+  renderer.autoClear = false;
+  renderer.clear();
+  renderer.render(backgroundScene, camera);
+  renderer.render(mainScene, camera);
+
+  animationId = requestAnimationFrame(animate);
     };
+
     animate();
 
     return () => {
@@ -258,27 +286,30 @@ export default function ThreeGlobe() {
       <div ref={mountRef} style={{ width: "100%", height: "100%" }} />
       {selectedCountry && (
         <div
-          style={{
-            position: "fixed",
-            top: hoverPosition.y + 10,
-            left: hoverPosition.x + 10,
-            background: "rgba(0, 0, 0, 0.9)",
-            color: "white",
-            padding: "12px 16px",
-            borderRadius: "8px",
-            fontSize: "14px",
-            zIndex: 1000,
-          }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <strong>{selectedCountry.name}</strong>
-          </div>
-          <div>
-            <strong>Fraud Rise:</strong> {selectedCountry.data.fraudRise}
-            <br />
-            {selectedCountry.data.note}
-          </div>
-        </div>
+  style={{
+    position: "fixed",
+    top: hoverPosition.y + 10,
+    left: hoverPosition.x + 10,
+    background: "linear-gradient(145deg, #0a0f1f, #111827)", // dark blue gradient
+    color: "#d1d5db", // light gray text
+    padding: "14px 18px",
+    borderRadius: "10px",
+    fontSize: "14px",
+    fontFamily: "'Orbitron', sans-serif", // futuristic font
+    zIndex: 1000,
+    border: "1px solid #00ffff", // neon blue edge
+    boxShadow: "0 0 10px #00ffff, 0 0 20px #00ffff", // glowing effect
+    transition: "all 0.3s ease-in-out",
+  }}
+>
+  <strong style={{ color: "#00ffff" }}>{selectedCountry.name}</strong>
+  <div style={{ marginTop: "6px" }}>
+    <strong style={{ color: "#ffffff" }}>Fraud Rise:</strong> {selectedCountry.data.fraudRise}
+    <br />
+    <span style={{ color: "#9ca3af" }}>{selectedCountry.data.note}</span>
+  </div>
+</div>
+
       )}
     </div>
   );

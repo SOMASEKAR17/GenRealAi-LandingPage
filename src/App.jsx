@@ -7,7 +7,7 @@ import About from './components/about';
 import Team from './components/team';
 import News from './components/news';
 import ContactUs from './components/ContactUs';
-import Education from './components/Education';
+import VideoCarousel  from "./components/videoCarousel"
 import Footer from './components/Footer';
 import FAQ from './components/FAQ';
 import Upload from './components/upload';
@@ -19,9 +19,13 @@ const Home = ({ isLoaded }) => (
   <div className='z-10' style={{ visibility: isLoaded ? 'visible' : 'hidden' }}>
     <Hero Loaded={isLoaded} />
     <About id="about" />
+    <div className='w-[100%] h-screen'>
+      <div className='w-[60%] h-[50%] mx-auto'>
+        <VideoCarousel />
+      </div>
+    </div>
     <Globe />
     <News id="news" />
-    <Education id="education" />
     <FAQ id="faq" />
     <Team id="team" />
     <ContactUs id="contact-us" />
