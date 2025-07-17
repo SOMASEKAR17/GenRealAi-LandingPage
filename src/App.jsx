@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 
-import Loader from './components/Loader';
+import Loader from './components/loader';
 import Hero from './components/hero';
 import About from './components/about';
 import Team from './components/team';
@@ -13,7 +13,6 @@ import FAQ from './components/FAQ';
 import Upload from './components/upload';
 import Processing from './components/processing';
 import LocomotiveScroll from 'locomotive-scroll';
-import Globe from './components/globe'
 
 const Home = ({ isLoaded }) => (
   <div className='z-10' style={{ visibility: isLoaded ? 'visible' : 'hidden' }}>
