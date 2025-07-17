@@ -10,7 +10,7 @@ import ContactUs from './components/ContactUs';
 import VideoCarousel  from "./components/videoCarousel"
 import Footer from './components/Footer';
 import FAQ from './components/FAQ';
-import Upload from './components/upload';
+import Upload from './components/Upload';
 import Processing from './components/processing';
 import LocomotiveScroll from 'locomotive-scroll';
 
