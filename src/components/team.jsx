@@ -1,5 +1,5 @@
 import React from "react";
-import ProfileCard from "./ProfileCard";
+import ProfileCard from "./profileCard";
 
 const Team = () => {
   const founders = [
