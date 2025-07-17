@@ -1,7 +1,7 @@
 import React from "react";
 import ProfileCard from "./ProfileCard";
 
-const TeamSection = () => {
+const Team = () => {
   const founders = [
     {
       name: "xyz",
@@ -73,4 +73,4 @@ const TeamSection = () => {
   );
 };
 
-export default TeamSection;
+export default Team;
