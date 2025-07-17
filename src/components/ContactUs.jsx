@@ -36,20 +36,20 @@ const ContactForm = () => {
     {
       icon: <Mail className="w-5 h-5" />,
       title: "Email",
-      info: "hello@company.com",
+      info: "genreal.ai@gmail.com",
       subInfo: "24/7 Support"
     },
     {
       icon: <Linkedin className="w-5 h-5" />,
       title: "LinkedIn",
-      info: "linkedin.com/in/yourprofile",
+      info: "https://www.linkedin.com/company/genreal-ai/",
       subInfo: "Let's connect"
     },
     {
       icon: <MapPin className="w-5 h-5" />,
       title: "Visit Us",
-      info: "123 Business District",
-      subInfo: "New York, NY 10001"
+      info: "VIT Vellore",
+      subInfo: "Vellore, Tamil Nadu, India"
     },
     {
       icon: <Clock className="w-5 h-5" />,
@@ -60,7 +60,7 @@ const ContactForm = () => {
   ];
 
   return (
-    <div className="bg-gradient-to-b from-[#0a0f1f] via-[#0b162c] to-[#050915] px-4 md:px-8 py-12 h-screen overflow-y-hidden" id="contact-us">
+    <div className="bg-gradient-to-b from-[#0a0f1f] via-[#0b162c] to-[#050915] px-4 md:px-8 py-12 h-screen overflow-y-hidden">
       {/* Glow Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-cyan-500/20 rounded-full blur-[160px]" />
@@ -94,7 +94,30 @@ const ContactForm = () => {
                   </div>
                   <div>
                     <h3 className="text-white font-semibold text-lg">{item.title}</h3>
-                    <p className="text-cyan-300 font-medium break-words">{item.info}</p>
+                    {item.title === 'LinkedIn' ? (
+                      <div className="flex items-center gap-2">
+                        <a
+                          href={item.info}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-cyan-300 font-medium break-all max-w-[180px] truncate hover:underline"
+                          title={item.info}
+                        >
+                          {item.info}
+                        </a>
+                        <a
+                          href={item.info}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center px-2 py-1 text-xs bg-cyan-700/30 rounded hover:bg-cyan-700/60 transition"
+                          title="Visit LinkedIn"
+                        >
+                          Visit
+                        </a>
+                      </div>
+                    ) : (
+                      <p className="text-cyan-300 font-medium break-words">{item.info}</p>
+                    )}
                     <p className="text-gray-500 text-sm">{item.subInfo}</p>
                   </div>
                 </div>

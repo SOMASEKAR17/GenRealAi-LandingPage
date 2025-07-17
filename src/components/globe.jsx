@@ -36,14 +36,15 @@ export default function ThreeGlobe() {
       .catch((err) => console.error("Failed to load fraud data:", err));
   }, []);
 
-  const getCountryColor = (name) => {
-    const info = countryData?.[name];
-    if (!info) return new THREE.Color().setHSL(Math.random(), 0.6, 0.5); // Random fallback
-    if (info.fraudRise === "High") return new THREE.Color(1, 0.2, 0.2);
-    if (info.fraudRise === "Medium") return new THREE.Color(1, 0.5, 0.5);
-    if (info.fraudRise === "Low") return new THREE.Color(1, 0.7, 0.7);
-    return new THREE.Color(0.2, 0.7, 0.8); // default blueish
-  };
+ const getCountryColor = (name) => {
+  const info = countryData?.[name];
+  const color = new THREE.Color();
+  if (!info || !info.fraudRise) return color.set("#00ff80"); // Very dark blue for no data
+  const percentage = parseFloat(info.fraudRise.replace(/[%\,]/g, ""));
+  if (percentage > 2000) return color.set("#ff0080");      // High → Hot pink
+  if (percentage >= 1000) return color.set("#00ffff");     // Medium → Cyan
+  return color.set("#00ff80");                             // Low → Bright green
+};
 
   const latLngToVector3 = (lat, lng, radius) => {
     const phi = (90 - lat) * (Math.PI / 180);
