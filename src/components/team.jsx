@@ -60,7 +60,7 @@ const TeamSection = () => {
       <div className="max-w-5xl mx-auto mt-16">
         <div className="relative overflow-hidden">
           <img
-            src="/team.png"
+            src="/team.jpg"
             alt="Our Team"
             className="w-full object-cover h-full"
           />

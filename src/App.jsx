@@ -24,7 +24,6 @@ const Home = ({ isLoaded }) => (
         <VideoCarousel />
       </div>
     </div>
-    <Globe />
     <News id="news" />
     <FAQ id="faq" />
     <Team id="team" />
