@@ -57,8 +57,8 @@ const TeamSection = () => {
       </div>
 
       {/* Team Section */}
-      <div className="max-w-5xl mx-auto mt-16">
-        <div className="relative overflow-hidden">
+      <div className="max-w-5xl  h-screen mx-auto mt-16">
+        <div className="relative h-[75%] rounded-3xl overflow-hidden">
           <img
             src="/team.jpg"
             alt="Our Team"
