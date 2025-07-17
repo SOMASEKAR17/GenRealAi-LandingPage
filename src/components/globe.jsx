@@ -154,7 +154,7 @@ export default function ThreeGlobe() {
 
               // Outer ring
               outerRing.forEach(([lng, lat]) => {
-                const v = latLngToVector3(lat, lng, radius + 0.09);
+                const v = latLngToVector3(lat, lng, radius + 0.01);
                 vertices3D.push(v.x, v.y, v.z);
                 const phi = (90 - lat) * (Math.PI / 180);
                 const theta = (-lng + 180) * (Math.PI / 180);
@@ -185,6 +185,7 @@ export default function ThreeGlobe() {
                 color: getCountryColor(name),
                 side: THREE.DoubleSide,
               });
+
 
               const mesh = new THREE.Mesh(geometry, material);
               mesh.userData.countryName = name;

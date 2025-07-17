@@ -60,7 +60,7 @@ const ContactForm = () => {
   ];
 
   return (
-    <div className="bg-gradient-to-b from-[#0a0f1f] via-[#0b162c] to-[#050915] px-4 md:px-8 py-12 min-h-screen">
+    <div className="bg-gradient-to-b from-[#0a0f1f] via-[#0b162c] to-[#050915] px-4 md:px-8 py-12 h-screen overflow-y-hidden">
       {/* Glow Background */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-cyan-500/20 rounded-full blur-[160px]" />
@@ -68,7 +68,7 @@ const ContactForm = () => {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[32rem] h-[32rem] bg-cyan-500/5 rounded-full blur-[160px]" />
       </div>
 
-      <div className="relative max-w-6xl mx-auto h-full">
+      <div className="relative max-w-6xl mx-auto">
         {/* Heading */}
         <div className="text-center mb-10">
           <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-3">
@@ -82,17 +82,17 @@ const ContactForm = () => {
         {/* Content */}
         <div className="grid lg:grid-cols-3 gap-8 h-full">
           {/* Contact Info */}
-          <div className="flex flex-col justify-between space-y-6">
+          <div className="space-y-4">
             {contactInfo.map((item, index) => (
               <div
                 key={index}
-                className="bg-[#10182f] border border-cyan-500/20 rounded-2xl p-6 hover:shadow-md hover:shadow-cyan-500/10 transition-all flex-1 flex items-center"
+                className="bg-[#10182f] border border-cyan-500/20 rounded-2xl p-5 hover:shadow-lg hover:shadow-cyan-500/10 transition-all duration-300 backdrop-blur-sm"
               >
-                <div className="flex items-center space-x-4 w-full">
+                <div className="flex items-center space-x-4">
                   <div className="bg-cyan-500/10 p-3 rounded-full text-cyan-400 flex-shrink-0">
                     {item.icon}
                   </div>
-                  <div className="flex-1">
+                  <div>
                     <h3 className="text-white font-semibold text-lg">{item.title}</h3>
                     <p className="text-cyan-300 font-medium break-words">{item.info}</p>
                     <p className="text-gray-500 text-sm">{item.subInfo}</p>
@@ -103,8 +103,8 @@ const ContactForm = () => {
           </div>
 
           {/* Form */}
-          <div className="lg:col-span-2 flex flex-col">
-            <div className="bg-[#0e152b] border border-cyan-500/20 rounded-3xl p-6 md:p-10 flex-1">
+          <div className="lg:col-span-2">
+            <div className="bg-[#0e152b] border border-cyan-500/20 rounded-3xl p-6 backdrop-blur-sm">
               <div className="flex items-center space-x-3 mb-6">
                 <MessageCircle className="w-6 h-6 text-cyan-400" />
                 <h2 className="text-2xl font-bold text-white">Send us a message</h2>
@@ -118,8 +118,8 @@ const ContactForm = () => {
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-6 h-full flex flex-col">
-                <div className="grid md:grid-cols-2 gap-6">
+              <div className="space-y-5">
+                <div className="grid md:grid-cols-2 gap-5">
                   {["firstName", "lastName"].map((field) => (
                     <div key={field}>
                       <label className="block text-gray-300 font-medium mb-2 capitalize">
@@ -143,7 +143,7 @@ const ContactForm = () => {
                   ))}
                 </div>
 
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-2 gap-5">
                   <div>
                     <label className="block text-gray-300 font-medium mb-2">Email</label>
                     <input
@@ -162,7 +162,7 @@ const ContactForm = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-gray-300 font-medium mb-2">Phone (Optional)</label>
+                    <label className="block text-gray-300 font-medium mb-2">Phone</label>
                     <input
                       type="tel"
                       name="phone"
@@ -197,7 +197,7 @@ const ContactForm = () => {
                   />
                 </div>
 
-                <div className="flex-1 flex flex-col">
+                <div>
                   <label className="block text-gray-300 font-medium mb-2">Message</label>
                   <textarea
                     name="message"
@@ -206,7 +206,8 @@ const ContactForm = () => {
                     onFocus={() => setFocused('message')}
                     onBlur={() => setFocused(null)}
                     required
-                    className={`w-full bg-[#121c35] border rounded-xl px-4 py-3 text-white resize-none transition-all duration-300 flex-1 min-h-[120px] ${
+                    rows={4}
+                    className={`w-full bg-[#121c35] border rounded-xl px-4 py-3 text-white resize-none transition-all duration-300 ${
                       focused === 'message'
                         ? 'border-cyan-400 shadow-md shadow-cyan-400/20'
                         : 'border-slate-700 hover:border-slate-600'
@@ -216,12 +217,13 @@ const ContactForm = () => {
 
                 <button
                   type="submit"
-                  className="w-full bg-gradient-to-r from-cyan-600 to-cyan-400 hover:from-cyan-500 hover:to-cyan-300 text-white font-semibold py-4 px-8 rounded-xl transition-transform duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-cyan-400/25 flex items-center justify-center space-x-3"
+                  onClick={handleSubmit}
+                  className="w-full bg-gradient-to-r from-cyan-600 to-cyan-400 hover:from-cyan-500 hover:to-cyan-300 text-white font-semibold py-4 px-8 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-xl hover:shadow-cyan-400/25 flex items-center justify-center space-x-3"
                 >
                   <Send className="w-5 h-5" />
                   <span>Send Message</span>
                 </button>
-              </form>
+              </div>
             </div>
           </div>
         </div>
