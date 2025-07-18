@@ -4,13 +4,13 @@ import logo from '/logoGenReal.png';
 
 const Footer = () => {
   return (
-    <footer className="bg-[#0a1220] text-white pt-10 pb-4">
-      <div className="flex flex-col md:flex-row w-full justify-between items-start">
+    <footer className="bg-[#0a1220] text-white pt-10 pb-6 px-4 sm:px-6 lg:px-10">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between gap-10">
 
-        
-        <div className="flex-1 flex flex-col items-start pl-6">
-          <img src={logo} alt="GenReal Logo" className="h-14 mb-3" />
-          <p className="text-xs opacity-60 mb-3">
+        {/* Left Section */}
+        <div className="flex-1 flex flex-col items-start">
+          <img src={logo} alt="GenReal Logo" className="h-14 mb-4" />
+          <p className="text-sm text-gray-400 mb-4">
             Based in Vellore, Tamil Nadu, India
           </p>
           <div className="flex gap-4 text-2xl">
@@ -20,21 +20,21 @@ const Footer = () => {
           </div>
         </div>
 
-        
-        <div className="flex-1 flex flex-col items-center">
-          <h4 className="text-cyan-300 font-bold text-lg mb-3">Company</h4>
-          <ul className="space-y-2 text-center">
-            <li><a href="/about" className="hover:text-cyan-300">About Us</a></li>
-            <li><a href="/contact" className="hover:text-cyan-300">Contact Us</a></li>
-            <li><a href="/team" className="hover:text-cyan-300">Our Team</a></li>
-            <li><a href="/privacy" className="hover:text-cyan-300">Privacy Policy</a></li>
+        {/* Center Section */}
+        <div className="flex-1 flex flex-col items-start md:items-center">
+          <h4 className="text-cyan-300 font-bold text-lg mb-4">Company</h4>
+          <ul className="space-y-2 text-sm">
+            <li><a href="#about" className="hover:text-cyan-300">About Us</a></li>
+            <li><a href="#contact-us" className="hover:text-cyan-300">Contact Us</a></li>
+            <li><a href="#team" className="hover:text-cyan-300">Our Team</a></li>
+            <li><a className="hover:text-cyan-300">Privacy Policy</a></li>
           </ul>
         </div>
 
-        
-        <div className="flex-1 flex flex-col items-end pr-6 text-right">
-          <h4 className="text-cyan-300 font-bold text-lg mb-3">Contact</h4>
-          <ul className="space-y-2 w-full">
+        {/* Right Section */}
+        <div className="flex-1 flex flex-col items-start md:items-end text-sm">
+          <h4 className="text-cyan-300 font-bold text-lg mb-4">Contact</h4>
+          <ul className="space-y-2">
             <li><span className="font-medium">Email:</span> genreal.ai@gmail.com</li>
             <li><span className="font-medium">Phone:</span> +91 7878787878</li>
           </ul>
@@ -42,11 +42,11 @@ const Footer = () => {
       </div>
 
       {/* Divider */}
-      <div className="border-t border-[#23263a] my-6 w-full" />
+      <div className="border-t border-[#23263a] my-6" />
 
-      {/* Bottom Copyright */}
-      <div className="w-full flex justify-center text-xs opacity-80">
-        © 2025 <span className="text-cyan-300 font-semibold mx-1">GenReal.AI</span> - All Rights Reserved.
+      {/* Copyright */}
+      <div className="text-center text-xs text-gray-400">
+        © 2025 <span className="text-cyan-300 font-semibold">GenReal.AI</span> - All Rights Reserved.
       </div>
     </footer>
   );
