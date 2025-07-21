@@ -18,7 +18,7 @@ const Home = ({ isLoaded }) => (
   <div className='z-10' style={{ visibility: isLoaded ? 'visible' : 'hidden' }}>
     <Hero Loaded={isLoaded} />
     <About id="about" />
-    <div className='w-[100%] h-screen'>
+    <div className='w-[100%] hidden md:block h-screen'>
       <div className='w-[60%] h-[50%] mx-auto'>
         <VideoCarousel />
       </div>

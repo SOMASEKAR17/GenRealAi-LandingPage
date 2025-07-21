@@ -172,9 +172,9 @@ const HeroSection = ({ Loaded }) => {
           <h2 className="text-cyan-400 text-4xl font-bold">80%</h2>
           <p className="text-gray-400 mt-2 text-sm max-w-xs">of companies lack protocols to handle deepfake attacks</p>
         </div>
-        <div className=' translate-y-6 h-[4vw] flex justify-center items-center flex-col'>
+        <div className=' translate-y-6 h-[4vw] hidden md:flex justify-center items-center flex-col'>
             <p className={`relative transition-all text-white/60 duration-1000 ease-out ${animateScroll ? 'top-0' : 'top-[20px]'}`}>Scroll Down</p>
-            <div className='w-full -mt-1 z-[99] h-[20px] bg-black'></div>
+            <div className='w-full -mt-1 z-[99] h-[2vw] bg-black'></div>
         </div>
         <div className="text-center">
           <h2 className="text-cyan-400 text-4xl font-bold">60%</h2>
