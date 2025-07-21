@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import gsap from 'gsap';
-
+import { FiUploadCloud } from 'react-icons/fi';
 import Processing from './processing';
 
 const UploadModal = () => {
@@ -99,7 +99,7 @@ const UploadModal = () => {
         >
           <label htmlFor="file-upload" className="cursor-pointer block">
             <div className="mb-4">
-              <img src="/letter.png" alt="Upload" className="h-16 w-16 mx-auto opacity-80" />
+              <FiUploadCloud className="text-cyan-400 text-6xl mx-auto animate-pulse" />
             </div>
             <p className="font-semibold text-lg mb-2">
               {file ? file.name : 'Drag and drop files here'}
