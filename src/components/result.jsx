@@ -1,5 +1,5 @@
-import React ,{useState ,useEffect} from 'react'; // Removed useState, useEffect as they are not directly used in this component's logic anymore
-import { FaArrowRight, FaHome, FaChartBar, FaArrowLeft, FaEye, FaCog, FaShieldAlt, FaMicrophone, FaBrain } from 'react-icons/fa'; // Removed FaChevronDown, FaChevronUp
+import React, { useState, useEffect } from 'react';
+import { FaArrowRight, FaHome, FaChartBar, FaArrowLeft, FaEye, FaCog, FaShieldAlt, FaMicrophone, FaBrain } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const DetailedAnalysis = ({ onBack }) => {
@@ -136,11 +136,10 @@ const DetailedAnalysis = ({ onBack }) => {
         <div className="absolute top-0 right-1/4 w-px h-full bg-gradient-to-b from-transparent via-purple-500/20 to-transparent animate-pulse delay-1000"></div>
       </div>
 
-      {/* Header - Modified */}
-      {/* The header is now solely for the title, without a back button at the top */}
-      <div className="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-xl border-b border-slate-700/50 pt-4 pb-2"> {/* Added pt-4 to give space for logo */}
+      {/* Header - Modified: Added pt-8 for potential logo space if it were present */}
+      <div className="sticky top-0 z-40 bg-slate-900/80 backdrop-blur-xl border-b border-slate-700/50 pt-8 pb-2">
         <div className="container mx-auto px-6">
-          <div className="flex items-center justify-center"> {/* Centered content */}
+          <div className="flex items-center justify-center">
             <div className="text-center">
               <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
                 Detailed Analysis Report
@@ -292,14 +291,13 @@ const DetailedAnalysis = ({ onBack }) => {
 
 const Result = () => {
   const [showDetailed, setShowDetailed] = useState(false);
-  // Removed expandedModel state as per previous instruction
 
   useEffect(() => {
     if (showDetailed) {
-      document.body.style.overflow = 'auto'; 
-      document.documentElement.style.overflow = 'auto'; 
+      document.body.style.overflow = 'auto';
+      document.documentElement.style.overflow = 'auto';
     } else {
-      document.body.style.overflow = 'auto'; 
+      document.body.style.overflow = 'auto';
       document.documentElement.style.overflow = 'auto';
     }
     return () => {
@@ -339,8 +337,6 @@ const Result = () => {
     setShowDetailed(true);
   };
 
-  // Removed toggleModel function as per previous instruction
-
   const getConfidenceColor = (confidence) => {
     switch(confidence) {
       case 'High': return 'text-emerald-400';
@@ -374,12 +370,13 @@ const Result = () => {
         <div className="absolute bottom-0 right-0 w-full h-px bg-gradient-to-l from-transparent via-blue-500/30 to-transparent animate-pulse delay-1000"></div>
       </div>
 
-      {/* Logo with enhanced styling - z-index ensures it stays on top */}
+      {/* Logo with responsive sizing and high z-index */}
       <div className="absolute top-4 left-4 z-50"> 
         <img
           src="/logoGenReal.png"
           alt="GenReal.AI"
-          className="h-20 w-auto object-contain"
+          // Responsive height: h-10 on small screens, h-16 on larger screens
+          className="h-10 sm:h-16 w-auto object-contain" 
         />
       </div>
 
@@ -400,7 +397,8 @@ const Result = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                className="text-center mb-8"
+                // Added responsive top padding (pt-16 sm:pt-20) to push content below the logo
+                className="text-center mb-8 pt-16 sm:pt-20" 
               >
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-4">
                   Analysis Complete
