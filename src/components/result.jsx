@@ -1,46 +1,47 @@
 import React, { useState, useEffect } from 'react';
-import { FaArrowRight, FaChevronDown } from 'react-icons/fa';
+import { FaArrowRight, FaChevronDown, FaChevronUp, FaHome, FaChartBar } from 'react-icons/fa';
 import { motion, AnimatePresence } from 'framer-motion';
 import DetailedAnalysis from "./detailedAnalysis"
 
 const Result = () => {
   const [showDetailed, setShowDetailed] = useState(false);
-  const [expandedModel, setExpandedModel] = useState(0);
+  const [expandedModel, setExpandedModel] = useState(null);
 
-  // Scroll lock effect
-  // Scroll lock effect
-useEffect(() => {
-  if (showDetailed) {
-    document.body.style.overflow = 'hidden'; // 👈 THIS
-  } else {
-    document.body.style.overflow = 'auto';
-  }
-  return () => {
-    document.body.style.overflow = 'auto';
-  };
-}, [showDetailed]);
-
+  useEffect(() => {
+    if (showDetailed) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [showDetailed]);
 
   const modelResults = [
     {
-      label: 'Model 1',
+      label: 'DeepFake Detector v1',
       value: 60,
-      details: "Lorem ipsum dolor sit amet, consectetur adipiscing elit..."
+      confidence: 'Medium',
+      details: "Advanced neural network analysis detecting facial inconsistencies and temporal artifacts in the video sequence."
     },
     {
-      label: 'Model 2',
+      label: 'FaceSwap Analyzer',
       value: 85,
-      details: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem..."
+      confidence: 'High',
+      details: "Specialized algorithm for identifying face replacement techniques and unnatural facial movements."
     },
     {
-      label: 'Model 3',
+      label: 'Temporal Consistency',
       value: 72,
-      details: "But I must explain to you how all this mistaken idea of..."
+      confidence: 'High',
+      details: "Frame-by-frame analysis detecting inconsistencies in lighting, shadows, and facial expressions over time."
     },
     {
-      label: 'Model 4',
+      label: 'Audio-Visual Sync',
       value: 49,
-      details: "At vero eos et accusamus et iusto odio dignissimos..."
+      confidence: 'Low',
+      details: "Cross-modal analysis examining lip-sync accuracy and voice-face correspondence patterns."
     },
   ];
 
@@ -49,87 +50,219 @@ useEffect(() => {
   };
 
   const toggleModel = (index) => {
-    setExpandedModel(expandedModel === index ? -1 : index);
+    setExpandedModel(expandedModel === index ? null : index);
+  };
+
+  const getConfidenceColor = (confidence) => {
+    switch(confidence) {
+      case 'High': return 'text-emerald-400';
+      case 'Medium': return 'text-yellow-400';
+      case 'Low': return 'text-red-400';
+      default: return 'text-slate-400';
+    }
+  };
+
+  const getProgressColor = (value) => {
+    if (value >= 70) return 'from-emerald-500 to-green-600';
+    if (value >= 50) return 'from-yellow-500 to-orange-500';
+    return 'from-red-500 to-red-600';
   };
 
   return (
-    <div className="w-screen min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white font-sans relative px-4 sm:px-6 overflow-y-auto">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-x-hidden">
+    <div className="w-screen min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 text-white font-sans relative">
+      {/* Enhanced Animated Background */}
+      <div className="absolute inset-0 overflow-hidden">
+        {/* Floating orbs */}
         <div className="absolute top-20 left-20 w-32 h-32 bg-cyan-400/10 rounded-full blur-xl animate-pulse"></div>
         <div className="absolute bottom-32 right-32 w-48 h-48 bg-blue-400/10 rounded-full blur-xl animate-pulse delay-1000"></div>
         <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-teal-400/10 rounded-full blur-xl animate-pulse delay-2000"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem]"></div>
+        <div className="absolute top-1/3 right-1/4 w-36 h-36 bg-purple-400/8 rounded-full blur-xl animate-pulse delay-500"></div>
+        
+        {/* Animated grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] animate-pulse"></div>
+        
+        {/* Moving gradient lines */}
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent animate-pulse"></div>
+        <div className="absolute bottom-0 right-0 w-full h-px bg-gradient-to-l from-transparent via-blue-500/30 to-transparent animate-pulse delay-1000"></div>
       </div>
 
-      {/* Logo */}
-      <img
-        src="/logoGenReal.png"
-        alt="GenReal.AI"
-        className="absolute top-4 left-4 h-10 w-10 sm:h-12 sm:w-12 object-contain z-20"
-      />
+      {/* Logo with enhanced styling */}
+      <div className="absolute top-4 left-4 z-30">
+        <img
+          src="/logoGenReal.png"
+          alt="GenReal.AI"
+          className="h-10 w-auto object-contain"
+        />
+      </div>
 
       <AnimatePresence mode="wait">
         {!showDetailed ? (
           <motion.div
             key="initial"
-            initial={{ opacity: 1 }}
+            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-            transition={{ duration: 0.5 }}
-            className="flex items-center justify-center min-h-screen"
+            exit={{ opacity: 0, y: -50, scale: 0.95 }}
+            transition={{ duration: 0.6, ease: "easeOut" }}
+            className="flex items-center justify-center min-h-screen p-4 sm:p-6 lg:p-8"
           >
-            <div className="relative z-10 flex flex-col md:flex-row w-full max-w-4xl rounded-2xl overflow-hidden shadow-2xl border border-cyan-400/30">
-              {/* Result Box */}
-              <div className="w-full md:w-1/2 bg-gradient-to-br from-cyan-500/20 to-blue-600/20 backdrop-blur-sm p-6 sm:p-8 flex flex-col items-center justify-center text-center">
-                <h3 className="text-md font-semibold text-slate-200 mb-4">Your Result</h3>
-                <div className="w-28 h-28 bg-slate-700/80 backdrop-blur-sm rounded-full flex flex-col items-center justify-center text-3xl font-bold mb-4 border border-cyan-400/30 shadow-xl">
-                  76
-                  <span className="text-xs font-medium text-slate-300 mt-1">out of 100</span>
-                </div>
-                <h4 className="text-xl font-bold text-white mb-2">Mostly a Deepfake</h4>
-                <p className="text-sm text-slate-300 px-4 leading-relaxed">
-                  60% of people encountered a deepfake video in the past year.
-                </p>
-              </div>
+            <div className="relative z-10 w-full max-w-6xl">
+              
+              {/* Header Section */}
+              <motion.div 
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2, duration: 0.5 }}
+                className="text-center mb-8"
+              >
+                <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-4">
+                  Analysis Complete
+                </h1>
+                <p className="text-slate-400 text-lg">AI-powered deepfake detection results</p>
+              </motion.div>
 
-              {/* Summary Box */}
-              <div className="w-full md:w-1/2 bg-slate-800/80 backdrop-blur-sm p-6 sm:p-8">
-                <h3 className="text-md font-semibold text-white mb-6">Summary</h3>
-                <div className="space-y-5">
-                  {modelResults.map((model, i) => (
-                    <div key={i}>
-                      <p className="text-sm text-slate-300 mb-2 font-medium">{model.label}</p>
-                      <div className="flex items-center gap-3">
-                        <span className="text-xs text-slate-400 font-mono">0</span>
-                        <div className="flex-1 h-2 bg-slate-600 rounded-full overflow-hidden">
-                          <div
-                            className="h-full bg-gradient-to-r from-cyan-400 to-blue-500 rounded-full transition-all duration-500"
-                            style={{ width: `${model.value}%` }}
-                          />
-                        </div>
-                        <span className="text-xs text-slate-400 font-mono">1</span>
+              {/* Main Results Card */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3, duration: 0.5 }}
+                className="flex flex-col lg:flex-row gap-6 rounded-3xl overflow-hidden shadow-2xl border border-cyan-400/20 backdrop-blur-sm bg-slate-800/30"
+              >
+                
+                {/* Result Display */}
+                <div className="lg:w-2/5 bg-gradient-to-br from-cyan-500/10 to-blue-600/10 backdrop-blur-sm p-8 lg:p-12 flex flex-col items-center justify-center text-center relative overflow-hidden">
+                  {/* Decorative elements */}
+                  <div className="absolute top-4 right-4 w-16 h-16 bg-cyan-400/5 rounded-full blur-xl"></div>
+                  <div className="absolute bottom-4 left-4 w-20 h-20 bg-blue-400/5 rounded-full blur-xl"></div>
+                  
+                  <motion.div
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.5, duration: 0.5, type: "spring" }}
+                    className="mb-6"
+                  >
+                    <div className="relative">
+                      <div className="w-32 h-32 sm:w-40 sm:h-40 bg-gradient-to-br from-slate-700/80 to-slate-800/80 backdrop-blur-sm rounded-full flex flex-col items-center justify-center text-4xl sm:text-5xl font-bold mb-6 border-2 border-cyan-400/30 shadow-2xl relative">
+                        <span className="bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">76</span>
+                        <span className="text-xs font-medium text-slate-300 mt-1">out of 100</span>
+                        
+                        {/* Animated ring */}
+                        <div className="absolute inset-0 rounded-full border-2 border-cyan-400/20 animate-ping"></div>
                       </div>
                     </div>
-                  ))}
+                  </motion.div>
+
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.7, duration: 0.5 }}
+                  >
+                    <h4 className="text-2xl sm:text-3xl font-bold text-white mb-3 bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">
+                      Likely Deepfake
+                    </h4>
+                    <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-xs">
+                      High confidence detection based on multiple AI model analysis
+                    </p>
+                  </motion.div>
                 </div>
 
-                {/* Buttons */}
-                <div className="mt-8 flex flex-col sm:flex-row justify-between gap-4">
-                  <button
-                    onClick={() => window.location.href = '/'}
-                    className="bg-slate-600 hover:bg-slate-500 text-white px-6 py-3 rounded-xl font-semibold transition-all duration-300 hover:scale-105"
+                {/* Analysis Summary */}
+                <div className="lg:w-3/5 bg-slate-800/50 backdrop-blur-sm p-6 sm:p-8 lg:p-12">
+                  <div className="flex items-center gap-3 mb-8">
+                    <FaChartBar className="text-cyan-400 text-xl" />
+                    <h3 className="text-xl sm:text-2xl font-bold text-white">Model Analysis</h3>
+                  </div>
+                  
+                  <div className="space-y-6">
+                    {modelResults.map((model, i) => (
+                      <motion.div 
+                        key={i}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: 0.4 + (i * 0.1), duration: 0.5 }}
+                        className={`group cursor-pointer transition-all duration-300 hover:scale-[1.02] ${
+                          expandedModel === i 
+                            ? 'bg-gradient-to-r from-slate-700/50 to-slate-600/50 p-4 rounded-xl border border-cyan-400/30 shadow-lg' 
+                            : 'hover:bg-slate-700/20 p-3 rounded-lg'
+                        }`}
+                        onClick={() => toggleModel(i)}
+                      >
+                        <div className="flex items-center justify-between mb-3">
+                          <p className="text-sm sm:text-base text-white font-semibold">{model.label}</p>
+                          <div className="flex items-center gap-2">
+                            <span className={`text-xs px-2 py-1 rounded-full bg-slate-700/50 ${getConfidenceColor(model.confidence)}`}>
+                              {model.confidence}
+                            </span>
+                            {expandedModel === i ? 
+                              <FaChevronUp className="text-cyan-400 transition-transform duration-300" /> : 
+                              <FaChevronDown className="text-slate-400 group-hover:text-cyan-400 transition-colors duration-300" />
+                            }
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-4 mb-2">
+                          <span className="text-xs text-slate-500 font-mono min-w-[20px]">0%</span>
+                          <div className="flex-1 h-3 bg-slate-600/50 rounded-full overflow-hidden backdrop-blur-sm border border-slate-500/30">
+                            <motion.div
+                              initial={{ width: 0 }}
+                              animate={{ width: `${model.value}%` }}
+                              transition={{ delay: 0.6 + (i * 0.1), duration: 0.8, ease: "easeOut" }}
+                              className={`h-full bg-gradient-to-r ${getProgressColor(model.value)} rounded-full shadow-lg relative`}
+                            >
+                              <div className="absolute inset-0 bg-white/20 rounded-full animate-pulse"></div>
+                            </motion.div>
+                          </div>
+                          <span className="text-xs text-slate-500 font-mono min-w-[30px]">100%</span>
+                        </div>
+                        
+                        <div className="flex justify-end">
+                          <span className="text-lg font-bold text-white">{model.value}%</span>
+                        </div>
+
+                        <AnimatePresence>
+                          {expandedModel === i && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="mt-4 pt-4 border-t border-slate-600/50"
+                            >
+                              <p className="text-sm text-slate-300 leading-relaxed">
+                                {model.details}
+                              </p>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </motion.div>
+                    ))}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8, duration: 0.5 }}
+                    className="mt-10 flex flex-col sm:flex-row gap-4"
                   >
-                    Go back Home
-                  </button>
-                  <button
-                    onClick={handleGetDetailedResult}
-                    className="bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white px-6 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105 shadow-lg"
-                  >
-                    Get Detailed Result <FaArrowRight className="text-sm" />
-                  </button>
+                    <button
+                      onClick={() => window.location.href = '/'}
+                      className="group bg-slate-600/80 hover:bg-slate-500/80 text-white px-6 py-4 rounded-xl font-semibold transition-all duration-300 hover:scale-105 hover:shadow-xl backdrop-blur-sm border border-slate-500/30 flex items-center justify-center gap-2"
+                    >
+                      <FaHome className="group-hover:scale-110 transition-transform duration-300" />
+                      Back to Home
+                    </button>
+                    <button
+                      onClick={handleGetDetailedResult}
+                      className="group bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white px-6 py-4 rounded-xl font-semibold flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105 shadow-xl hover:shadow-2xl relative overflow-hidden"
+                    >
+                      <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"></div>
+                      <FaChartBar className="group-hover:scale-110 transition-transform duration-300" />
+                      Detailed Analysis
+                      <FaArrowRight className="group-hover:translate-x-1 transition-transform duration-300" />
+                    </button>
+                  </motion.div>
                 </div>
-              </div>
+              </motion.div>
             </div>
           </motion.div>
         ) : (
