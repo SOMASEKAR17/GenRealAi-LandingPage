@@ -19,7 +19,7 @@ const Processing = () => {
       if (!start) start = timestamp;
       const elapsed = timestamp - start;
 
-      const percentage = Math.min((elapsed / 10000) * 100, 100);
+      const percentage = Math.min((elapsed / 10000) * 200, 100);
       setProgress(prev => (percentage > prev ? Math.floor(percentage) : prev));
 
       if (percentage < 100) {
