@@ -114,7 +114,7 @@ const NewsTimeline = () => {
       </div>
 
       {isMobile ? (
-        <div className="flex flex-col items-center px-4 pt-50 pb-8 space-y-6 min-h-screen">
+        <div className="flex flex-col items-center px-4 pt-50 mb-20 space-y-6 min-h-screen">
           {/* Current News Card */}
           <div className="w-full max-w-sm bg-cyan-400 text-black rounded-2xl p-5 shadow-xl">
             <div className="w-4 h-4 bg-white border-4 border-cyan-700 rounded-full mb-4"></div>
@@ -143,7 +143,7 @@ const NewsTimeline = () => {
           </div>
 
           {/* Navigation Controls */}
-          <div className="flex justify-center items-center w-full max-w-xs gap-4 bg-black/40 backdrop-blur-sm rounded-2xl p-4 border border-cyan-400/30">
+          <div className="flex justify-center h-[20%] items-center w-full max-w-xs gap-4 bg-black/40 backdrop-blur-sm rounded-2xl p-4 border border-cyan-400/30">
             <button
               className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-cyan-500 to-cyan-600 text-white rounded-full shadow-xl disabled:from-gray-500 disabled:to-gray-600 disabled:cursor-not-allowed transition-all duration-300 transform hover:scale-110 active:scale-95"
               onClick={() => setCurrentIndex((prev) => prev - 1)}
@@ -189,15 +189,15 @@ const NewsTimeline = () => {
       ) : (
         <div
           ref={horizontalRef}
-          className="flex items-center h-full w-max space-x-12 pl-48 pt-[15vw] md:pt[10vw] lg:pt-[8vw] pr-24"
+          className="flex items-center h-full w-max space-x-12 pl-48 pt-[30vh] lg:pt-[20vh] pr-24"
         >
           {newsItems.map((item, index) => (
             <div
               key={index}
-              className="min-w-[80vw] max-w-[80vw] lg:min-w-[50vw] lg:max-w-[50vw] xl:min-w-[40vw] xl:max-w-[40vw] md:h-[50vw] lg:h-[45vw] xl:h-[30vw] bg-cyan-400 text-black rounded-lg p-6 shadow-xl cursor-pointer transform hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl"
+              className="min-w-[80vw] max-w-[80vw] lg:min-w-[50vw] lg:max-w-[50vw] xl:min-w-[40vw] xl:max-w-[40vw]  md:h-[60vh] bg-cyan-400 text-black rounded-lg p-6 shadow-xl cursor-pointer transform hover:scale-[1.02] transition-all duration-300 hover:shadow-2xl"
               onClick={() => handleCardClick(item.link)}
             >
-              <div className="w-4 h-4 bg-white border-4 border-cyan-700 rounded-full mb-4"></div>
+              
               <img
                 src={item.image}
                 alt={item.title}
