@@ -90,8 +90,8 @@ const HeroSection = ({ Loaded }) => {
     { id: 'about', label: 'About' },
     { id: 'news', label: 'News' },
     { id: 'faq', label: 'FAQ' },
-    { id: 'team', label: 'Team' },
     { id: 'contact-us', label: 'Contact Us' },
+    { id: 'team', label: 'Team' },
   ];
 
   const getLinkClass = (id) =>

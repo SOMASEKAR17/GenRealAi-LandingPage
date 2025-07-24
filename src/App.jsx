@@ -11,8 +11,7 @@ import VideoCarousel  from "./components/videoCarousel"
 import Footer from './components/Footer';
 import FAQ from './components/FAQ';
 import Upload from './components/Upload';
-import Processing from './components/processing';
-import LocomotiveScroll from 'locomotive-scroll';
+import Plagiarism from "./components/Plagiarism";
 
 const Home = ({ isLoaded }) => (
   <div className='z-10' style={{ visibility: isLoaded ? 'visible' : 'hidden' }}>
@@ -25,8 +24,8 @@ const Home = ({ isLoaded }) => (
     </div>
     <News id="news" />
     <FAQ id="faq" />
-    <Team id="team" />
     <ContactUs id="contact-us" />
+    <Team id="team" />
     <Footer />
   </div>
 );
@@ -51,14 +50,14 @@ const AppContent = () => {
       <Routes>
         <Route path="/" element={<Home isLoaded={isLoaded} />} />
         <Route path="/upload" element={<Upload />} />
-        <Route path="/processing" element={<Processing/>}/>
+        <Route path="/plagiarism" element={<Plagiarism/>} />
       </Routes>
     </div>
   );
 };
 
 const App = () => {
-  const locomotiveScroll = new LocomotiveScroll();
+
   return (
     <Router>
       <AppContent />

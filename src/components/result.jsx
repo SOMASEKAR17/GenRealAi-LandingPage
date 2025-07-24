@@ -397,7 +397,6 @@ const Result = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2, duration: 0.5 }}
-                // Added responsive top padding (pt-16 sm:pt-20) to push content below the logo
                 className="text-center mb-8 pt-16 sm:pt-20" 
               >
                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent mb-4">

@@ -1,126 +1,183 @@
-import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 
 const faqs = [
   {
-    question: 'What contents can be uploaded?',
+    question: "What is DeepfakeQuiz?",
     answer:
-      'You can upload image (JPG, PNG), video (MP4, MOV), and audio (MP3, WAV) files. Our platform verifies news, videos, and voice clips to prevent misinformation and protect digital trust.',
+      "DeepfakeQuiz is an interactive platform that tests your ability to identify deepfakes. It uses real and AI-generated content to raise awareness about misinformation.",
   },
   {
-    question: 'What are the pricing options?',
+    question: "How does the quiz work?",
     answer:
-      'We offer free basic features, with Pro upgrades for advanced tools, batch analysis, and priority support. Enterprise solutions are customized for organizational needs, including integration and enhanced security.',
+      "You’ll be shown a series of media clips — your task is to decide whether each is real or generated. You’ll receive feedback on your accuracy and learn tips for identifying fakes.",
   },
   {
-    question: 'Is GenReal.ai suitable for personal and business use?',
+    question: "Why should I take this quiz?",
     answer:
-      'Yes, it\'s versatile for both. Individuals can verify social media and news. Businesses use it for brand protection, deepfake prevention, and ensuring secure digital communications.',
+      "The rise of AI-generated media makes it harder to distinguish real from fake. This quiz helps sharpen your detection skills in a fun, engaging way.",
   },
   {
-    question: 'How do you handle data privacy and security?',
+    question: "Is my data safe?",
     answer:
-      'Data privacy is paramount. We use end-to-end encryption for all content and results, adhering to regulations like GDPR. User data is anonymized, and never shared. Our infrastructure features enterprise-grade security.',
+      "Yes, we don’t collect any personal data from the quiz. It’s designed solely for education and awareness.",
   },
 ];
 
-const FAQ = () => {
+export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(null);
 
-  const toggleFAQ = (idx) => {
-    setOpenIndex(openIndex === idx ? null : idx);
+  const toggleFAQ = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
   };
 
   return (
-    <div className="w-screen min-h-screen flex flex-col items-center justify-center relative text-white overflow-hidden p-0 m-0" id="faq">
-      {/* Stunning Animated Background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-cyan-400/20 to-blue-500/20 rounded-full blur-3xl animate-[float_8s_ease-in-out_infinite]"></div>
-        <div className="absolute bottom-1/3 right-1/3 w-80 h-80 bg-gradient-to-r from-teal-400/15 to-cyan-500/15 rounded-full blur-3xl animate-[float_12s_ease-in-out_infinite_reverse]"></div>
-        <div className="absolute top-1/2 right-1/4 w-64 h-64 bg-gradient-to-r from-blue-400/10 to-indigo-500/10 rounded-full blur-3xl animate-[float_10s_ease-in-out_infinite_2s]"></div>
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(34,197,94,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(34,197,94,0.02)_1px,transparent_1px)] bg-[size:6rem_6rem] opacity-40"></div>
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/30"></div>
+    <div
+      className="w-screen min-h-screen flex flex-col items-center justify-center relative text-white overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950"
+      id="faq"
+    >
+      {/* Background blobs */}
+      <div className="absolute inset-0 z-0 overflow-hidden">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 0.2, scale: 1.2 }}
+          transition={{
+            duration: 15,
+            repeat: Infinity,
+            repeatType: "reverse",
+            ease: "easeInOut",
+          }}
+          className="absolute w-[800px] h-[800px] bg-cyan-500/10 rounded-full blur-3xl -top-[300px] -left-[300px]"
+        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 0.15, scale: 1.1 }}
+          transition={{
+            duration: 18,
+            repeat: Infinity,
+            repeatType: "reverse",
+            ease: "easeInOut",
+            delay: 2,
+          }}
+          className="absolute w-[900px] h-[900px] bg-indigo-400/10 rounded-full blur-3xl -bottom-[350px] -right-[350px]"
+        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 0.2, scale: 1.3 }}
+          transition={{
+            duration: 10,
+            repeat: Infinity,
+            repeatType: "reverse",
+            ease: "easeInOut",
+            delay: 1,
+          }}
+          className="absolute w-[600px] h-[600px] bg-teal-400/10 rounded-full blur-3xl top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
+        />
+
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(34,197,94,0.01)_1px,transparent_1px),linear-gradient(90deg,rgba(34,197,94,0.01)_1px,transparent_1px)] bg-[size:6rem_6rem] opacity-20"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/30"></div>
       </div>
 
-      {/* Content */}
-      <div className="relative z-10 w-full flex flex-col items-center justify-center">
-        <div className="text-center mb-16 mt-16">
-          <h1 className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-200 via-blue-300 to-teal-200 text-[2.8rem] font-extrabold tracking-[2px] drop-shadow-lg animate-[glow_4s_ease-in-out_infinite_alternate]">
-            GenReal.AI Your Digital Trust Partner
-          </h1>
-          <div className="w-32 h-1 bg-gradient-to-r from-transparent via-cyan-400 to-transparent mx-auto mt-6 animate-[shimmer_2s_ease-in-out_infinite]"></div>
-          <p className="text-cyan-100/80 text-[1.1rem] leading-relaxed max-w-3xl mx-auto mt-8 px-4">
-            Navigate the complex digital landscape with confidence. Our cutting-edge AI solutions accurately distinguish between authentic and generated content, combating deepfakes and misinformation while promoting digital trust and media literacy.
-          </p>
+      <div className="relative z-10 w-full px-4 sm:px-10 pt-32 pb-20">
+        <div className="text-center mb-16">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-cyan-100 mb-2 sm:mb-3">
+            Frequently <span className="text-cyan-400">Asked Question</span>
+          </h2>
+          <motion.p
+            initial={{ opacity: 0, y: 40, scale: 0.95 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{
+              duration: 1,
+              ease: [0.25, 1, 0.5, 1],
+              delay: 0.4,
+            }}
+            className="text-white/80 text-[1.1rem] leading-relaxed max-w-4xl mx-auto mt-8 px-4"
+          >
+            Navigate the complex digital landscape with confidence. Our
+            cutting-edge AI solutions accurately distinguish between authentic
+            and generated content, combating deepfakes and misinformation while
+            promoting digital trust and media literacy.
+          </motion.p>
         </div>
 
-        {/* FAQ List */}
-        <div className="w-[95vw] max-w-[980px] relative z-10">
-          {faqs.map((faq, idx) => (
-            <div
-              key={idx}
-              className={`group px-8 py-8 transition-all duration-500 ease-out hover:bg-gradient-to-r hover:from-cyan-500/8 hover:to-blue-500/8 hover:backdrop-blur-sm ${
-                idx !== faqs.length - 1 ? 'border-b border-cyan-300/15' : ''
-              } ${openIndex === idx ? 'bg-gradient-to-r from-cyan-500/10 to-blue-500/10 backdrop-blur-sm' : ''} mb-2 rounded-xl`}
-            >
-              <div
-                className="flex items-center justify-between w-full cursor-pointer group"
-                onClick={() => toggleFAQ(idx)}
+        {/* FAQ content and image */}
+        <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-10 max-w-6xl mx-auto">
+          {/* FAQ List */}
+          <div className="w-full lg:w-3/5">
+            {faqs.map((faq, index) => (
+              <motion.div
+                key={index}
+                className="mb-6 rounded-2xl bg-white/5 backdrop-blur-lg border border-white/10 shadow-md transition hover:bg-white/10"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.1 * index }}
+                whileHover={{ scale: 1.02 }}
               >
-                <p className="text-white text-[1.35rem] font-semibold tracking-wide group-hover:text-cyan-100 transition-colors duration-300">
-                  {faq.question}
-                </p>
-                <div
-                  className={`flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-900 shadow-[0_4px_20px_rgba(0,255,255,0.3)] transition-all duration-500 ease-out hover:shadow-[0_6px_30px_rgba(0,255,255,0.5)] hover:scale-110 ${
-                    openIndex === idx ? 'rotate-180 scale-110' : ''
-                  }`}
+                <button
+                  className="flex justify-between items-center w-full text-left focus:outline-none p-6"
+                  onClick={() => toggleFAQ(index)}
                 >
-                  <ChevronDown size={20} className="font-bold" />
-                </div>
-              </div>
+                  <span className="text-lg font-semibold text-white">
+                    {faq.question}
+                  </span>
+                  <ChevronDown
+                    size={20}
+                    className={`transition-transform duration-300 ${
+                      openIndex === index ? "rotate-180" : ""
+                    } text-cyan-400`}
+                  />
+                </button>
+                <AnimatePresence initial={false}>
+                  {openIndex === index && (
+                    <motion.div
+                      initial={{
+                        height: 0,
+                        opacity: 0,
+                        paddingTop: 0,
+                        paddingBottom: 0,
+                      }}
+                      animate={{
+                        height: "auto",
+                        opacity: 1,
+                        paddingTop: 24,
+                        paddingBottom: 24,
+                      }}
+                      exit={{
+                        height: 0,
+                        opacity: 0,
+                        paddingTop: 0,
+                        paddingBottom: 0,
+                      }}
+                      transition={{ duration: 0.4, ease: "easeInOut" }}
+                      className="overflow-hidden"
+                    >
+                      <p className="px-6 text-white/70 text-[1.05rem]">
+                        {faq.answer}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </motion.div>
+            ))}
+          </div>
 
-              {/* Framer Motion Answer Reveal */}
-              <AnimatePresence initial={false}>
-                {openIndex === idx && (
-                  <motion.div
-                    key="answer"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.5, ease: 'easeOut' }}
-                    className="pt-6 text-cyan-100/90 text-[1.1rem] leading-relaxed whitespace-pre-wrap font-light"
-                  >
-                    {faq.answer}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
+          {/* Image */}
+          <motion.div
+            initial={{ opacity: 0, x: 50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
+            className="w-full lg:w-2/5 flex justify-center items-center p-4 lg:p-0"
+          >
+            <img
+              src="/faq-image.png"
+              alt="AI Robot Answering Questions"
+              className="max-w-full h-auto rounded-lg shadow-2xl transition-transform duration-500 hover:scale-105"
+              style={{ maxWidth: "400px", objectFit: "cover" }}
+            />
+          </motion.div>
         </div>
       </div>
-
-      {/* Custom CSS Animations */}
-      <style jsx>{`
-        @keyframes float {
-          0%, 100% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-20px) rotate(180deg); }
-        }
-        
-        @keyframes glow {
-          0% { text-shadow: 0 0 4px rgba(34, 211, 238, 0.3); }
-          100% { text-shadow: 0 0 10px rgba(34, 211, 238, 0.4), 0 0 14px rgba(59, 130, 246, 0.3); }
-        }
-
-        
-        @keyframes shimmer {
-          0% { opacity: 0.5; transform: scaleX(0.5); }
-          50% { opacity: 1; transform: scaleX(1); }
-          100% { opacity: 0.5; transform: scaleX(0.5); }
-        }
-      `}</style>
     </div>
   );
-};
-
-export default FAQ;
+}
