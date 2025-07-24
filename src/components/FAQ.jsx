@@ -81,8 +81,8 @@ export default function FAQ() {
 
       <div className="relative z-10 w-full px-4 sm:px-10 pt-32 pb-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl sm:text-5xl font-bold mb-4 tracking-tight">
-            Frequently Asked Questions
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-cyan-100 mb-2 sm:mb-3">
+            Frequently <span className="text-cyan-400">Asked Question</span>
           </h2>
           <motion.p
             initial={{ opacity: 0, y: 40, scale: 0.95 }}
