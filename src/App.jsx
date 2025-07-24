@@ -25,8 +25,8 @@ const Home = ({ isLoaded }) => (
     </div>
     <News id="news" />
     <FAQ id="faq" />
-    <Team id="team" />
     <ContactUs id="contact-us" />
+    <Team id="team" />
     <Footer />
   </div>
 );
