@@ -14,6 +14,36 @@ html {
   display: none;
 }
 
+/* Scrollbar styles */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #0e0e2c; /* dark background */
+  border-radius: 8px;
+}
+
+/* Thumb */
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #00f0ff, #007f9f); /* cyan glow */
+  border-radius: 8px;
+  border: 2px solid #0e0e2c; /* match track border for glow illusion */
+}
+
+/* Hover effect on thumb */
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #00d9ff, #00a3cc);
+}
+
+/* Firefox support */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #00f0ff #0e0e2c;
+}
+
+
 p {
   font-family: 'Exo', Arial, Helvetica, sans-serif !important;
 }

@@ -441,7 +441,7 @@ const Result = () => {
                     animate={{ opacity: 1 }}
                     transition={{ delay: 0.7, duration: 0.5 }}
                   >
-                    <h4 className="text-2xl sm:text-3xl font-bold text-white mb-3 bg-gradient-to-r from-red-400 to-red-500 bg-clip-text text-transparent">
+                    <h4 className="text-2xl sm:text-3xl font-bold text-white mb-3 bg-gradient-to-r from-red-400 to-red-500 bg-clip-text ">
                       Likely Deepfake
                     </h4>
                     <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-xs">
