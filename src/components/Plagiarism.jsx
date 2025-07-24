@@ -8,8 +8,9 @@ export default function AIPlagiarismChecker() {
 
   const handleCheckPlagiarism = () => {
     if (!textInput.trim()) return;
-    
+
     setIsChecking(true);
+    // Simulate API call or processing time
     setTimeout(() => {
       setIsChecking(false);
       setHasResults(true);
@@ -31,39 +32,41 @@ export default function AIPlagiarismChecker() {
         <div className="absolute bottom-32 right-32 w-48 h-48 bg-blue-400/10 rounded-full blur-xl animate-pulse delay-1000"></div>
         <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-teal-400/10 rounded-full blur-xl animate-pulse delay-2000"></div>
         <div className="absolute top-1/3 right-1/4 w-36 h-36 bg-purple-400/8 rounded-full blur-xl animate-pulse delay-500"></div>
-        
+
         {/* Animated grid */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(59,130,246,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(59,130,246,0.03)_1px,transparent_1px)] bg-[size:4rem_4rem] animate-pulse"></div>
-        
+
         {/* Moving gradient lines */}
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-cyan-500/30 to-transparent animate-pulse"></div>
         <div className="absolute bottom-0 right-0 w-full h-px bg-gradient-to-l from-transparent via-blue-500/30 to-transparent animate-pulse delay-1000"></div>
       </div>
 
       {/* Main Container */}
-      <div className="flex items-center justify-center min-h-screen p-6">
-        <div className="relative z-10 w-full max-w-7xl">
+      <div className="flex items-center justify-center min-h-screen p-6 py-12">
+        <div className="relative z-10 w-full max-w-5xl">
           {/* Main Card Container */}
           <div className="bg-slate-800/40 backdrop-blur-xl rounded-3xl overflow-hidden border border-slate-600/30 shadow-2xl">
             {/* Header */}
-            <div className="p-6 border-b border-slate-700/50">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-cyan-400 rounded flex items-center justify-center">
-                  <FileText className="w-6 h-6 text-slate-900" />
-                </div>
+            <div className="p-6 border-b border-slate-700/50 text-center">
+              <div className="flex items-center justify-center gap-3 mb-4">
+                <img
+                  src="/logoGenReal.png" 
+                  alt="AI Plagiarism Checker Logo"
+                  className="w-10 h-10 object-contain" 
+                />
                 <h1 className="text-3xl font-bold text-white">
                   AI <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Plagiarism</span> Checker
                 </h1>
               </div>
-              <p className="text-slate-300 text-sm max-w-2xl">
-                Detect AI & Human Plagiarism with Unmatched Precision. Built for 
-                educators, writers, and institutions—get accurate, fast, and 
+              <p className="text-slate-300 text-sm mx-auto max-w-2xl">
+                Detect AI & Human Plagiarism with Unmatched Precision. Built for
+                educators, writers, and institutions—get accurate, fast, and
                 transparent results in one click.
               </p>
             </div>
 
             {/* Main Content */}
-            <div className="flex h-[600px]">
+            <div className="flex h-[500px]">
               {/* Left Side - Text Input */}
               <div className="w-1/2 p-6 border-r border-slate-700/50">
                 <div className="h-full flex flex-col">
@@ -73,7 +76,7 @@ export default function AIPlagiarismChecker() {
                       {textInput.length}/5000
                     </div>
                   </div>
-                  
+
                   <div className="flex-1 mb-4">
                     <textarea
                       value={textInput}
@@ -83,7 +86,7 @@ export default function AIPlagiarismChecker() {
                       maxLength={5000}
                     />
                   </div>
-                  
+
                   <div className="flex gap-3">
                     <button
                       onClick={handleCheckPlagiarism}
@@ -92,7 +95,7 @@ export default function AIPlagiarismChecker() {
                     >
                       {isChecking ? 'Checking...' : 'Check for Plagiarism'}
                     </button>
-                    
+
                     {(hasResults || textInput) && (
                       <button
                         onClick={handleReset}
@@ -109,7 +112,7 @@ export default function AIPlagiarismChecker() {
               <div className="w-1/2 p-6">
                 <div className="h-full flex flex-col">
                   <h2 className="text-xl font-semibold text-white mb-4">Plagiarism Results</h2>
-                  
+
                   {!textInput.trim() && !isChecking && !hasResults && (
                     <div className="flex-1 flex items-center justify-center">
                       <div className="text-center">
@@ -131,7 +134,7 @@ export default function AIPlagiarismChecker() {
                   )}
 
                   {hasResults && !isChecking && (
-                    <div className="flex-1">
+                    <div className="flex-1 overflow-y-auto">
                       {/* Sample Text Display */}
                       <div className="bg-slate-700/30 backdrop-blur-sm border border-slate-600/40 rounded-xl p-4 mb-6">
                         <p className="text-slate-300 text-sm leading-relaxed">
@@ -140,27 +143,27 @@ export default function AIPlagiarismChecker() {
                       </div>
 
                       {/* Results Circles */}
-                      <div className="grid grid-cols-2 gap-6 mb-6">
+                      <div className="grid grid-cols-2 gap-4 mb-6">
                         <div className="text-center">
-                          <div className="relative w-20 h-20 mx-auto mb-3">
-                            <svg className="w-20 h-20 transform -rotate-90">
+                          <div className="relative w-16 h-16 mx-auto mb-2">
+                            <svg className="w-16 h-16 transform -rotate-90">
                               <circle
-                                cx="40"
-                                cy="40"
-                                r="32"
+                                cx="32"
+                                cy="32"
+                                r="28"
                                 stroke="currentColor"
-                                strokeWidth="8"
+                                strokeWidth="6"
                                 fill="none"
                                 className="text-slate-600"
                               />
                               <circle
-                                cx="40"
-                                cy="40"
-                                r="32"
+                                cx="32"
+                                cy="32"
+                                r="28"
                                 stroke="currentColor"
-                                strokeWidth="8"
+                                strokeWidth="6"
                                 fill="none"
-                                strokeDasharray={`${75 * 2.01} ${201 - 75 * 2.01}`}
+                                strokeDasharray={`${75 * 1.76} ${176 - 75 * 1.76}`}
                                 className="text-red-500"
                               />
                             </svg>
@@ -168,30 +171,30 @@ export default function AIPlagiarismChecker() {
                               <span className="text-white text-lg font-bold">75%</span>
                             </div>
                           </div>
-                          <p className="text-red-400 font-semibold">Plagiarism</p>
-                          <p className="text-red-400 font-semibold">Found</p>
+                          <p className="text-red-400 font-semibold text-sm">Plagiarism</p>
+                          <p className="text-red-400 font-semibold text-sm">Found</p>
                         </div>
 
                         <div className="text-center">
-                          <div className="relative w-20 h-20 mx-auto mb-3">
-                            <svg className="w-20 h-20 transform -rotate-90">
+                          <div className="relative w-16 h-16 mx-auto mb-2">
+                            <svg className="w-16 h-16 transform -rotate-90">
                               <circle
-                                cx="40"
-                                cy="40"
-                                r="32"
+                                cx="32"
+                                cy="32"
+                                r="28"
                                 stroke="currentColor"
-                                strokeWidth="8"
+                                strokeWidth="6"
                                 fill="none"
                                 className="text-slate-600"
                               />
                               <circle
-                                cx="40"
-                                cy="40"
-                                r="32"
+                                cx="32"
+                                cy="32"
+                                r="28"
                                 stroke="currentColor"
-                                strokeWidth="8"
+                                strokeWidth="6"
                                 fill="none"
-                                strokeDasharray={`${25 * 2.01} ${201 - 25 * 2.01}`}
+                                strokeDasharray={`${25 * 1.76} ${176 - 25 * 1.76}`}
                                 className="text-green-500"
                               />
                             </svg>
@@ -199,21 +202,21 @@ export default function AIPlagiarismChecker() {
                               <span className="text-white text-lg font-bold">25%</span>
                             </div>
                           </div>
-                          <p className="text-green-400 font-semibold">Unique</p>
-                          <p className="text-green-400 font-semibold">Text</p>
+                          <p className="text-green-400 font-semibold text-sm">Unique</p>
+                          <p className="text-green-400 font-semibold text-sm">Text</p>
                         </div>
                       </div>
 
                       {/* Detailed Breakdown */}
                       <div className="bg-slate-700/30 backdrop-blur-sm border border-slate-600/40 rounded-xl p-4">
                         <h3 className="text-white font-semibold mb-4">Detailed Analysis</h3>
-                        
+
                         <div className="space-y-4">
                           <div className="flex justify-between items-center text-sm">
                             <span className="text-slate-400">Exact Match</span>
                             <span className="text-white">5%</span>
                           </div>
-                          
+
                           <div className="space-y-2">
                             <div className="flex justify-between text-sm">
                               <span className="text-slate-400">Paraphrased Content</span>
