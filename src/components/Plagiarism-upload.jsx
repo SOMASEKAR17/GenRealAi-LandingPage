@@ -135,13 +135,6 @@ export default function AIPlagiarismChecker() {
 
                   {hasResults && !isChecking && (
                     <div className="flex-1 overflow-y-auto">
-                      {/* Sample Text Display */}
-                      <div className="bg-slate-700/30 backdrop-blur-sm border border-slate-600/40 rounded-xl p-4 mb-6">
-                        <p className="text-slate-300 text-sm leading-relaxed">
-                          {textInput.substring(0, 200)}...
-                        </p>
-                      </div>
-
                       {/* Results Circles */}
                       <div className="grid grid-cols-2 gap-4 mb-6">
                         <div className="text-center">
