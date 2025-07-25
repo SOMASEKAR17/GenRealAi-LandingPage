@@ -77,7 +77,7 @@ export default function AIPlagiarismChecker() {
                     </div>
                   </div>
 
-                  <div className="flex-1 mb-4">
+                  <div className="flex-1 mb-4 relative">
                     <textarea
                       value={textInput}
                       onChange={(e) => setTextInput(e.target.value)}
@@ -85,7 +85,21 @@ export default function AIPlagiarismChecker() {
                       className="w-full h-full bg-slate-700/30 backdrop-blur-sm border border-slate-600/40 rounded-xl p-4 text-white placeholder-slate-400 outline-none resize-none text-sm leading-relaxed focus:border-cyan-400/60 transition-all duration-300 focus:bg-slate-700/40"
                       maxLength={5000}
                     />
+
+                    {/* Background SVG card only when empty */}
+                    {!textInput.trim() && !isChecking && !hasResults && (
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div className="bg-slate-700/30 border border-slate-600/30 rounded-xl p-6 flex items-center justify-center">
+                          <img
+                            src="/paste.svg"
+                            alt="Paste Icon"
+                            className="w-16 h-16 opacity-50"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
+
 
                   <div className="flex gap-3">
                     <button
@@ -111,17 +125,23 @@ export default function AIPlagiarismChecker() {
               {/* Right Side - Results */}
               <div className="w-1/2 p-6">
                 <div className="h-full flex flex-col">
-                  <h2 className="text-xl font-semibold text-white mb-4">Plagiarism Results</h2>
+                {/* Dynamic Section Header */}
+                  <h2 className="text-xl font-semibold text-white mb-4">
+                    {hasResults ? 'Results' : 'Get Started'}
+                  </h2>
 
+                  {/* Step-by-step instructions (no SVG) */}
                   {!textInput.trim() && !isChecking && !hasResults && (
-                    <div className="flex-1 flex items-center justify-center">
-                      <div className="text-center">
-                        <FileText className="w-16 h-16 text-slate-500 mx-auto mb-4" />
-                        <p className="text-slate-400 text-lg mb-2">Ready to Check</p>
-                        <p className="text-slate-500 text-sm">Enter text on the left to get started</p>
+                    <div className="flex flex-col items-start justify-start h-full px-8 pt-2 text-slate-400 space-y-6">
+                      <div className="space-y-2 text-sm leading-relaxed max-w-xs">
+                        <p><span className="font-semibold text-white">Step 1:</span> Paste any paragraph or essay you'd like to check.</p>
+                        <p><span className="font-semibold text-white">Step 2:</span> Click <span className="text-cyan-400 font-semibold">Check for Plagiarism</span>.</p>
+                        <p><span className="font-semibold text-white">Step 3:</span> You'll see which parts are AI-generated or human-written.</p>
+                        <p><span className="font-semibold text-white">Tip:</span> Use this to refine and improve your content quality!</p>
                       </div>
                     </div>
                   )}
+
 
                   {isChecking && (
                     <div className="flex-1 flex items-center justify-center">
