@@ -48,7 +48,7 @@ import React from "react";
        {/* Image for the circular design */}
        <div
          className="relative mx-auto mt-20 flex justify-center items-center"
-         style={{ width: 'min(30vw, 400px)', height: 'min(30vw, 400px)' }}
+         style={{ width: 'min(45vw, 600px)', height: 'min(45vw, 600px)' }}
        >
          <img
            src={aboutUsImage}

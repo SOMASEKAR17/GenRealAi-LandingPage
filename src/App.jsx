@@ -11,12 +11,14 @@ import VideoCarousel  from "./components/videoCarousel"
 import Footer from './components/Footer';
 import FAQ from './components/FAQ';
 import Upload from './components/Upload';
-import Plagiarism from "./components/Plagiarism";
+import Plagiarism from "./components/Plagiarism-upload";
+import PlagiarismAbout from "./components/Plagiarism";
 
 const Home = ({ isLoaded }) => (
   <div className='z-10' style={{ visibility: isLoaded ? 'visible' : 'hidden' }}>
     <Hero Loaded={isLoaded} />
     <About id="about" />
+    <PlagiarismAbout />
     <div className='w-[100%] hidden md:block h-screen'>
       <div className='w-[60%] h-[50%] mx-auto'>
         <VideoCarousel />
