@@ -86,7 +86,7 @@ const Processing = () => {
           transition={{ duration: 0.8, delay: 0.2 }}
           className="text-center mb-8"
         >
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
+          <h1 className="text-2xl sm:text-3xl mt-10 md:text-4xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
             Analyzing Content
           </h1>
           <p className="text-sm sm:text-base text-slate-300 mb-6">
