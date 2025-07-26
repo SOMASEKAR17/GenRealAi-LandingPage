@@ -7,6 +7,8 @@ module.exports = {
       },
       fontFamily: {
         inter: ['Inter', 'sans-serif'],
+        raleway: ['Raleway', 'sans-serif'],
+        poppins: ['Poppins', 'sans-serif'],
       },
     },
   },

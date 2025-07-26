@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { FileText, CheckCircle, AlertCircle } from 'lucide-react';
+// import { FileText, CheckCircle, AlertCircle } from 'lucide-react'; // Lucide icons are not directly used in the current display logic but kept if you plan to use them.
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 
 export default function AIPlagiarismChecker() {
+  const navigate = useNavigate(); // Initialize the navigate function
+
   const [textInput, setTextInput] = useState('');
   const [isChecking, setIsChecking] = useState(false);
   const [hasResults, setHasResults] = useState(false);
@@ -21,6 +24,15 @@ export default function AIPlagiarismChecker() {
     setTextInput('');
     setHasResults(false);
     setIsChecking(false);
+  };
+
+  // Function to handle the main button's action (Check or Go Home)
+  const handleMainButtonAction = () => {
+    if (hasResults) {
+      navigate('/'); // Go to home if results are shown
+    } else {
+      handleCheckPlagiarism(); // Check plagiarism if no results
+    }
   };
 
   return (
@@ -46,13 +58,21 @@ export default function AIPlagiarismChecker() {
         <div className="relative z-10 w-full max-w-5xl">
           {/* Main Card Container */}
           <div className="bg-slate-800/40 backdrop-blur-xl rounded-3xl overflow-hidden border border-slate-600/30 shadow-2xl">
+            {/* Close Button (top-right) */}
+            <button
+              onClick={() => navigate('/')} // Uses useNavigate to go to home
+              className="absolute top-4 right-6 text-slate-400 hover:text-white text-2xl font-bold z-50 cursor-pointer transition-colors duration-200"
+              aria-label="Close"
+            >
+              ×
+            </button>
             {/* Header */}
             <div className="p-6 border-b border-slate-700/50 text-center">
               <div className="flex items-center justify-center gap-3 mb-4">
                 <img
-                  src="/logoGenReal.png" 
+                  src="/logoGenReal.png"
                   alt="AI Plagiarism Checker Logo"
-                  className="w-10 h-10 object-contain" 
+                  className="w-10 h-10 object-contain"
                 />
                 <h1 className="text-3xl font-bold text-white">
                   AI <span className="bg-gradient-to-r from-cyan-400 to-blue-400 bg-clip-text text-transparent">Plagiarism</span> Checker
@@ -77,7 +97,7 @@ export default function AIPlagiarismChecker() {
                     </div>
                   </div>
 
-                  <div className="flex-1 mb-4">
+                  <div className="flex-1 mb-4 relative">
                     <textarea
                       value={textInput}
                       onChange={(e) => setTextInput(e.target.value)}
@@ -85,15 +105,28 @@ export default function AIPlagiarismChecker() {
                       className="w-full h-full bg-slate-700/30 backdrop-blur-sm border border-slate-600/40 rounded-xl p-4 text-white placeholder-slate-400 outline-none resize-none text-sm leading-relaxed focus:border-cyan-400/60 transition-all duration-300 focus:bg-slate-700/40"
                       maxLength={5000}
                     />
+
+                    {/* Background SVG card only when empty */}
+                    {!textInput.trim() && !isChecking && !hasResults && (
+                      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div className="bg-slate-700/30 border border-slate-600/30 rounded-xl p-6 flex items-center justify-center">
+                          <img
+                            src="/paste.svg"
+                            alt="Paste Icon"
+                            className="w-16 h-16 opacity-50"
+                          />
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex gap-3">
                     <button
-                      onClick={handleCheckPlagiarism}
-                      disabled={!textInput.trim() || isChecking}
+                      onClick={handleMainButtonAction} // Use the new handler
+                      disabled={!textInput.trim() && !hasResults || isChecking} // Disable if no text AND no results, or if checking
                       className="flex-1 bg-gradient-to-r from-cyan-500 to-blue-500 hover:from-cyan-600 hover:to-blue-600 disabled:from-slate-600 disabled:to-slate-600 disabled:cursor-not-allowed text-white py-3 px-6 rounded-xl font-medium transition-all duration-300 transform hover:scale-105 shadow-lg backdrop-blur-sm"
                     >
-                      {isChecking ? 'Checking...' : 'Check for Plagiarism'}
+                      {isChecking ? 'Checking...' : (hasResults ? 'Go to Home' : 'Check for Plagiarism')}
                     </button>
 
                     {(hasResults || textInput) && (
@@ -111,18 +144,24 @@ export default function AIPlagiarismChecker() {
               {/* Right Side - Results */}
               <div className="w-1/2 p-6">
                 <div className="h-full flex flex-col">
-                  <h2 className="text-xl font-semibold text-white mb-4">Plagiarism Results</h2>
+                  {/* Dynamic Section Header */}
+                  <h2 className="text-xl font-semibold text-white mb-4">
+                    {hasResults ? 'Results' : 'Get Started'}
+                  </h2>
 
+                  {/* Step-by-step instructions */}
                   {!textInput.trim() && !isChecking && !hasResults && (
-                    <div className="flex-1 flex items-center justify-center">
-                      <div className="text-center">
-                        <FileText className="w-16 h-16 text-slate-500 mx-auto mb-4" />
-                        <p className="text-slate-400 text-lg mb-2">Ready to Check</p>
-                        <p className="text-slate-500 text-sm">Enter text on the left to get started</p>
+                    <div className="flex flex-col items-start justify-start h-full px-8 pt-2 text-slate-400 space-y-6">
+                      <div className="space-y-2 text-sm leading-relaxed max-w-xs">
+                        <p><span className="font-semibold text-white">Step 1:</span> Paste any paragraph or essay you'd like to check.</p>
+                        <p><span className="font-semibold text-white">Step 2:</span> Click <span className="text-cyan-400 font-semibold">Check for Plagiarism</span>.</p>
+                        <p><span className="font-semibold text-white">Step 3:</span> You'll see which parts are AI-generated or human-written.</p>
+                        <p><span className="font-semibold text-white">Tip:</span> Use this to refine and improve your content quality!</p>
                       </div>
                     </div>
                   )}
 
+                  {/* Loading/Checking state */}
                   {isChecking && (
                     <div className="flex-1 flex items-center justify-center">
                       <div className="text-center">
@@ -133,15 +172,9 @@ export default function AIPlagiarismChecker() {
                     </div>
                   )}
 
+                  {/* Results Display */}
                   {hasResults && !isChecking && (
                     <div className="flex-1 overflow-y-auto">
-                      {/* Sample Text Display */}
-                      <div className="bg-slate-700/30 backdrop-blur-sm border border-slate-600/40 rounded-xl p-4 mb-6">
-                        <p className="text-slate-300 text-sm leading-relaxed">
-                          {textInput.substring(0, 200)}...
-                        </p>
-                      </div>
-
                       {/* Results Circles */}
                       <div className="grid grid-cols-2 gap-4 mb-6">
                         <div className="text-center">

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence, motion } from 'framer-motion';
 
 import Loader from './components/loader';
 import Hero from './components/hero';
@@ -11,12 +12,14 @@ import VideoCarousel  from "./components/videoCarousel"
 import Footer from './components/Footer';
 import FAQ from './components/FAQ';
 import Upload from './components/Upload';
-import Plagiarism from "./components/Plagiarism";
+import Plagiarism from "./components/Plagiarism-upload";
+import DeepfakeDetectionPlatform from "./components/aboutCards";
 
 const Home = ({ isLoaded }) => (
   <div className='z-10' style={{ visibility: isLoaded ? 'visible' : 'hidden' }}>
     <Hero Loaded={isLoaded} />
     <About id="about" />
+    <DeepfakeDetectionPlatform />
     <div className='w-[100%] hidden md:block h-screen'>
       <div className='w-[60%] h-[50%] mx-auto'>
         <VideoCarousel />
@@ -30,12 +33,22 @@ const Home = ({ isLoaded }) => (
   </div>
 );
 
+const PageWrapper = ({ children }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 30 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: -30 }}
+    transition={{ duration: 0.6, ease: "easeInOut" }}
+  >
+    {children}
+  </motion.div>
+);
+
 const AppContent = () => {
   const location = useLocation();
   const [isLoaded, setIsLoaded] = useState(location.pathname !== '/');
 
   useEffect(() => {
-    // Scroll to top when loading finishes
     if (isLoaded) {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
@@ -47,14 +60,38 @@ const AppContent = () => {
     <div className='relative bg-black overflow-hidden'>
       {isHome && !isLoaded && <Loader onFinish={() => setIsLoaded(true)} />}
 
-      <Routes>
-        <Route path="/" element={<Home isLoaded={isLoaded} />} />
-        <Route path="/upload" element={<Upload />} />
-        <Route path="/plagiarism" element={<Plagiarism/>} />
-      </Routes>
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          <Route
+            path="/"
+            element={
+              <PageWrapper>
+                <Home isLoaded={isLoaded} />
+              </PageWrapper>
+            }
+          />
+          <Route
+            path="/upload"
+            element={
+              <PageWrapper>
+                <Upload />
+              </PageWrapper>
+            }
+          />
+          <Route
+            path="/plagiarism"
+            element={
+              <PageWrapper>
+                <Plagiarism />
+              </PageWrapper>
+            }
+          />
+        </Routes>
+      </AnimatePresence>
     </div>
   );
 };
+
 
 const App = () => {
 
