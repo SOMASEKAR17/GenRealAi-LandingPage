@@ -70,6 +70,7 @@
     hsla(266, 25%, 50%, calc(var(--card-opacity) * 0.3)) 60%,
     hsla(266, 0%, 40%, 0) 100%);
   overflow: hidden;
+  touch-action: none;
 }
 
 .pc-card:hover,
