@@ -62,7 +62,6 @@ const Face = ({ paused, isVisible, disableTracking, onModelLoaded }) => {
 
     wireframesRef.current = addedWireframes;
 
-    // Mark model as ready and notify parent component
     if (!modelReady) {
       setModelReady(true);
       if (onModelLoaded) {
@@ -71,6 +70,7 @@ const Face = ({ paused, isVisible, disableTracking, onModelLoaded }) => {
     }
 
     return () => {
+      // Remove wireframes
       wireframesRef.current.forEach((mesh) => {
         if (mesh.parent) mesh.parent.remove(mesh);
       });
@@ -79,6 +79,20 @@ const Face = ({ paused, isVisible, disableTracking, onModelLoaded }) => {
       scene.traverse((child) => {
         if (child.isMesh) {
           child.userData.hasWireframe = false;
+
+          if (child.geometry) {
+            child.geometry.dispose();
+          }
+          if (Array.isArray(child.material)) {
+            child.material.forEach((mat) => mat.dispose && mat.dispose());
+          } else if (child.material) {
+            child.material.dispose();
+          }
+
+          // Optional: dispose textures if present
+          if (child.material?.map) {
+            child.material.map.dispose();
+          }
         }
       });
     };
@@ -127,13 +141,13 @@ const Face = ({ paused, isVisible, disableTracking, onModelLoaded }) => {
   }, [scene]);
 
   useFrame(() => {
-    if (paused || !groupRef.current || !isVisible) return;
-    groupRef.current.rotation.y += (mouse.x * 0.6 - groupRef.current.rotation.y) * 0.1;
-    groupRef.current.rotation.x += (mouse.y * 0.4 - groupRef.current.rotation.x) * 0.1;
-  });
+      if (paused || !groupRef.current || !isVisible) return;
+      groupRef.current.rotation.y += (mouse.x * 0.6 - groupRef.current.rotation.y) * 0.1;
+      groupRef.current.rotation.x += (mouse.y * 0.4 - groupRef.current.rotation.x) * 0.1;
+    });
 
-  return <group ref={groupRef}><primitive object={scene} /></group>;
-};
+    return <group ref={groupRef}><primitive object={scene} /></group>;
+  };
 
 const FaceModel = ({ paused, disableTracking, onModelLoaded }) => {
   const [isVisible, setIsVisible] = useState(false);
