@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 
@@ -6,31 +6,57 @@ const faqs = [
   {
     question: "What is DeepfakeQuiz?",
     answer:
-      "DeepfakeQuiz is an interactive platform that tests your ability to identify deepfakes. It uses real and AI-generated content to raise awareness about misinformation.",
+      " DeepfakeQuiz is an interactive platform that tests your ability to identify deepfakes. It uses real and AI-generated content to raise awareness about misinformation.",
   },
   {
     question: "How does the quiz work?",
     answer:
-      "You’ll be shown a series of media clips — your task is to decide whether each is real or generated. You’ll receive feedback on your accuracy and learn tips for identifying fakes.",
+      " You’ll be shown a series of media clips — your task is to decide whether each is real or generated. You’ll receive feedback on your accuracy and learn tips for identifying fakes.",
   },
   {
     question: "Why should I take this quiz?",
     answer:
-      "The rise of AI-generated media makes it harder to distinguish real from fake. This quiz helps sharpen your detection skills in a fun, engaging way.",
+      " The rise of AI-generated media makes it harder to distinguish real from fake. This quiz helps sharpen your detection skills in a fun, engaging way.",
   },
   {
     question: "Is my data safe?",
     answer:
-      "Yes, we don’t collect any personal data from the quiz. It’s designed solely for education and awareness.",
+      " Yes, we don’t collect any personal data from the quiz. It’s designed solely for education and awareness.",
   },
 ];
 
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState(null);
+  const [typedText, setTypedText] = useState("");
+  const [typingDone, setTypingDone] = useState(false);
 
   const toggleFAQ = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
+    if (index === openIndex) {
+      setOpenIndex(null);
+      setTypedText("");
+    } else {
+      setOpenIndex(index);
+      setTypedText("");
+      setTypingDone(false);
+    }
   };
+
+  useEffect(() => {
+    if (openIndex !== null) {
+      const answer = faqs[openIndex].answer;
+      let i = 0;
+      const typingInterval = setInterval(() => {
+        setTypedText((prev) => prev + answer.charAt(i));
+        i++;
+        if (i >= answer.length) {
+          clearInterval(typingInterval);
+          setTypingDone(true);
+        }
+      }, 15); // speed of typing
+
+      return () => clearInterval(typingInterval);
+    }
+  }, [openIndex]);
 
   return (
     <div
@@ -82,7 +108,7 @@ export default function FAQ() {
       <div className="relative z-10 w-full px-4 sm:px-10 pt-32 pb-20">
         <div className="text-center mb-16">
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-extrabold text-cyan-100 mb-2 sm:mb-3">
-            Frequently <span className="text-cyan-400">Asked Question</span>
+            Frequently <span className="text-cyan-400">Asked Questions</span>
           </h2>
           <motion.p
             initial={{ opacity: 0, y: 40, scale: 0.95 }}
@@ -101,8 +127,7 @@ export default function FAQ() {
           </motion.p>
         </div>
 
-        {/* FAQ content and image */}
-        <div className="flex flex-col lg:flex-row items-center lg:items-start justify-center gap-10 max-w-6xl mx-auto">
+        <div className="flex flex-col lg:flex-row items-stretch justify-center gap-10 max-w-6xl mx-auto">
           {/* FAQ List */}
           <div className="w-full lg:w-3/5">
             {faqs.map((faq, index) => (
@@ -152,8 +177,9 @@ export default function FAQ() {
                       transition={{ duration: 0.4, ease: "easeInOut" }}
                       className="overflow-hidden"
                     >
-                      <p className="px-6 text-white/70 text-[1.05rem]">
-                        {faq.answer}
+                      <p className="px-6 text-white/70 text-[1.05rem] min-h-[80px]">
+                        {typedText}
+                        {!typingDone && <span className="animate-pulse">|</span>}
                       </p>
                     </motion.div>
                   )}
@@ -167,15 +193,16 @@ export default function FAQ() {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
-            className="w-full lg:w-2/5 flex justify-center items-center p-4 lg:p-0"
+            className="hidden lg:flex items-stretch justify-center p-4 lg:p-0"
           >
             <img
-              src="/faq-image.png"
+              src="/faq image-2.jpg"
               alt="AI Robot Answering Questions"
-              className="max-w-full h-auto rounded-lg shadow-2xl transition-transform duration-500 hover:scale-105"
-              style={{ maxWidth: "400px", objectFit: "cover" }}
+              className="w-full h-full object-cover rounded-lg shadow-2xl max-h-full"
+              style={{ maxWidth: "400px" }}
             />
           </motion.div>
+
         </div>
       </div>
     </div>

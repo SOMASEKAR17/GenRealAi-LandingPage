@@ -1,36 +1,55 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 
-const Loader = ({ onFinish }) => {
+const Loader = ({ onFinish, faceModelLoaded }) => {
   const progressRef = useRef(null);
   const containerRef = useRef(null);
 
   useEffect(() => {
     let progress = { value: 0 };
+    let tween;
 
-    // Animate number from 0 to 100
-    gsap.to(progress, {
-      value: 100,
-      duration: 2,         // 2 seconds duration, adjust as you want
-      ease: 'power1.out',
-      onUpdate: () => {
-        if (progressRef.current) {
-          progressRef.current.textContent = `${Math.floor(progress.value)}%`;
-        }
-      },
-      onComplete: () => {
-        // Animate shrink + fade out
-        gsap.to(containerRef.current, {
-          scale:1.1,
-          translateY: '6%',
-          opacity: 0.5,
-          duration: 1,
-          ease: 'power2.inOut',
-          onComplete: onFinish,
-        });
-      },
-    });
-  }, [onFinish]);
+    if (faceModelLoaded) {
+      // Only start the progress animation when face model is loaded
+      tween = gsap.to(progress, {
+        value: 100,
+        duration: 1.5,         // Slightly faster since model is already loaded
+        ease: 'power1.out',
+        onUpdate: () => {
+          if (progressRef.current) {
+            progressRef.current.textContent = `${Math.floor(progress.value)}%`;
+          }
+        },
+        onComplete: () => {
+          // Animate shrink + fade out
+          gsap.to(containerRef.current, {
+            scale: 1.1,
+            translateY: '6%',
+            opacity: 0.5,
+            duration: 1,
+            ease: 'power2.inOut',
+            onComplete: onFinish,
+          });
+        },
+      });
+    } else {
+      // Show loading progress up to 90% while waiting for face model
+      tween = gsap.to(progress, {
+        value: 90,
+        duration: 3,
+        ease: 'power1.out',
+        onUpdate: () => {
+          if (progressRef.current) {
+            progressRef.current.textContent = `${Math.floor(progress.value)}%`;
+          }
+        },
+      });
+    }
+
+    return () => {
+      if (tween) tween.kill();
+    };
+  }, [onFinish, faceModelLoaded]);
 
   return (
     <div
@@ -61,4 +80,4 @@ const Loader = ({ onFinish }) => {
   );
 };
 
-export default Loader;
+export default Loader

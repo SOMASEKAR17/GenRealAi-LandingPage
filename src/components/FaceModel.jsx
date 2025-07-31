@@ -4,13 +4,14 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { useGLTF } from '@react-three/drei';
 import * as THREE from 'three';
 
-const Face = ({ paused, isVisible, disableTracking }) => {
+const Face = ({ paused, isVisible, disableTracking, onModelLoaded }) => {
   const { scene } = useGLTF('/RoboFace/scene.gltf');
   const groupRef = useRef();
   const [mouse, setMouse] = useState({ x: 0, y: 0 });
   const [scale, setScale] = useState({ x: 1.5, y: 1.2, z: 1.2 });
   const wireframesRef = useRef([]);
   const sharedWireMaterial = useRef(null);
+  const [modelReady, setModelReady] = useState(false);
 
   useEffect(() => {
     if (!sharedWireMaterial.current) {
@@ -61,7 +62,15 @@ const Face = ({ paused, isVisible, disableTracking }) => {
 
     wireframesRef.current = addedWireframes;
 
+    if (!modelReady) {
+      setModelReady(true);
+      if (onModelLoaded) {
+        onModelLoaded();
+      }
+    }
+
     return () => {
+      // Remove wireframes
       wireframesRef.current.forEach((mesh) => {
         if (mesh.parent) mesh.parent.remove(mesh);
       });
@@ -70,10 +79,24 @@ const Face = ({ paused, isVisible, disableTracking }) => {
       scene.traverse((child) => {
         if (child.isMesh) {
           child.userData.hasWireframe = false;
+
+          if (child.geometry) {
+            child.geometry.dispose();
+          }
+          if (Array.isArray(child.material)) {
+            child.material.forEach((mat) => mat.dispose && mat.dispose());
+          } else if (child.material) {
+            child.material.dispose();
+          }
+
+          // Optional: dispose textures if present
+          if (child.material?.map) {
+            child.material.map.dispose();
+          }
         }
       });
     };
-  }, [scene, scale, isVisible]);
+  }, [scene, scale, isVisible, modelReady, onModelLoaded]);
 
   // 🔥 Mouse tracking – only if visible and not disabled
   useEffect(() => {
@@ -118,15 +141,15 @@ const Face = ({ paused, isVisible, disableTracking }) => {
   }, [scene]);
 
   useFrame(() => {
-    if (paused || !groupRef.current || !isVisible) return;
-    groupRef.current.rotation.y += (mouse.x * 0.6 - groupRef.current.rotation.y) * 0.1;
-    groupRef.current.rotation.x += (mouse.y * 0.4 - groupRef.current.rotation.x) * 0.1;
-  });
+      if (paused || !groupRef.current || !isVisible) return;
+      groupRef.current.rotation.y += (mouse.x * 0.6 - groupRef.current.rotation.y) * 0.1;
+      groupRef.current.rotation.x += (mouse.y * 0.4 - groupRef.current.rotation.x) * 0.1;
+    });
 
-  return <group ref={groupRef}><primitive object={scene} /></group>;
-};
+    return <group ref={groupRef}><primitive object={scene} /></group>;
+  };
 
-const FaceModel = ({ paused, disableTracking }) => {
+const FaceModel = ({ paused, disableTracking, onModelLoaded }) => {
   const [isVisible, setIsVisible] = useState(false);
   const canvasRef = useRef();
 
@@ -159,7 +182,12 @@ const FaceModel = ({ paused, disableTracking }) => {
       <directionalLight position={[2, 2, 5]} intensity={1.2} />
       <Suspense fallback={null}>
         {isVisible && (
-          <Face paused={paused} isVisible={isVisible} disableTracking={disableTracking} />
+          <Face 
+            paused={paused} 
+            isVisible={isVisible} 
+            disableTracking={disableTracking}
+            onModelLoaded={onModelLoaded}
+          />
         )}
       </Suspense>
     </Canvas>
