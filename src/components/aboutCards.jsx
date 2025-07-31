@@ -44,7 +44,7 @@ const DeepfakeDetectionPlatform = () => {
     <div className="relative overflow-hidden bg-gradient-to-b from-[#0A0F1F] via-[#050A15] to-[#0A0F1F] transition-colors duration-1000" id="products">
 
       {/* Header */}
-      <div className={`relative z-20 pt-24 pb-8 transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+      <div className={`relative z-20 pt-4 pb-8 transition-all duration-1000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h1 className="text-3xl sm:text-5xl font-bold text-white mb-6 leading-tight">
             <span className="block">

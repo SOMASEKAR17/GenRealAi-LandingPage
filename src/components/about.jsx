@@ -1,14 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { MotionPathPlugin } from "gsap/MotionPathPlugin"; 
+import { MotionPathPlugin } from "gsap/MotionPathPlugin";
 
-gsap.registerPlugin(ScrollTrigger, MotionPathPlugin); 
+gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
 const AboutUsSection = () => {
   const sectionRef = useRef(null);
   const heroRef = useRef(null);
-  const logoRef = useRef(null);
   const deepfakeRef = useRef(null);
   const plagiarismRef = useRef(null);
   const floatingElementsRef = useRef([]);
@@ -17,7 +16,6 @@ const AboutUsSection = () => {
   const rightMotionRef = useRef(null);
 
   useEffect(() => {
-    // Create floating background elements
     const createFloatingElements = () => {
       for (let i = 0; i < 20; i++) {
         const element = document.createElement('div');
@@ -63,7 +61,6 @@ const AboutUsSection = () => {
     createParticles();
 
     const ctx = gsap.context(() => {
-      // Continuously moving background particles
       particlesRef.current.forEach((particle) => {
         gsap.to(particle, {
           y: -window.innerHeight - 100,
@@ -82,7 +79,6 @@ const AboutUsSection = () => {
         });
       });
 
-      // Floating elements animation
       floatingElementsRef.current.forEach((element) => {
         gsap.to(element, {
           y: Math.random() * 100 - 50,
@@ -95,12 +91,12 @@ const AboutUsSection = () => {
         });
       });
 
-      // Hero section animation with stagger effect
-      gsap.fromTo(heroRef.current.querySelector('.hero-title'), 
+      // Hero section animations
+      gsap.fromTo(heroRef.current.querySelector('.hero-title'),
         { opacity: 0, y: 80, scale: 0.9 },
-        { 
-          opacity: 1, 
-          y: 0, 
+        {
+          opacity: 1,
+          y: 0,
           scale: 1,
           duration: 2,
           ease: "power3.out",
@@ -108,43 +104,16 @@ const AboutUsSection = () => {
         }
       );
 
-      gsap.fromTo(heroRef.current.querySelector('.hero-subtitle'), 
-        { opacity: 0, y: 60 },
-        { 
-          opacity: 1, 
-          y: 0, 
-          duration: 1.8,
-          ease: "power2.out",
-          delay: 0.8
-        }
-      );
-
-      gsap.fromTo(heroRef.current.querySelector('.hero-description'), 
+      gsap.fromTo(heroRef.current.querySelector('.hero-description'),
         { opacity: 0, y: 40 },
-        { 
-          opacity: 1, 
-          y: 0, 
+        {
+          opacity: 1,
+          y: 0,
           duration: 1.5,
           ease: "power2.out",
           delay: 1.2
         }
       );
-
-      // Spinning logo animation with pulsing effect
-      gsap.to(logoRef.current, { 
-        rotation: 360,
-        duration: 25,
-        repeat: -1,
-        ease: "none"
-      });
-
-      gsap.to(logoRef.current, {
-        scale: 1.1,
-        duration: 3,
-        repeat: -1,
-        yoyo: true,
-        ease: "power2.inOut"
-      });
 
       // Deepfake section - slide in from left with morphing effect
       const deepfakeTl = gsap.timeline({
@@ -157,12 +126,9 @@ const AboutUsSection = () => {
       });
       
       deepfakeTl
-        .fromTo(deepfakeRef.current.querySelector('.content-wrapper'), 
-          { x: -200, opacity: 0, scale: 0.8 }, 
-          { x: 0, opacity: 1, scale: 1 })
-        .fromTo(deepfakeRef.current.querySelector('.icon-wrapper'),
-          { rotation: -180, scale: 0 },
-          { rotation: 0, scale: 1 }, "-=0.5");
+        .fromTo(deepfakeRef.current.querySelector('.content-wrapper'),
+          { x: -200, opacity: 0, scale: 0.8 },
+          { x: 0, opacity: 1, scale: 1 });
 
       // Plagiarism section - slide in from right with wave effect
       const plagiarismTl = gsap.timeline({
@@ -177,12 +143,8 @@ const AboutUsSection = () => {
       plagiarismTl
         .fromTo(plagiarismRef.current.querySelector('.content-wrapper'),
           { x: 200, opacity: 0, scale: 0.8 },
-          { x: 0, opacity: 1, scale: 1 })
-        .fromTo(plagiarismRef.current.querySelector('.wave-bg'),
-          { scaleX: 0, transformOrigin: "right center" },
-          { scaleX: 1 }, "-=0.7");
+          { x: 0, opacity: 1, scale: 1 });
 
-      // MotionPath animations for left and right sides
       if (leftMotionRef.current) {
         gsap.to(leftMotionRef.current, {
           motionPath: {
@@ -250,8 +212,8 @@ const AboutUsSection = () => {
 
   return (
     <div ref={sectionRef} className="bg-gradient-to-b from-black to-[#0F1419] text-white font-sans relative overflow-hidden" id="about">
-      {/* Hero Section */}
-      <section ref={heroRef} className="min-h-screen flex items-center justify-center relative z-10">
+      {/* Hero Section - Redesigned */}
+      <section ref={heroRef} className="min-h-screen flex items-center justify-center relative z-10 pt-24">
         {/* Animated background overlay */}
         <div className="absolute inset-0 bg-gradient-to-br from-[#00D1FF]/5 via-transparent to-[#1E40AF]/5 animate-pulse"></div>
         
@@ -260,64 +222,43 @@ const AboutUsSection = () => {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             
             {/* Left side - Main content */}
-            <div className="space-y-8">
-              <div className="grid lg:grid-cols-[1fr_0.8fr] gap-16 items-center">
-                <h1 className="text-7xl lg:text-9xl font-black mb-4 bg-gradient-to-r from-[#FFFFFF] via-[#00D1FF] to-[#FFFFFF] bg-clip-text text-transparent leading-tight whitespace-nowrap">
-                  GenReal.ai
-                </h1>
-              </div>
-
-              <div className="hero-subtitle">
-                <h2 className="text-2xl lg:text-4xl font-bold text-[#00D1FF] mb-6 tracking-wide">
-                  Building Digital Trust
-                </h2>
-              </div>
+            <div className="space-y-6">
+              <h1 className="hero-title text-5xl lg:text-7xl font-extrabold mb-4 bg-gradient-to-r from-white via-cyan-400 to-white bg-clip-text text-transparent leading-tight">
+                Building a <br /> Safer Digital World
+              </h1>
               
               <div className="hero-description">
-                <div className="bg-gradient-to-r from-[#00D1FF]/10 to-transparent p-8 rounded-2xl border border-[#00D1FF]/20 backdrop-blur-sm">
-                  <p className="text-xl lg:text-2xl leading-relaxed text-[#E6F3FF] font-medium">
-                    Our mission is to assist in creating a 
-                    <span className="text-[#00D1FF] font-bold"> safer, more reliable digital environment</span> 
-                    where trust isn't compromised. Whether you're moderating user content or safeguarding public communications, 
-                    <span className="text-[#60A5FA] font-bold"> we're here to help you lead with confidence.</span>
-                  </p>
-                </div>
-                
-                {/* Call to action */}
-                <div className="flex flex-wrap gap-4 mt-8">
-                  <button className="bg-gradient-to-r from-[#00D1FF] to-[#0099CC] text-black font-bold px-8 py-4 rounded-full hover:shadow-lg hover:shadow-[#00D1FF]/30 transition-all duration-300 transform hover:scale-105">
-                    Explore Solutions
-                  </button>
-                  <button className="border-2 border-[#00D1FF] text-[#00D1FF] font-bold px-8 py-4 rounded-full hover:bg-[#00D1FF]/10 transition-all duration-300">
-                    Learn More
-                  </button>
-                </div>
+                <p className="text-lg lg:text-xl leading-relaxed text-[#E6F3FF] font-medium">
+                  At GenReal.ai, our mission is to empower you with the tools to **trust the content you see**. We provide advanced AI solutions for deepfake detection and plagiarism prevention, creating a **safer, more reliable digital environment** for everyone.
+                </p>
+              </div>
+              
+              {/* Call to action buttons */}
+              <div className="flex flex-wrap gap-4 mt-8">
+                <button className="bg-gradient-to-r from-[#00D1FF] to-[#0099CC] text-black font-bold px-8 py-4 rounded-full hover:shadow-lg hover:shadow-[#00D1FF]/30 transition-all duration-300 transform hover:scale-105">
+                  Explore Solutions
+                </button>
+                <button className="border-2 border-[#00D1FF] text-[#00D1FF] font-bold px-8 py-4 rounded-full hover:bg-[#00D1FF]/10 transition-all duration-300">
+                  Contact Sales
+                </button>
               </div>
             </div>
             
-            {/* Right side - Visual element */}
-            <div className="relative flex justify-center lg:justify-end">
-              <div className="relative w-96 h-96">
-                {/* Animated rings */}
-                <div className="absolute inset-0 rounded-full border-2 border-[#00D1FF]/30 animate-spin"></div>
-                <div className="absolute inset-8 rounded-full border border-[#00D1FF]/50 animate-pulse"></div>
-                <div className="absolute inset-16 rounded-full bg-gradient-to-br from-[#00D1FF]/20 to-[#1E40AF]/20 backdrop-blur-sm"></div>
-                
-                {/* Center logo */}
-                <div className="absolute inset-24 flex items-center justify-center">
-                  <div className="w-32 h-32 bg-gradient-to-br from-[#00D1FF] to-[#0099CC] rounded-full flex items-center justify-center shadow-2xl shadow-[#00D1FF]/40">
-                    <svg viewBox="0 0 64 64" className="w-16 h-16 text-white">
-                      <circle cx="32" cy="32" r="20" fill="none" stroke="currentColor" strokeWidth="3"/>
-                      <circle cx="32" cy="32" r="8" fill="currentColor"/>
-                      <path d="M32 8 L36 20 L32 32 L28 20 Z" fill="currentColor" opacity="0.8"/>
-                      <path d="M56 32 L44 36 L32 32 L44 28 Z" fill="currentColor" opacity="0.8"/>
-                      <path d="M32 56 L28 44 L32 32 L36 44 Z" fill="currentColor" opacity="0.8"/>
-                      <path d="M8 32 L20 28 L32 32 L20 36 Z" fill="currentColor" opacity="0.8"/>
-                    </svg>
+            {/* Right side - Video placeholder */}
+              <div className="relative flex justify-center lg:justify-end">
+                <div className="relative w-full max-w-xl h-[320px] sm:h-[400px] md:h-[480px] bg-gray-900 rounded-3xl overflow-hidden border-2 border-cyan-400/50 shadow-2xl shadow-cyan-500/20">
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-8 bg-gray-900/80 backdrop-blur-sm">
+                    <h3 className="text-xl md:text-2xl font-bold text-white mb-2">How It Works: Watch the Demo</h3>
+                    <p className="text-sm md:text-base text-gray-400 mb-6">See how easy it is to upload your content and get instant results.</p>
+                    <button className="flex items-center gap-2 bg-white/20 hover:bg-white/30 text-white font-semibold px-6 py-3 rounded-full transition-colors duration-300">
+                      <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                      Play Video
+                    </button>
                   </div>
+                  {/* Optional: Add a subtle overlay for visual flair */}
+                  <div className="absolute inset-0 bg-gradient-to-tr from-cyan-400/10 to-transparent pointer-events-none"></div>
                 </div>
               </div>
-            </div>
           </div>
         </div>
       </section>
