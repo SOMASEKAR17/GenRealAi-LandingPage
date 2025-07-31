@@ -120,9 +120,9 @@ const AboutUsSection = () => {
       const deepfakeTl = gsap.timeline({
         scrollTrigger: {
           trigger: deepfakeRef.current,
-          start: "top 70%",
-          end: "bottom 30%",
-          scrub: 0.7,
+          start: "top 90%",
+          end: "bottom 70%",
+          scrub: 1.3,
         }
       });
       
@@ -138,9 +138,9 @@ const AboutUsSection = () => {
       const plagiarismTl = gsap.timeline({
         scrollTrigger: {
           trigger: plagiarismRef.current,
-          start: "top 70%",
-          end: "bottom 30%",
-          scrub: 0.8,
+          start: "top 90%",
+          end: "bottom 70%",
+          scrub: 1.5,
         }
       });
       
