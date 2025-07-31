@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
-const HeroSection = ({ Loaded }) => {
+const HeroSection = ({ Loaded, onFaceModelLoaded }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
@@ -15,7 +15,6 @@ const HeroSection = ({ Loaded }) => {
   const heroRef = useRef(null);
   const [isHeroInView, setIsHeroInView] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
-
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
@@ -36,10 +35,9 @@ const HeroSection = ({ Loaded }) => {
 
   const [animateScroll, setAnimateScroll] = useState(false);
 
-
-    const timer = setTimeout(() => {
-        setAnimateScroll(!animateScroll);
-      }, 2000);
+  const timer = setTimeout(() => {
+    setAnimateScroll(!animateScroll);
+  }, 2000);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -99,16 +97,20 @@ const HeroSection = ({ Loaded }) => {
       ? 'text-white font-semibold border-b-2 border-white'
       : 'text-gray-300 hover:text-white';
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const handleClick = () => {
-      navigate("/upload");
-    };
+  const handleClick = () => {
+    navigate("/upload");
+  };
 
   return (
     <div className="relative h-screen bg-transparent text-white overflow-hidden" id="home" ref={heroRef}>
       <GeometricAnimation paused={!isHeroInView} disableTracking={isMobile} />
-      <FaceModel paused={!isHeroInView} disableTracking={isMobile} />
+      <FaceModel 
+        paused={!isHeroInView} 
+        disableTracking={isMobile} 
+        onModelLoaded={onFaceModelLoaded}
+      />
 
       <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-black/70 via-black/40 to-black z-20 pointer-events-none" />
 
@@ -145,24 +147,25 @@ const HeroSection = ({ Loaded }) => {
         )}
       </nav>
 
-      <div 
-      className="absolute inset-0 flex flex-col items-center justify-start pt-[26vh] sm:pt-[26vh] md:pt-[30vh] xl:pt-[24vh] text-center z-30 pointer-events-none px-4">
-        <h1 className="text-[clamp(2.75rem,10vw,5rem)] sm:text-[clamp(3rem,8vw,5.5rem)] lg:text-[5.5rem] xl:text-[6rem] leading-[clamp(2.75rem,7vw,4.5rem)] sm:leading-[clamp(3rem,7vw,5rem)] lg:leading-[5.5rem] text-center font-bold">
-          Welcome to<br />
-          <span className="bg-gradient-to-r from-[#6EE5F5] via-[#29A3B3] to-[#1397A9] bg-clip-text text-transparent">
-            GenReal
-          </span>.AI
-        </h1>
-        <p className="mt-6 text-sm sm:text-base md:text-lg text-gray-300">
-          Discover the new age of security
-        </p>
-        <button className="mt-8 bg-orange-400 hover:bg-orange-500 text-white px-6 py-3 rounded-full text-sm font-semibold transition pointer-events-auto"
-          onClick={handleClick}
-        >
-          Get Started →
-        </button>
+      {/* Main text positioned relative to face model */}
+      <div className="absolute inset-0 z-30 pointer-events-none">
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
+          <h1 className="text-[clamp(3rem,12vw,8rem)] sm:text-[clamp(3.5rem,10vw,7rem)] md:text-[clamp(4rem,8vw,6rem)] lg:text-[clamp(4.5rem,7vw,5.5rem)] xl:text-[clamp(5rem,6vw,6rem)] leading-[0.9] font-bold whitespace-nowrap">
+            Welcome to<br />
+            <span className="bg-gradient-to-r from-[#6EE5F5] via-[#29A3B3] to-[#1397A9] bg-clip-text text-transparent">
+              GenReal
+            </span>.AI
+          </h1>
+          <p className="mt-[clamp(1rem,2vw,2rem)] text-[clamp(0.875rem,1.5vw,1.125rem)] text-gray-300">
+            Discover the new age of security
+          </p>
+          <button className="mt-[clamp(1.5rem,3vw,2rem)] bg-orange-400 hover:bg-orange-500 text-white px-[clamp(1.5rem,2vw,2rem)] py-[clamp(0.75rem,1vw,1rem)] rounded-full text-[clamp(0.875rem,1vw,1rem)] font-semibold transition pointer-events-auto"
+            onClick={handleClick}
+          >
+            Get Started →
+          </button>
+        </div>
       </div>
-
 
       <div
         ref={statsRef}

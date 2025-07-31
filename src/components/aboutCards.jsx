@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { UserPlus, Shield, FileSearch } from 'lucide-react';
 
 const DeepfakeDetectionPlatform = () => {
@@ -54,7 +55,7 @@ const DeepfakeDetectionPlatform = () => {
           <h1 className="text-3xl sm:text-5xl font-bold text-white mb-6 leading-tight">
             <span className="block">
               <span className="text-cyan-400">Deepfake Detection</span>
-              {' '}&{' '}
+              {' '} & {' '}
               <span className="text-cyan-400">AI Plagiarism Prevention</span>
             </span>
           </h1>
@@ -63,8 +64,6 @@ const DeepfakeDetectionPlatform = () => {
           </p>
         </div>
       </div>
-
-
 
       {/* Services Grid */}
       <div className="relative z-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">
@@ -109,12 +108,22 @@ const DeepfakeDetectionPlatform = () => {
                     ))}
                   </div>
 
-                  {/* Push button to bottom */}
+                  {/* Button */}
                   <div className="mt-auto">
-                    <button className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-cyan-500/20 to-cyan-600/20 border border-cyan-500/30 text-cyan-300 font-medium hover:from-cyan-500/30 hover:to-cyan-600/30 hover:border-cyan-400/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-cyan-500/20">
-                      {service.buttonLabel}
-                      <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
-                    </button>
+                    {index === 0 ? (
+                      <button className="w-full py-3 px-6 rounded-xl bg-gradient-to-r from-cyan-500/20 to-cyan-600/20 border border-cyan-500/30 text-cyan-300 font-medium hover:from-cyan-500/30 hover:to-cyan-600/30 hover:border-cyan-400/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-cyan-500/20">
+                        {service.buttonLabel}
+                        <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
+                      </button>
+                    ) : (
+                      <Link
+                        to={index === 1 ? "/upload" : "/plagiarism"}
+                        className="block w-full text-center py-3 px-6 rounded-xl bg-gradient-to-r from-cyan-500/20 to-cyan-600/20 border border-cyan-500/30 text-cyan-300 font-medium hover:from-cyan-500/30 hover:to-cyan-600/30 hover:border-cyan-400/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-cyan-500/20"
+                      >
+                        {service.buttonLabel}
+                        <span className="inline-block ml-2 group-hover:translate-x-1 transition-transform">→</span>
+                      </Link>
+                    )}
                   </div>
                 </div>
 

@@ -15,9 +15,9 @@ import Upload from './components/Upload';
 import Plagiarism from "./components/Plagiarism-upload";
 import DeepfakeDetectionPlatform from "./components/aboutCards";
 
-const Home = ({ isLoaded }) => (
+const Home = ({ isLoaded, onFaceModelLoaded }) => (
   <div className='z-10' style={{ visibility: isLoaded ? 'visible' : 'hidden' }}>
-    <Hero Loaded={isLoaded} />
+    <Hero Loaded={isLoaded} onFaceModelLoaded={onFaceModelLoaded} />
     <About id="about" />
     <DeepfakeDetectionPlatform />
     <div className='w-[100%] hidden md:block h-screen'>
@@ -47,6 +47,15 @@ const PageWrapper = ({ children }) => (
 const AppContent = () => {
   const location = useLocation();
   const [isLoaded, setIsLoaded] = useState(location.pathname !== '/');
+  const [faceModelLoaded, setFaceModelLoaded] = useState(false);
+
+  const handleFaceModelLoaded = () => {
+    setFaceModelLoaded(true);
+  };
+
+  const handleLoaderFinish = () => {
+    setIsLoaded(true);
+  };
 
   useEffect(() => {
     if (isLoaded) {
@@ -58,7 +67,12 @@ const AppContent = () => {
 
   return (
     <div className='relative bg-black overflow-hidden'>
-      {isHome && !isLoaded && <Loader onFinish={() => setIsLoaded(true)} />}
+      {isHome && !isLoaded && (
+        <Loader 
+          onFinish={handleLoaderFinish} 
+          faceModelLoaded={faceModelLoaded}
+        />
+      )}
 
       <AnimatePresence mode="wait">
         <Routes location={location} key={location.pathname}>
@@ -66,7 +80,10 @@ const AppContent = () => {
             path="/"
             element={
               <PageWrapper>
-                <Home isLoaded={isLoaded} />
+                <Home 
+                  isLoaded={isLoaded} 
+                  onFaceModelLoaded={handleFaceModelLoaded}
+                />
               </PageWrapper>
             }
           />
