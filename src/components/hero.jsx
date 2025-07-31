@@ -11,8 +11,10 @@ const HeroSection = ({ Loaded, onFaceModelLoaded }) => {
   const [prevScrollPos, setPrevScrollPos] = useState(0);
   const [visible, setVisible] = useState(true);
   const [activeSection, setActiveSection] = useState('');
+  const [showPopupButtons, setShowPopupButtons] = useState(false);
   const statsRef = useRef(null);
   const heroRef = useRef(null);
+  const popupButtonsRef = useRef(null);
   const [isHeroInView, setIsHeroInView] = useState(true);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -32,6 +34,28 @@ const HeroSection = ({ Loaded, onFaceModelLoaded }) => {
       );
     }
   }, [Loaded]);
+
+  // Animate popup buttons when they appear
+  useEffect(() => {
+    if (showPopupButtons && popupButtonsRef.current) {
+      gsap.fromTo(
+        popupButtonsRef.current.children,
+        { 
+          scale: 0.9, 
+          opacity: 0, 
+          y: 20
+        },
+        { 
+          scale: 1, 
+          opacity: 1, 
+          y: 0,
+          duration: 0.6, 
+          ease: 'power3.out',
+          stagger: 0.1
+        }
+      );
+    }
+  }, [showPopupButtons]);
 
   const [animateScroll, setAnimateScroll] = useState(false);
 
@@ -83,6 +107,21 @@ const HeroSection = ({ Loaded, onFaceModelLoaded }) => {
     };
   }, []);
 
+  // Close popup when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (popupButtonsRef.current && !popupButtonsRef.current.contains(event.target) && 
+          !event.target.closest('.get-started-btn')) {
+        setShowPopupButtons(false);
+      }
+    };
+
+    if (showPopupButtons) {
+      document.addEventListener('mousedown', handleClickOutside);
+      return () => document.removeEventListener('mousedown', handleClickOutside);
+    }
+  }, [showPopupButtons]);
+
   const navLinks = [
     { id: 'home', label: 'Home' },
     { id: 'about', label: 'About' },
@@ -99,8 +138,18 @@ const HeroSection = ({ Loaded, onFaceModelLoaded }) => {
 
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate("/upload");
+  const handleGetStartedClick = () => {
+    setShowPopupButtons(!showPopupButtons);
+  };
+
+  const handlePlagiarismClick = () => {
+    navigate("/plagiarism-detection");
+    setShowPopupButtons(false);
+  };
+
+  const handleDeepfakeClick = () => {
+    navigate("/deepfake-detection");
+    setShowPopupButtons(false);
   };
 
   return (
@@ -159,11 +208,47 @@ const HeroSection = ({ Loaded, onFaceModelLoaded }) => {
           <p className="mt-[clamp(1rem,2vw,2rem)] text-[clamp(0.875rem,1.5vw,1.125rem)] text-gray-300">
             Discover the new age of security
           </p>
-          <button className="mt-[clamp(1.5rem,3vw,2rem)] bg-orange-400 hover:bg-orange-500 text-white px-[clamp(1.5rem,2vw,2rem)] py-[clamp(0.75rem,1vw,1rem)] rounded-full text-[clamp(0.875rem,1vw,1rem)] font-semibold transition pointer-events-auto"
-            onClick={handleClick}
-          >
-            Get Started →
-          </button>
+          
+          {/* Get Started Button with Popup */}
+          <div className="relative pointer-events-auto">
+            <button 
+              className="get-started-btn mt-[clamp(1.5rem,3vw,2rem)] bg-orange-400 hover:bg-orange-500 text-white px-[clamp(1.5rem,2vw,2rem)] py-[clamp(0.75rem,1vw,1rem)] rounded-full text-[clamp(0.875rem,1vw,1rem)] font-semibold transition duration-300 transform hover:scale-105"
+              onClick={handleGetStartedClick}
+            >
+              Get Started →
+            </button>
+            
+            {/* Dynamic Popup Buttons */}
+            {showPopupButtons && (
+              <div 
+                ref={popupButtonsRef}
+                className="absolute top-full mt-6 left-1/2 -translate-x-1/2 flex flex-col sm:flex-row gap-4 z-50"
+              >
+                <button
+                  onClick={handlePlagiarismClick}
+                  className="relative overflow-hidden bg-gradient-to-r from-purple-500/90 to-purple-600/90 hover:from-purple-400 hover:to-purple-500 text-white px-8 py-4 rounded-2xl text-sm font-medium transition-all duration-500 transform hover:scale-110 hover:-translate-y-1 shadow-2xl backdrop-blur-md border border-purple-300/20 whitespace-nowrap group"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-out"></div>
+                  <div className="relative flex items-center gap-2">
+                    <span className="text-lg">🔍</span>
+                    <span>Plagiarism Detection</span>
+                  </div>
+                </button>
+                <button
+                  onClick={handleDeepfakeClick}
+                  className="relative overflow-hidden bg-gradient-to-r from-cyan-500/90 to-cyan-600/90 hover:from-cyan-400 hover:to-cyan-500 text-white px-8 py-4 rounded-2xl text-sm font-medium transition-all duration-500 transform hover:scale-110 hover:-translate-y-1 shadow-2xl border border-cyan-300/20 whitespace-nowrap group"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 ease-out"></div>
+                  <div className="relative flex items-center gap-2">
+                    <span className="text-lg">🎭</span>
+                    <span>Video Deepfake Detection</span>
+                  </div>
+                </button>
+              </div>
+            )}
+            
+
+          </div>
         </div>
       </div>
 

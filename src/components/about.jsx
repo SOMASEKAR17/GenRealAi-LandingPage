@@ -249,7 +249,7 @@ const AboutUsSection = () => {
   );
 
   return (
-    <div ref={sectionRef} className="bg-gradient-to-b from-black to-[#0F1419] text-white font-sans relative overflow-hidden">
+    <div ref={sectionRef} className="bg-gradient-to-b from-black to-[#0F1419] text-white font-sans relative overflow-hidden" id="about">
       {/* Hero Section */}
       <section ref={heroRef} className="min-h-screen flex items-center justify-center relative z-10">
         {/* Animated background overlay */}

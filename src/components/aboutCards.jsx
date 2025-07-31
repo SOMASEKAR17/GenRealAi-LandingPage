@@ -117,7 +117,7 @@ const DeepfakeDetectionPlatform = () => {
                       </button>
                     ) : (
                       <Link
-                        to={index === 1 ? "/upload" : "/plagiarism"}
+                        to={index === 1 ? "/deepfake-detection" : "/plagiarism-detection"}
                         className="block w-full text-center py-3 px-6 rounded-xl bg-gradient-to-r from-cyan-500/20 to-cyan-600/20 border border-cyan-500/30 text-cyan-300 font-medium hover:from-cyan-500/30 hover:to-cyan-600/30 hover:border-cyan-400/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-cyan-500/20"
                       >
                         {service.buttonLabel}

@@ -88,7 +88,7 @@ const AppContent = () => {
             }
           />
           <Route
-            path="/upload"
+            path="/deepfake-detection"
             element={
               <PageWrapper>
                 <Upload />
@@ -96,7 +96,7 @@ const AppContent = () => {
             }
           />
           <Route
-            path="/plagiarism"
+            path="/plagiarism-detection"
             element={
               <PageWrapper>
                 <Plagiarism />
