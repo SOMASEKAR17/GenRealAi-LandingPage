@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, FileSearch } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const DeepfakeDetectionPlatform = () => {
   const [flippedCards, setFlippedCards] = useState(new Set());
   const [isLoaded, setIsLoaded] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setIsLoaded(true);
@@ -37,6 +39,7 @@ const DeepfakeDetectionPlatform = () => {
         "API Integration Ready"
       ],
       buttonLabel: "Try Detection Tool",
+      path: "/deepfake-detection",
       bgImage: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Cdefs%3E%3ClinearGradient id='bg1' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23064e77;stop-opacity:0.3'/%3E%3Cstop offset='100%25' style='stop-color:%23155e75;stop-opacity:0.1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='300' fill='url(%23bg1)'/%3E%3Cg opacity='0.4'%3E%3Ccircle cx='80' cy='80' r='3' fill='%2306b6d4'/%3E%3Ccircle cx='320' cy='60' r='2' fill='%2306b6d4'/%3E%3Ccircle cx='150' cy='180' r='2.5' fill='%2306b6d4'/%3E%3Ccircle cx='280' cy='220' r='2' fill='%2306b6d4'/%3E%3Cpath d='M50 150 Q200 100 350 200' stroke='%2306b6d4' stroke-width='1' fill='none' opacity='0.3'/%3E%3Cpath d='M100 250 Q250 180 380 240' stroke='%2306b6d4' stroke-width='1' fill='none' opacity='0.2'/%3E%3C/g%3E%3Ctext x='200' y='160' text-anchor='middle' fill='%2306b6d4' font-family='Arial' font-size='24' font-weight='bold' opacity='0.1'%3EDETECT%3C/text%3E%3C/svg%3E"
     },
     {
@@ -54,6 +57,7 @@ const DeepfakeDetectionPlatform = () => {
         "Citation Verification"
       ],
       buttonLabel: "Try Plagiarism Tool",
+      path: "/plagiarism-detection",
       bgImage: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'%3E%3Cdefs%3E%3ClinearGradient id='bg2' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23075985;stop-opacity:0.3'/%3E%3Cstop offset='100%25' style='stop-color:%234338ca;stop-opacity:0.1'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='400' height='300' fill='url(%23bg2)'/%3E%3Cg opacity='0.3'%3E%3Crect x='60' y='60' width='80' height='4' fill='%2306b6d4' rx='2'/%3E%3Crect x='60' y='80' width='120' height='4' fill='%2306b6d4' rx='2'/%3E%3Crect x='60' y='100' width='90' height='4' fill='%2306b6d4' rx='2'/%3E%3Crect x='220' y='60' width='100' height='4' fill='%2306b6d4' rx='2'/%3E%3Crect x='220' y='80' width='80' height='4' fill='%2306b6d4' rx='2'/%3E%3Crect x='220' y='100' width='110' height='4' fill='%2306b6d4' rx='2'/%3E%3Crect x='60' y='160' width='70' height='4' fill='%2306b6d4' rx='2'/%3E%3Crect x='60' y='180' width='140' height='4' fill='%2306b6d4' rx='2'/%3E%3Crect x='220' y='160' width='90' height='4' fill='%2306b6d4' rx='2'/%3E%3Crect x='220' y='180' width='75' height='4' fill='%2306b6d4' rx='2'/%3E%3C/g%3E%3Ctext x='200' y='260' text-anchor='middle' fill='%2306b6d4' font-family='Arial' font-size='20' font-weight='bold' opacity='0.1'%3EVERIFY%3C/text%3E%3C/svg%3E"
     }
   ];
@@ -182,11 +186,11 @@ const DeepfakeDetectionPlatform = () => {
 
                     {/* Action Button */}
                     <div className="relative z-10">
-                      <button 
+                      <button
                         className="w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-cyan-600/30 to-blue-600/30 border border-cyan-400/40 text-white font-semibold text-lg hover:from-cyan-500/40 hover:to-blue-500/40 hover:border-cyan-300/60 transition-all duration-300 backdrop-blur-sm group/btn"
                         onClick={(e) => {
-                          e.stopPropagation();
-                          alert(`${service.buttonLabel} clicked!`);
+                          e.stopPropagation(); // Prevents the card from flipping back
+                          navigate(service.path);
                         }}
                       >
                         <span className="flex items-center justify-center gap-2">
